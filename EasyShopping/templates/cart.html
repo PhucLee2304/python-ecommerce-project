@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+</head>
+<body>
+    <div class="sectionOne">
+        <div class="product">
+            <div class="selectAll">
+                <input type="checkbox" id="inputCheckboxAll">
+                <label for="inputCheckboxAll">Sản phẩm(4)</label>
+            </div>
+        </div>
+        <div class="unitPrice">Đơn giá</div>
+        <div class="quantity">Số lượng</div>
+        <div class="amountUnit">Số tiền</div>
+        <div class="action">Thao tác</div>
+    </div>
+
+    <div class="sectionTwo">
+        <div class="product">
+            <div class="select">
+                <input type="checkbox" id="inputCheckbox1">
+            </div>
+            <div class="imageNameProduct">
+                <a class="imageProduct" href="#">
+                    <img src="../asset/loginCSS/image/logo_ptit.png" alt="Ảnh sản phẩm">
+                </a>
+                <a class="nameProduct" title="Name Product" href="#">Tên sản phẩm</a>
+            </div>
+        </div>
+        <div class="unitPrice">
+            <span class="originalPrice">70.000đ</span>
+            <span class="discountPrice">47.000đ</span>
+        </div>
+        <div class="quantity">
+            <button class="decreaseButton" aria-label="decrease">-</button>
+            <input type="text" class="inputQuantity" value="1">
+            <button class="increaseButton" aria-label="increase">+</button>
+        </div>
+        <div class="amountUnit">
+            <span class="amountUnitDiscount">47.000đ</span>
+        </div>
+        <div class="action">
+            <button class="delete">Xóa</button>
+        </div>
+    </div>
+
+    <div class="sectionThree">
+        <div class="product">
+            <div class="selectAll">
+                <input type="checkbox" id="inputCheckboxAllThree">
+                <label for="inputCheckboxAllThree">Chọn tất cả(4)</label>
+            </div>
+        </div>
+        <div class="deleteAllContainer">
+            <button class="deleteAll">
+                <span class="textDelete">Xóa</span>
+            </button>
+        </div>
+        <div class="purchase">
+            <div class="total">Tổng thanh toán (0 sản phẩm):</div>
+            <div class="totalAmount">0đ</div>
+            <button class="buy">
+                <span class="textBuyProduct">Mua hàng</span>
+            </button>
+        </div>
+    </div>
+</body>
+</html>

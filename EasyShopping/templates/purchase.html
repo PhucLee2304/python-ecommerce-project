@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Thanh Toán</title>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+</head>
+<body>
+
+    <!-- Thông tin người nhận -->
+    <div class="sectionRecipient">
+        <h3 class="thongtin">Thông tin người nhận</h3>
+        <p>Tên người nhận: Nguyễn Văn A</p>
+        <p>Địa chỉ nhận hàng: 123 Đường ABC, Phường XYZ, Quận 1, TP.HCM</p>
+        <p>Số điện thoại: 0987654321</p>
+    </div>
+
+    <div class="sectionOne">
+        <div class="product">
+            <div class="selectAll">
+                <label for="inputCheckboxAll">Sản phẩm</label>
+            </div>
+        </div>
+        <div class="unitPrice">Đơn giá</div>
+        <div class="quantity">Số lượng</div>
+        <div class="amountUnit">Số tiền</div>
+    </div>
+
+    <div class="sectionTwo">
+        <div class="product">
+            <div class="select"></div>
+            <div class="imageNameProduct">
+                <a class="imageProduct" href="#">
+                    <img src="../asset/loginCSS/image/logo_ptit.png" alt="Sản phẩm 1">
+                </a>
+                <a class="nameProduct" title="Sản phẩm 1" href="#">Tên sản phẩm 1</a>
+            </div>
+        </div>
+        <div class="unitPrice">
+            <span class="originalPrice">100.000đ</span>
+            <span class="discountPrice">90.000đ</span>
+        </div>
+        <div class="quantity">1</div>
+        <div class="amountUnit">
+            <span class="amountUnitDiscount">90.000đ</span>
+        </div>
+    </div>
+
+    <div class="sectionThree">
+        <div class="shippingFee">
+            <p>Phí vận chuyển: 30.000đ</p>
+        </div>
+        <div class="paymentMethod">
+            <p>Phương thức thanh toán:</p>
+            <input type="radio" name="payment" id="bankTransfer" value="bankTransfer">
+            <label for="bankTransfer">Chuyển khoản</label><br>
+            <input type="radio" name="payment" id="cashOnDelivery" value="cashOnDelivery">
+            <label for="cashOnDelivery">Thanh toán khi nhận hàng</label>
+        </div>
+    </div>
+
+    <div class="sectionFour">
+        <div class="purchase">
+            <div class="total">Tổng thanh toán (2 sản phẩm):</div>
+            <div class="totalAmount">270.000đ</div>
+            <button class="buy">
+                <span class="textBuyProduct">Thanh toán</span>
+            </button>
+        </div>
+    </div>
+
+</body>
+</html>

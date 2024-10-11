@@ -1,0 +1,205 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    overflow-x: hidden;
+}
+
+* {
+    box-sizing: border-box; 
+}
+
+button {
+    cursor: pointer;
+    background-color: #ff5722;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.2);
+    margin-right: 10px;
+    vertical-align: middle; 
+}
+
+input[type="text"] {
+    text-align: center;
+    width: 50px;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+img {
+    width: 50px; 
+    height: auto;
+}
+
+.sectionOne {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    background-color: #ddd;
+    padding: 10px;
+    font-weight: bold;
+    width: 100%; 
+    overflow: hidden;
+}
+
+.product, .unitPrice, .quantity, .amountUnit, .action {
+    flex: 1; 
+    text-align: center;
+}
+
+.sectionTwo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    width: 100%; 
+    overflow: hidden;
+}
+
+.product {
+    display: flex;
+    align-items: center; 
+    flex: 3; 
+}
+
+.imageNameProduct {
+    display: flex;
+    align-items: center;
+    margin-left: 10px; 
+}
+
+.unitPrice, .quantity, .amountUnit, .action {
+    flex: 1; 
+    text-align: center; 
+}
+
+.unitPrice .originalPrice {
+    text-decoration: line-through;
+    color: #999;
+    margin-right: 5px;
+}
+
+.quantity {
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+.quantity button {
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+}
+
+.quantity input {
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin: 0 5px; 
+    width: 50px;
+}
+
+.action {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+
+.action .delete {
+    background-color: #ff5722;
+    border: none;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 4px;
+}
+
+.sectionThree {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    background-color: #f1f1f1;
+    padding: 20px;
+    font-size: 18px;
+    border-top: 1px solid #ddd; 
+    width: 100%; 
+    overflow: hidden;
+}
+
+.selectDelete {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.product .select, .selectAll {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+}
+
+.deleteAllContainer {
+    flex: 1;
+    text-align: center;
+}
+
+.purchase {
+    flex: 2; 
+    display: flex;
+    justify-content: flex-end; 
+    margin-right: 35px;
+}
+
+.total, .totalAmount, .buy {
+    margin: 0 10px; 
+    display: inline-flex; 
+    align-items: center; 
+}
+
+.total {
+    font-weight: bold;
+}
+
+.totalAmount {
+    font-weight: bold;
+}
+
+.buy {
+    background-color: #ff5722;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+}
+
+.product .select, .selectAll {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+}
+
+.sectionThree .product .selectAll{
+    margin-left: 0; 
+}
+
+.sectionThree .deleteAllContainer {
+    margin-left: -1650px; 
+}
+
+.sectionThree .product .selectAll{
+    margin-left: -10px;
+}
+
+.sectionThree .purchase .totalAmount{
+    margin-left: -5px;
+}

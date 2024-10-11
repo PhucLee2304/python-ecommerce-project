@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{customer.full_name}}</title>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+</head>
+
+<body>
+    <div class="main">
+        <div class="sectionOne">
+            <div class="iconName">
+                <img class="icon" src="{% static "images/logo_ptit.png" %}" alt="Ảnh đại diện">
+                <div class="name">Phúc</div>
+            </div>
+            <div class="iconOrders">
+                <img class="icon" src="{% static "images/logo_ptit.png" %}" alt="Icon đơn mua">
+
+                <a class="name" href="#">Đơn mua</a>
+            </div>
+            <div class="iconCart">
+                <img class="icon" src="{% static "images/logo_ptit.png" %}" alt="Icon giỏ hàng">
+                <a class="name" href="#">Giỏ hàng<a>
+            </div>
+        </div>
+        <div class="sectionTwo">
+            <div class="content">
+                <div class="title">
+                    <h1 class="titleOne">Hồ sơ của tôi</h1>
+                    <div class="titleTwo">Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
+                </div>
+                <div class="content">
+                    <form action="">
+                        <table class="table">
+                            <tr>
+                                <td class="label">
+                                    <label>Tên</label>
+                                </td>
+                                <td>
+                                    <input type="text" name="fullname" placeholder="Tên" value="fullname">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    <label>Email</label>
+                                </td>
+                                <td>
+                                    <input type="text" name="email" placeholder="Email" value="email">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    <label>Số điện thoại</label>
+                                </td>
+                                <td>
+                                    <input type="text" name="phone" placeholder="Số điện thoại" value="phone">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    <label>Giới tính</label>
+                                </td>
+                                <td>
+                                    <div class="genderTick">
+                                        <div class="tick">
+                                            <input type="radio" name="gender" value="male" id="male">
+                                            <label for="male">Nam</label>
+                                        </div>
+                                        <div class="tick">
+                                            <input type="radio" name="gender" value="female" id="female">
+                                            <label for="female">Nữ</label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    <label>Ngày sinh</label>
+                                </td>
+                                <td>
+                                    <div class="dateInputs">
+                                        <input class="dateOfBirth" type="text" name="date" placeholder="Ngày" value="dateOfBirth">
+                                        <input class="dateOfBirth" type="text" name="month" placeholder="Tháng" value="dateOfBirth">
+                                        <input class="dateOfBirth" type="text" name="year" placeholder="Năm" value="dateOfBirth">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    <label>Địa chỉ</label>
+                                </td>
+                                <td>
+                                    <input type="text" name="address" placeholder="Địa chỉ" value="address">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    <label></label>
+                                </td>
+                                <td>
+                                    <button type="button" aria-disabled="false">Lưu</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+            <div class="imageEdit">
+                <div class="innerWrap">
+                    <div class="image">
+                        <img id="previewImage" src="{{customer.userImage.url}}" alt="Ảnh đại diện" class="hidden">
+                        <input type="file" accept=".jpg, .jpeg, .png" id="imageInput" style="display: none;" onchange="showImage(event)">
+                        <button type="button" class="selectImage" onclick="document.getElementById('imageInput').click();">
+                            <span>Chọn ảnh</span>
+                        </button>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+    <script>
+        function showImage(event) {
+            const imageInput = event.target;
+            const previewImage = document.getElementById('previewImage');
+            
+            if (imageInput.files && imageInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.classList.remove('hidden'); 
+                    previewImage.classList.add('icon');
+                }
+                reader.readAsDataURL(imageInput.files[0]);
+            } else {
+                previewImage.classList.add('hidden'); 
+            }
+        }
+    </script>
+    
+</body>
+
+</html>

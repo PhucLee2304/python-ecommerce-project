@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <title>Register</title>
+</head>
+
+<body>
+    <div class="content">
+        <div class="container">
+            <div class="innerTitle">
+                <h2 class="register">Register</h2>
+                <div class="innerNavigation">
+                    <p>Already have an account?</p>
+                    <a href="{% url "login" %}">Log in</a>
+                </div>
+            </div>
+            <div class="registerForm">
+                <div class="innerWrap">
+                    <div class="innerImage">
+                        <img src="{% static "images/formImage.png" %}" alt="">
+                    </div>
+                    <div class="innerInformation">
+                        <div>
+                            {% for message in messages %}
+                                <h5>{{message}}</h5>
+                            {% endfor %}
+                        </div>    
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <div class="usernameInput">
+                                <label for="username">Username</label>
+                                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                            </div>
+                            <br>
+                            <div class="passwordInput">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                            </div>
+                            <br>
+                            <div class="confirmPasswordInput">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                            </div>
+                            <button class="registerButton" type="submit">Register</button>
+                        </form>
+                        <div class="innerPolicy">
+                            <p>By signing up, you agree to our <b>Terms of Service</b> and <b>Privacy Policy</b></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

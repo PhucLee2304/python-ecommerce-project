@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <title>Log in</title>
+</head>
+
+<body>
+    <div class="content">
+        <div class="container">
+            <div class="innerTitle">
+                <h2 class="innerLogIn">Log in</h2>
+                <div class="innerNavigation">
+                    <p>Don't have an account yet?</p>
+                    <a href="{% url "register" %}">Register</a>
+                </div>
+            </div>
+            <div class="loginForm">
+                <div class="innerWrap">
+                    <div class="innerImage">
+                        <img src="{% static "images/formImage.png" %}" alt="">
+                    </div>
+                    <div class="innerInformation">
+                        <div>
+                            {% for message in messages %}
+                            <h5>{{message}}</h5>
+                            {% endfor %}
+                        </div>
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <div class="emailAdressInput">
+                                <label for="username">Username</label>
+                                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                            </div>
+                            <br>
+                            <div class="passwordInput">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                            </div>
+                            <button class="loginButton" type="submit">Log in</button>
+                            <br>
+                            <a href="#">Forgot the password?</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
