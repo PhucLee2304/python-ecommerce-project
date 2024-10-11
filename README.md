@@ -29,13 +29,23 @@ git push
 ### Cập nhật branch của mình với những thay đổi của branch main
 
 1. Fetch the latest changes from the remote repository:
+```bash
 git fetch origin
+```
 2. Switch to your branch (if you are not already on it):
+```bash
 git checkout your-branch-name
+```
 3. Rebase your branch onto the main branch
+```bash
 git rebase origin/main
+```
 4. Resolve any conflicts if prompted ( nếu xảy ra lỗi thì giải quyết conflicts r thực hiện 2 lệnh dưới đây, nếu không xảy ra lỗi thì bỏ qua)
+```bash
 git add .
 git rebase --continue
+```
 5. Push your updated branch to the remote repository
+```bash
 git push origin your-branch-name
+```
