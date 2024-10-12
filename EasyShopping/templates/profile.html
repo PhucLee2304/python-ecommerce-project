@@ -14,7 +14,7 @@
         <div class="sectionOne">
             <div class="iconName">
                 <img class="icon" src="{% static "images/logo_ptit.png" %}" alt="Ảnh đại diện">
-                <div class="name">Phúc</div>
+                <div class="name">{{customer.user.last_name}}</div>
             </div>
             <div class="iconOrders">
                 <img class="icon" src="{% static "images/logo_ptit.png" %}" alt="Icon đơn mua">
@@ -33,14 +33,15 @@
                     <div class="titleTwo">Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
                 </div>
                 <div class="content">
-                    <form action="">
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
                         <table class="table">
                             <tr>
                                 <td class="label">
                                     <label>Tên</label>
                                 </td>
                                 <td>
-                                    <input type="text" name="fullname" placeholder="Tên" value="fullname">
+                                    <input type="text" name="full_name" placeholder="Tên" value="{{customer.full_name}}">
                                 </td>
                             </tr>
                             <tr>
@@ -48,7 +49,7 @@
                                     <label>Email</label>
                                 </td>
                                 <td>
-                                    <input type="text" name="email" placeholder="Email" value="email">
+                                    <input type="text" name="email" placeholder="Email" value="{{customer.user.email}}">
                                 </td>
                             </tr>
                             <tr>
@@ -56,7 +57,7 @@
                                     <label>Số điện thoại</label>
                                 </td>
                                 <td>
-                                    <input type="text" name="phone" placeholder="Số điện thoại" value="phone">
+                                    <input type="text" name="phone" placeholder="Số điện thoại" value="{{customer.phone}}">
                                 </td>
                             </tr>
                             <tr>
@@ -66,11 +67,11 @@
                                 <td>
                                     <div class="genderTick">
                                         <div class="tick">
-                                            <input type="radio" name="gender" value="male" id="male">
+                                            <input type="radio" name="gender" value="Male" id="male" {% if customer.gender == 'Male' %}checked{% endif %}>
                                             <label for="male">Nam</label>
                                         </div>
                                         <div class="tick">
-                                            <input type="radio" name="gender" value="female" id="female">
+                                            <input type="radio" name="gender" value="Female" id="female" {% if customer.gender == 'Female' %}checked{% endif %}>
                                             <label for="female">Nữ</label>
                                         </div>
                                     </div>
@@ -82,9 +83,9 @@
                                 </td>
                                 <td>
                                     <div class="dateInputs">
-                                        <input class="dateOfBirth" type="text" name="date" placeholder="Ngày" value="dateOfBirth">
-                                        <input class="dateOfBirth" type="text" name="month" placeholder="Tháng" value="dateOfBirth">
-                                        <input class="dateOfBirth" type="text" name="year" placeholder="Năm" value="dateOfBirth">
+                                        <input class="dateOfBirth" type="text" name="day" placeholder="Ngày" value="{{customer.dateOfBirth.day}}">
+                                        <input class="dateOfBirth" type="text" name="month" placeholder="Tháng" value="{{customer.dateOfBirth.month}}">
+                                        <input class="dateOfBirth" type="text" name="year" placeholder="Năm" value="{{customer.dateOfBirth.year}}">
                                     </div>
                                 </td>
                             </tr>
@@ -93,53 +94,35 @@
                                     <label>Địa chỉ</label>
                                 </td>
                                 <td>
-                                    <input type="text" name="address" placeholder="Địa chỉ" value="address">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="label">
-                                    <label></label>
-                                </td>
-                                <td>
-                                    <button type="button" aria-disabled="false">Lưu</button>
+                                    <input type="text" name="address" placeholder="Địa chỉ" value="{{customer.address}}">
                                 </td>
                             </tr>
                         </table>
+                        <div class="imageEdit">
+                            <div class="innerWrap">
+                                <div class="image">
+                                    <img id="previewImage" src="{{customer.userImage.url}}" alt="Ảnh đại diện" class="icon">
+                                    <input type="file" accept=".jpg, .jpeg, .png" name="userImage" id="imageInput" style="display: none;" onchange="previewImage(event)">
+                                    <button type="button" class="selectImage" onclick="document.getElementById('imageInput').click();">
+                                        <span>Choose file</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit">Save</button>
+                        </div>
                     </form>
-                </div>
-            </div>
-            <div class="imageEdit">
-                <div class="innerWrap">
-                    <div class="image">
-                        <img id="previewImage" src="{{customer.userImage.url}}" alt="Ảnh đại diện" class="hidden">
-                        <input type="file" accept=".jpg, .jpeg, .png" id="imageInput" style="display: none;" onchange="showImage(event)">
-                        <button type="button" class="selectImage" onclick="document.getElementById('imageInput').click();">
-                            <span>Chọn ảnh</span>
-                        </button>
-                    </div>
                 </div>
             </div>            
         </div>
     </div>
     <script>
-        function showImage(event) {
-            const imageInput = event.target;
-            const previewImage = document.getElementById('previewImage');
-            
-            if (imageInput.files && imageInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewImage.classList.remove('hidden'); 
-                    previewImage.classList.add('icon');
-                }
-                reader.readAsDataURL(imageInput.files[0]);
-            } else {
-                previewImage.classList.add('hidden'); 
-            }
+        function previewImage(event) {
+            const preview = document.getElementById('previewImage');
+            preview.src = URL.createObjectURL(event.target.files[0]);
         }
     </script>
-    
 </body>
 
 </html>

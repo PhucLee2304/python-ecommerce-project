@@ -13,6 +13,3 @@ class Review(models.Model):
 
     class Meta:
         db_table = 'review'
-
-    # def __str__(self):
-    #     return f"Review {self.reviewID} for {self.productID.productName} by {self.customerID.username}"
