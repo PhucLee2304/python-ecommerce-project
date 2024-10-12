@@ -8,9 +8,6 @@ class Category(models.Model):
     class Meta:
         db_table = 'category'
 
-    # def __str__(self):
-    #     return self.categoryName
-
 class Product(models.Model):
     productID = models.AutoField(primary_key=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -24,23 +21,10 @@ class Product(models.Model):
     class Meta:
         db_table = 'product'
 
-    # def __str__(self):
-    #     return self.productName
-
 class UserInterest(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)  
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)  # Đã sửa tên trường
-
-    # count = models.PositiveIntegerField(default=0) 
+    timestamp = models.DateTimeField(auto_now_add=True)  
 
     class Meta:
         db_table = 'userInterest' 
-
-    # def __str__(self):
-    #     return f"View by {self.user.username} on {self.category.categoryName} - Count: {self.count}"
-
-# class Search(models.Model):
-#     category = models.ForeignKey(Category, on_delete=models.CASCADE)  # Đã sửa lại tên trường
-#     filter = models.CharField(max_length=255)  # Có thể điều chỉnh chiều dài tối đa tùy theo yêu cầu
-#     string = models.CharField(max_length=255)
