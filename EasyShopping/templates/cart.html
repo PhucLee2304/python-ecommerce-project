@@ -8,67 +8,190 @@
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
 </head>
 <body>
-    <div class="sectionOne">
-        <div class="product">
-            <div class="selectAll">
-                <input type="checkbox" id="inputCheckboxAll">
-                <label for="inputCheckboxAll">Sản phẩm(4)</label>
-            </div>
-        </div>
-        <div class="unitPrice">Đơn giá</div>
-        <div class="quantity">Số lượng</div>
-        <div class="amountUnit">Số tiền</div>
-        <div class="action">Thao tác</div>
+    <div>
+        {% for message in messages %}
+            <h5>{{ message }}</h5>
+        {% endfor %}
     </div>
 
-    <div class="sectionTwo">
-        <div class="product">
-            <div class="select">
-                <input type="checkbox" id="inputCheckbox1">
+    <form action="{% url 'cartActions' %}" method="POST" id="cartForm">
+        {% csrf_token %}
+        <div class="sectionOne">
+            <div class="product">
+                <div class="selectAll">
+                    <input type="checkbox" id="inputCheckboxAll" name="selectAll" onclick="toggleCheckboxes(this)">
+                    <label for="inputCheckboxAll">Item ({{ items|length }})</label>
+                </div>
             </div>
-            <div class="imageNameProduct">
-                <a class="imageProduct" href="#">
-                    <img src="{% static "images/logo_ptit.png" %}" alt="Ảnh sản phẩm">
-                </a>
-                <a class="nameProduct" title="Name Product" href="#">Tên sản phẩm</a>
-            </div>
+            <div class="unitPrice">Unit Price</div>
+            <div class="quantity">Quantity</div>
+            <div class="amountUnit">Unit Amount</div>
+            <div class="action">Action</div>
         </div>
-        <div class="unitPrice">
-            <span class="originalPrice">70.000đ</span>
-            <span class="discountPrice">47.000đ</span>
-        </div>
-        <div class="quantity">
-            <button class="decreaseButton" aria-label="decrease">-</button>
-            <input type="text" class="inputQuantity" value="1">
-            <button class="increaseButton" aria-label="increase">+</button>
-        </div>
-        <div class="amountUnit">
-            <span class="amountUnitDiscount">47.000đ</span>
-        </div>
-        <div class="action">
-            <button class="delete">Xóa</button>
-        </div>
-    </div>
 
-    <div class="sectionThree">
-        <div class="product">
-            <div class="selectAll">
-                <input type="checkbox" id="inputCheckboxAllThree">
-                <label for="inputCheckboxAllThree">Chọn tất cả(4)</label>
+        {% for item in items %}
+            <div class="sectionTwo">
+                <div class="product">
+                    <div class="select">
+                        <input type="checkbox" id="inputCheckbox{{ forloop.counter }}" name="selectProduct[]" value="{{ item.itemID }}" onclick="toggleCheckboxAll()">
+                    </div>
+                    <div class="imageNameProduct">
+                        <a class="imageProduct" href="#">
+                            <img src="{{ item.productImage }}" alt="Ảnh sản phẩm">
+                        </a>
+                        <a class="nameProduct" title="{{ item.productName }}" href="#">{{ item.productName }}</a>
+                    </div>
+                    <div class="productDetails">
+                        <span class="sizeColor">Size: {{ item.sizeName }}</span>
+                    </div>
+                </div>
+
+                <div class="unitPrice">
+                    <span class="originalPrice">{{ item.price }}đ</span>
+                    <span class="discountPrice">{{ item.priceAfterDiscount }}đ</span>
+                </div>
+                <div class="quantity">
+                    <button type="button" class="decreaseButton" aria-label="Giảm">-</button>
+                    <input type="number" class="inputQuantity" name="quantity{{ forloop.counter }}" value="{{ item.quantity }}" min="1">
+                    <button type="button" class="increaseButton" aria-label="Tăng">+</button>
+                </div>
+                <div class="amountUnit">
+                    <span id="totalPrice{{ forloop.counter }}" class="amountUnitDiscount">{{ item.totalPrice }}đ</span>
+                </div>
+                <div class="action">
+                    <button type="submit" class="delete" name="deleteProduct" value="{{ item.itemID }}">Delete</button>
+                </div>
+
+                <input type="hidden" name="itemID{{ forloop.counter }}" value="{{ item.itemID }}">
+                {% comment %} <input type="hidden" name="quantity{{ forloop.counter }}" value="{{ item.quantity }}"> {% endcomment %}
+            </div>
+        {% endfor %}
+
+        <div class="sectionThree">
+            <div class="product">
+                <div class="selectAll">
+                    <input type="checkbox" id="inputCheckboxAllThree" name="selectAllThree" onclick="toggleCheckboxes(this)">
+                    <label for="inputCheckboxAllThree">Select All ({{ items|length }})</label>
+                </div>
+            </div>
+            <div class="deleteAllContainer">
+                <button type="submit" class="deleteAll" name="deleteAll">Delete All</button>
+            </div>
+            <div class="purchase">
+                <div class="total">Total (0 items):</div>
+                <div class="totalAmount">0đ</div>
+                <input type="hidden" id="hiddenTotalAmount" name="hiddenTotalAmount" value="0">
+                <button type="submit" class="buy" name="buyAll" onclick="return validateSelectedItems()">Buy</button>
             </div>
         </div>
-        <div class="deleteAllContainer">
-            <button class="deleteAll">
-                <span class="textDelete">Xóa</span>
-            </button>
-        </div>
-        <div class="purchase">
-            <div class="total">Tổng thanh toán (0 sản phẩm):</div>
-            <div class="totalAmount">0đ</div>
-            <button class="buy">
-                <span class="textBuyProduct">Mua hàng</span>
-            </button>
-        </div>
-    </div>
+    </form>
+
+    <script>
+        const quantityInputs = document.querySelectorAll('.inputQuantity');
+        const decreaseButtons = document.querySelectorAll('.decreaseButton');
+        const increaseButtons = document.querySelectorAll('.increaseButton');
+        const hiddenTotalAmountInput = document.getElementById('hiddenTotalAmount');
+
+        decreaseButtons.forEach((button, index) => {
+            button.addEventListener('click', function() {
+                changeQuantity(index, -1);
+            });
+        });
+
+        increaseButtons.forEach((button, index) => {
+            button.addEventListener('click', function() {
+                changeQuantity(index, 1);
+            });
+        });
+
+        function changeQuantity(index, change) {
+            const input = document.querySelectorAll('.inputQuantity')[index];
+            let value = parseInt(input.value);
+            value += change;
+
+            if (value < 1) {
+                value = 1;
+            }
+
+            input.value = value;
+            updateAmountUnit(index, value);
+        }
+
+        quantityInputs.forEach((input, index) => {
+            input.addEventListener('input', function() {
+                let value = parseInt(input.value);
+        
+                if (value < 1 || isNaN(value)) {
+                    value = 1;
+                    input.value = 1;
+                }
+        
+                updateAmountUnit(index, value);
+            });
+        });
+
+        function updateAmountUnit(index, quantity) {
+            const price = parseFloat(document.querySelectorAll('.discountPrice')[index].textContent.replace('đ', '').replace(/\./g, '').trim());
+            const totalPriceElement = document.getElementById(`totalPrice${index + 1}`);
+            const newTotalPrice = price * quantity;
+
+            totalPriceElement.textContent = `${newTotalPrice}đ`.replace(/\./g, '');
+            updateTotalAmount();
+        }
+
+        function updateTotalAmount() {
+            let totalAmount = 0;
+            let totalCount = 0;
+
+            document.querySelectorAll('input[name="selectProduct[]"]').forEach((checkbox, index) => {
+                if (checkbox.checked) {
+                    const priceElement = document.getElementById(`totalPrice${index + 1}`);
+                    const price = parseFloat(priceElement.textContent.replace('đ', '').replace(/\./g, '').trim());
+                    totalAmount += price;
+                    totalCount++;
+                }
+            });
+
+            document.querySelector('.totalAmount').textContent = `${totalAmount}đ`.replace(/\./g, '');
+            document.querySelector('.total').textContent = `Total (${totalCount} items):`;
+            hiddenTotalAmountInput.value = totalAmount;
+        }
+
+        function toggleCheckboxes(master) {
+            const checkboxes = document.querySelectorAll('input[name="selectProduct[]"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = master.checked;
+            });
+            updateTotalAmount();
+        }
+
+        function toggleCheckboxAll() {
+            const checkboxes = document.querySelectorAll('input[name="selectProduct[]"]');
+            const allCheckbox = document.getElementById('inputCheckboxAll');
+            const allCheckboxThree = document.getElementById('inputCheckboxAllThree');
+
+            const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+            allCheckbox.checked = allChecked;
+            allCheckboxThree.checked = allChecked;
+
+            updateTotalAmount();
+        }
+
+        function validateSelectedItems() {
+            const checkboxes = document.querySelectorAll('input[name="selectProduct[]"]');
+            const selectedItems = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+
+            if (selectedItems.length === 0) {
+                alert("You have not chosen any items");
+                return false;
+            }
+
+            return true;
+        }
+
+        window.onload = function() {
+            updateTotalAmount();
+        };
+    </script>
 </body>
 </html>
