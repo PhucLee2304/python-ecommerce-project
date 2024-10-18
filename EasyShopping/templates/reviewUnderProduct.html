@@ -137,7 +137,7 @@
             <div class="starRating">
                 <span>
                     {% for i in starRange %}
-                        {% if i <= averageRating|floatformat:1 %}
+                        {% if i <= averageRating|floatformat:0 %}
                           ★
                         {% else %}
                           ☆
@@ -156,26 +156,26 @@
             <button class="filter-btn">1 Sao ({{ ratingCount.1star }})</button>
         </div>        
 
-        {% for review in customerReviews %}
+        {% for customerReview in customerReviews %}
             <div class="review">
                 <div class="reviewer">
-                    <img src="{{ review.image }}" alt="User Avatar" class="avatar">
-                    <span class="reviewer-name">{{ review.name }}</span>
+                    <img src="{{ customerReview.image }}" alt="User Avatar" class="avatar">
+                    <span class="reviewer-name">{{ customerReview.name }}</span>
                 </div>
                 <div class="review-details">
                     <div class="review-info">
                         <span class="stars">
                             {% for i in starRange %}
-                                {% if i <= review.rating %}
+                                {% if i <= customerReview.rating %}
                                     ★
                                 {% else %}
                                     ☆
                                 {% endif %}
                             {% endfor %}
                         </span>
-                        <span class="date">{{ review.reviewDate }}</span>
+                        <span class="date">{{ customerReview.reviewDate }}</span>
                     </div>
-                    <div class="review-text">{{ review.comment }}</div>
+                    <div class="review-text">{{ customerReview.comment }}</div>
                 </div>
             </div>
         {% empty %}
