@@ -5,6 +5,9 @@ class Category(models.Model):
     categoryID = models.AutoField(primary_key=True)
     categoryName = models.CharField(max_length=255, null=False)
 
+    def __str__(self):
+        return self.categoryName
+    
     class Meta:
         db_table = 'category'
 
@@ -18,6 +21,12 @@ class Product(models.Model):
     shippingFee = models.DecimalField(max_digits=6, decimal_places=0, default=0) 
     productImage = models.ImageField(upload_to='products/', null=False, blank=False, default='static/images/userImageDefault.png')
 
+    def getNewPrice(self):
+        return self.price * (1 - self.discount)
+    
+    def __str__(self):
+        return self.productName
+    
     class Meta:
         db_table = 'product'
 
