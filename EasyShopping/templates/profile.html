@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{customer.full_name}}</title>
+    <title>{{user.full_name}}</title>
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -17,7 +17,7 @@
                 <div class="content">
                     <div class="iconName">
                         <i class="fas fa-user-circle icon"></i>
-                        <div class="name">{{customer.user.last_name}}</div>
+                        <div class="name">{{user.last_name}}</div>
                     </div>
                     <div class="iconOrders">
                         <i class="fas fa-shopping-basket icon"></i>
@@ -49,7 +49,7 @@
                             <div class="imageEdit">
                                 <div class="innerWrap">
                                     <div class="image">
-                                        <img id="previewImage" src="{{customer.userImage.url}}" alt="Ảnh đại diện" class="iconImage">
+                                        <img id="previewImage" src="{{user.userImage.url}}" alt="Ảnh đại diện" class="iconImage">
                                         <input type="file" accept=".jpg, .jpeg, .png" id="imageInput" name="imageInput" style="display: none;">
                                         <button type="button" class="selectImage">
                                             <span>Choose file</span>
@@ -65,7 +65,7 @@
                                             <label>Full Name</label>
                                         </td>
                                         <td>
-                                            <input type="text" name="full_name" placeholder="Full Name" value="{% if customer.full_name != ' ' %}{{ customer.full_name }}{% endif %}">
+                                            <input type="text" name="full_name" placeholder="Full Name" value="{% if user.full_name != ' ' %}{{ user.full_name }}{% endif %}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -73,7 +73,7 @@
                                             <label>Email</label>
                                         </td>
                                         <td>
-                                            <input type="text" name="email" placeholder="Email" value="{{customer.user.email}}">
+                                            <input type="text" name="email" placeholder="Email" value="{{user.email}}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -81,7 +81,7 @@
                                             <label>Phone Number</label>
                                         </td>
                                         <td>
-                                            <input type="text" name="phone" placeholder="Phone Number" value="{% if customer.phone %}{{ customer.phone }}{% endif %}">
+                                            <input type="text" name="phone" placeholder="Phone Number" value="{% if user.phone %}{{ user.phone }}{% endif %}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -91,11 +91,11 @@
                                         <td>
                                             <div class="genderTick">
                                                 <div class="tick">
-                                                    <input type="radio" name="gender" value="Male" id="male" {% if customer.gender == 'Male' %}checked{% endif %}>
+                                                    <input type="radio" name="gender" value="Male" id="male" {% if user.gender == 'Male' %}checked{% endif %}>
                                                     <label for="male">Male</label>
                                                 </div>
                                                 <div class="tick">
-                                                    <input type="radio" name="gender" value="Female" id="female" {% if customer.gender == 'Female' %}checked{% endif %}>
+                                                    <input type="radio" name="gender" value="Female" id="female" {% if user.gender == 'Female' %}checked{% endif %}>
                                                     <label for="female">Female</label>
                                                 </div>
                                             </div>
@@ -107,9 +107,9 @@
                                         </td>
                                         <td>
                                             <div class="dateInputs">
-                                                <input class="dateOfBirth" type="text" name="day" placeholder="Day" value="{{customer.dateOfBirth.day}}">
-                                                <input class="dateOfBirth" type="text" name="month" placeholder="Month" value="{{customer.dateOfBirth.month}}">
-                                                <input class="dateOfBirth" type="text" name="year" placeholder="Year" value="{{customer.dateOfBirth.year}}">
+                                                <input class="dateOfBirth" type="text" name="day" placeholder="Day" value="{{user.dateOfBirth.day}}">
+                                                <input class="dateOfBirth" type="text" name="month" placeholder="Month" value="{{user.dateOfBirth.month}}">
+                                                <input class="dateOfBirth" type="text" name="year" placeholder="Year" value="{{user.dateOfBirth.year}}">
                                             </div>
                                         </td>
                                     </tr>
@@ -118,7 +118,7 @@
                                             <label>Address</label>
                                         </td>
                                         <td>
-                                            <input type="text" name="address" placeholder="Adress" value="{% if customer.address %}{{ customer.address }}{% endif %}">
+                                            <input type="text" name="address" placeholder="Adress" value="{% if user.address %}{{ user.address }}{% endif %}">
                                         </td>
                                     </tr>
                                 </table>
