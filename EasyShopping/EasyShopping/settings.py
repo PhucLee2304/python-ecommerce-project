@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'cart',
     'history',
     'home',
-    # 'productDetail',
+    'productDetail',
     'purchase',
     'review',
     'core',
