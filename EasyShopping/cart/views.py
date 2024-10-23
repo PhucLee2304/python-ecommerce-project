@@ -86,6 +86,6 @@ def cartActions(request):
  
     return redirect('cartShow')
 
-# @login_required(login_url='login')
-# def purchase(request):
-#     return render(request, 'purchase.html')
+@login_required(login_url='login')
+def purchase(request):
+    return render(request, 'purchase.html')

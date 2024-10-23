@@ -20,3 +20,4 @@ class Order(models.Model):
     class Meta:
         unique_together = (('customer', 'item', 'orderDate'),)
         db_table = 'order'
+    
