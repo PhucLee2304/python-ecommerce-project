@@ -14,12 +14,10 @@
                             <span>${{product.getNewPrice}}</span>
                         </div>
                         <p class="lead">{{product.description}}</p>
-                        
-                        <form action="" method="post">
+                        <form action="{% url 'productDetail:cart' %}" method="post">
                             <div class="row mb-3">
                                 <div class="col-sm-2">
-                                    <input name="item_id" class="form-control text-center me-3" id="itemId" type="num" value="1" style="max-width: 3rem; display: none" />
-                                    <input name="quantity" class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
+                                    <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
                                 </div>
                                 <div class="col-sm-3">
                                     
@@ -50,6 +48,7 @@
                             </div>
                             
                         </form>
+                        
                     </div>
                 </div>
             </div>
@@ -162,41 +161,85 @@
         </section>
         
         <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                // Add event listener for the "Add to Cart" button
-                document.getElementById("addToCartButton").addEventListener("click", function(e) {
-                    e.preventDefault();  // Prevent the form from submitting in the traditional way
-                    const quantity = document.getElementById("inputQuantity").value;
-                    const size = document.querySelector("select.form-select").value;
-                    const item_id = document.getElementById("itemId").value;
-                    // Prepare data to send via POST
-                    const formData = new FormData();
-                    formData.append('quantity', quantity);
-                    formData.append('size', size);
-                    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');  // Ensure CSRF token is included
-                    formData.append('item_id', item_id);  // Append item_id
-
-                    console.log(item_id)
-                    console.log(quantity)
-                    console.log(size)
-                    // Send the data using Fetch API
-                    fetch("http://127.0.0.1:8000/api/cart-item/", {
-                        method: "POST",
-                        body: formData
-                    }).then(response => response.json())
-                      .then(data => {
-                        console.log(data);
-                        if (data) {
-                            alert('Product added to cart!');
-                        } else {
-                            alert('There was an issue adding the product to the cart.');
-                        }
-                    }).catch(error => {
-                        console.error('Error:', error);
-                    });
-                });
+            // JavaScript to handle the form submission
+            document.getElementById("addToCartButton").addEventListener("click", function() {
+                const form = document.getElementById("addToCartForm");
+                const quantity = document.getElementById("quantity").value;
+                const url = form.getAttribute("data-url");  // Fetch the URL from the form's data attribute
+                
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',  // CSRF token for security
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ quantity: quantity })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the cart details without reloading
+                        document.getElementById("cartItemCount").textContent = data.cartItemCount;
+                        document.getElementById("cartTotalAmount").textContent = data.cartTotalAmount;
+                        alert(data.message);
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
             });
         </script>
         
+        {% comment %} <div id="productDetail">
+            <h1 id="productName"></h1>
+            <p id="productDescription"></p>
+            <p>Price: <span id="productPrice"></span></p>
+            <img id="productImage" src="" alt="Product Image" width="200" />
+            
+            <h3>Available Sizes</h3>
+            <ul id="productSizes"></ul>
         
+            <h3>Reviews</h3>
+            <ul id="productReviews"></ul>
+        </div>
+
+        <script>
+            $(document).ready(function(){
+                const productID = 1;  // Replace with the actual product ID you want to fetch
+        
+                // Perform AJAX request to get product detail from the API
+                $.ajax({
+                    url: `/api/product/${productID}/`,  // Your API endpoint
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        // Data successfully retrieved from the API
+                        console.log(data);  // Log the data to inspect the structure
+        
+                        // Example: Display product information in HTML
+                        $('#productName').text(data.productName);
+                        $('#productDescription').text(data.description);
+                        $('#productPrice').text(data.price);
+                        $('#productImage').attr('src', data.productImage);
+        
+                        // Show sizes and stock quantities
+                        let sizes = '';
+                        data.items.forEach(function(item) {
+                            sizes += `<li>${item.size}: ${item.stockQuantity} in stock</li>`;
+                        });
+                        $('#productSizes').html(sizes);
+        
+                        // Show reviews
+                        let reviews = '';
+                        data.reviews.forEach(function(review) {
+                            reviews += `<li>${review.user}: ${review.rating} stars - ${review.comment}</li>`;
+                        });
+                        $('#productReviews').html(reviews);
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);  // Handle any errors
+                    }
+                });
+            });
+        </script> {% endcomment %}
 {% endblock content %}

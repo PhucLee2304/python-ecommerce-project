@@ -1,0 +1,48 @@
+{% extends "layout/myLayout.html" %}
+{% load static %}
+{% block content %}
+<form id="addToCartForm" data-url="{% url 'add_to_cart' item.productID %}" method="POST">
+    {% csrf_token %}
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" min="1" value="1">
+    
+    <button type="button" id="addToCartButton">Add to Cart</button> <!-- Notice 'button' type -->
+</form>
+
+<!-- Optionally, display the cart details somewhere on the page -->
+<div id="cartDetails">
+    <p>Items in Cart: <span id="cartItemCount">0</span></p>
+    <p>Total Amount: <span id="cartTotalAmount">0</span></p>
+</div>
+
+<script>
+    // JavaScript to handle the form submission
+    document.getElementById("addToCartButton").addEventListener("click", function() {
+        const form = document.getElementById("addToCartForm");
+        const quantity = document.getElementById("quantity").value;
+        const url = form.getAttribute("data-url");  // Fetch the URL from the form's data attribute
+        
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',  // CSRF token for security
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ quantity: quantity })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the cart details without reloading
+                document.getElementById("cartItemCount").textContent = data.cartItemCount;
+                document.getElementById("cartTotalAmount").textContent = data.cartTotalAmount;
+                alert(data.message);
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+
+{% endblock content %}
