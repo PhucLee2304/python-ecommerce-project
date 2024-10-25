@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/history.css' %}"> <!-- Liên kết đến file CSS -->
+</head>
+<body>
+
+<div class="container">
+    <h1>Order History</h1>
+
+    {% if orders %}
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>STT</th> <!-- Cột Thứ tự -->
+                    <th>Image</th> <!-- Cột hình ảnh -->
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ forloop.counter }}</td> <!-- Hiển thị số thứ tự -->
+                    <td>
+                        <div class="imageNameProduct">
+                            <a class="imageProduct" href="#">
+                                <img src="{{ order.item.product.productImage.url }}" alt="Ảnh sản phẩm" class="product-image">
+                            </a>
+                            <a class="nameProduct" title="{{ order.item.product.productName }}" href="{% url 'productDetail:product-detail' order.item.product.productID %}">
+                                hg
+                            </a>
+                        </div>
+                    </td>
+                    <td>{{ order.item.product.productName }}</td>       
+                    <td>{{ order.itemQuantity }}</td>
+                    <td>{{ order.orderDate }}</td>  
+                    <td class="status {% if order.orderStatus == 'Pending' %}pending{% elif order.orderStatus == 'Canceled' %}canceled{% else %}completed{% endif %}">
+                        {{ order.orderStatus }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>            
+        </table>
+    </div>
+    {% else %}
+    <p class="no-orders">No orders found.</p>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
