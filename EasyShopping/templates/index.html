@@ -1,0 +1,148 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Shopping</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+<body>
+
+    <div class="header">
+        <img src="{% static 'images/shopping-online.png' %}" alt="Logo">
+        <h1>Easy Shopping</h1>
+
+        <div class="header-buttons">
+            <button class="login-btn">Login</button>
+            <button class="signup-btn">Sign up</button>
+        </div>
+    </div>
+
+    <div class="search-bar">
+        <input type="text" placeholder="Search for products">
+        <button>Search</button>
+    </div>
+
+    <div class="category-title">
+        <h2>Product Categories</h2>
+    </div>
+
+    <div class="categories">
+        <div class="category" onclick="window.location.href='category_tees.html'">
+            <img src="{% static 'images/tee.png' %}" alt="Tees" class="category-img">
+            <h3>Tees</h3>
+        </div>
+        <div class="category" onclick="window.location.href='category_pants.html'">
+            <img src="{% static 'images/pants.png' %}" alt="Pants & Jeans" class="category-img">
+            <h3>Pants & Jeans</h3>
+        </div>
+        <div class="category" onclick="window.location.href='category_dress.html'">
+            <img src="{% static 'images/dress.png' %}" alt="Dress" class="category-img">
+            <h3>Dress</h3>
+        </div>
+        <div class="category" onclick="window.location.href='category_shoes.html'">
+            <img src="{% static 'images/shoes.png' %}" alt="Shoes" class="category-img">
+            <h3>Shoes</h3>
+        </div>
+        <div class="category" onclick="window.location.href='category_bags.html'">
+            <img src="{% static 'images/handbag.png' %}" alt="Bags" class="category-img">
+            <h3>Bags</h3>
+        </div>
+    </div>
+    
+    <div class="product-title">
+        <h2>Recommended for you</h2>
+    </div>
+
+    <section class="products">
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="https://m.media-amazon.com/images/I/71WkpiQE-4L._AC_UL1500_.jpg" alt="Túi Da">
+                <h3>Leather Bag</h3>
+                <p class="old-price"> 796,964 VND</p>
+                <p class="new-price"> Price: 677,419 VND</p>
+                <dis>Discount: 15%</dis>
+            </div>
+
+            <div class="product-card">
+                <img src="https://m.media-amazon.com/images/I/71k3tZx2mML._AC_UL1500_.jpg" alt="Giày Air Max">
+                <h3>Giày Air Max</h3>
+                <p class="old-price"> 723,688 VND</p>
+                <p class="new-price"> Price: 470,397 VND</p>
+                <dis>Discount: 35%</dis>
+            </div>
+
+            <div class="product-card">
+                <img src="https://m.media-amazon.com/images/I/61cXCZYYwvL._AC_UL480_FMwebp_QL65_.jpg" alt="Tên sản phẩm 3">
+                <h3>Stan Smith</h3>
+                <p class="old-price"> 556,600 VND</p>
+                <p class="new-price"> Price: 283,866 VND</p>
+                <dis>Discount: 49%</dis>
+            </div>
+
+            <div class="product-card">
+                <img src="https://m.media-amazon.com/images/I/61YemWmTjnS._AC_UL480_FMwebp_QL65_.jpg" alt="Tên sản phẩm 4">
+                <h3>Chuck Taylor</h3>
+                <p class="old-price"> 618,373 VND</p>
+                <p class="new-price"> Price: 432,861 VND</p>
+                <dis>Discount: 30%</dis>
+            </div>
+
+            <div class="product-card">
+                <img src="https://m.media-amazon.com/images/I/81oYVI732GL._AC_UL480_QL65_.jpg" alt="Tên sản phẩm 5">
+                <h3>Canvas bag</h3>
+                <p class="old-price"> 929,394 VND</p>
+                <p class="new-price"> Price: 501,873 VND</p>
+                <dis>Discount: 46%</dis>
+            </div>
+
+            <div class="product-card">
+                <img src="https://m.media-amazon.com/images/I/51rRFn9OjsL._AC_UL480_QL65_.jpg" alt="Tên sản phẩm 6">
+                <h3>Basic Tee</h3>
+                <p class="old-price"> 754,499 VND</p>
+                <p class="new-price"> Price: 475,334 VND</p>
+                <dis>Discount: 37%</p\dis>
+            </div>
+
+            <div class="product-card">
+                <img src="https://m.media-amazon.com/images/I/912fGzAnmaL._AC_UL480_FMwebp_QL65_.jpg" alt="Tên sản phẩm 7">
+                <h3>Dress Pants</h3>
+                <p class="old-price"> 557,789 VND</p>
+                <p class="new-price"> Price: 371,940 VND</p>
+                <dis>Discount: 43%</dis>
+            </div>
+
+            <div class="product-card">
+                <img src="https://m.media-amazon.com/images/I/61TIGGsLoVL._MCnd_AC_UL480_FMwebp_QL65_.jpg" alt="Tên sản phẩm 8">
+                <h3>Midi Dress</h3>
+                <p class="old-price"> 881,871 VND</p>
+                <p class="new-price"> Price: 826,650 VND</p>
+                <dis>Discount: 7%</dis>
+            </div>
+
+            <div class="product-card">
+                <img src="https://m.media-amazon.com/images/I/914je8Wm-BL._AC_UL480_FMwebp_QL65_.jpg" alt="Tên sản phẩm 9">
+                <h3>Wide Leg Pants</h3>
+                <p class="old-price"> 949,240 VND</p>
+                <p class="new-price"> Price: 930,255 VND</p>
+                <dis>Discount: 2%</dis>
+            </div>
+
+            <div class="product-card">
+                <img src="https://m.media-amazon.com/images/I/716hWqFfY1L._AC_UL480_QL65_.jpg" alt="Tên sản phẩm 10">
+                <h3>Oversized Tee</h3>
+                <p class="old-price"> 936,507 VND</p>
+                <p class="new-price"> Price: 655,555 VND</p>
+                <dis>Discount: 30%</dis>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Copyright © 2024 Shopping Website</p>
+    </footer>  
+    <script src="read_product.js"></script> 
+</body>
+</html>
