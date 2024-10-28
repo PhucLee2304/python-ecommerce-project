@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
-    <link rel="stylesheet" href="{% static "css/checkout.css" %}">
+    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
 </head>
 <body>
     <div class="recipient-info">
         <h3>Thông tin người nhận</h3>
-        <p>Tên người nhận: {{user.full_name}}</p>
-        <p>Địa chỉ nhận hàng: {{user.address}}</p>
-        <p>Số điện thoại: {{user.phone}}</p>
+        <p>Tên người nhận: {{ user.full_name }}</p>
+        <p>Địa chỉ nhận hàng: {{ user.address }}</p>
+        <p>Số điện thoại: {{ user.phone }}</p>
     </div>
     
     <div class="order-header">
@@ -31,21 +31,25 @@
                 <div class="product-info">
                     <div class="product-details">
                         <a class="product-image" href="#">
-                            <img src="{{order.item.product.productImage.url}}" alt="{{order.item.product.productName}}">
+                            <img src="{{ order.item.product.productImage.url }}" alt="{{ order.item.product.productName }}">
                         </a>
-                        <a class="product-name" title="{{order.item.product.productName}}" href="#">{{order.item.product.productName}}</a>
+                        <a class="product-name" title="{{ order.item.product.productName }}" href="#">{{ order.item.product.productName }}</a>
                     </div>
                 </div>
                 <div class="item-unit-price">
-                    <span class="discounted-price">{{order.item.product.getNewPrice()}}đ</span>
+                    <span class="discounted-price">{{ order.item.product.getNewPrice }}đ</span>
                 </div>
-                <div class="item-quantity">{{order.itemQuantity}}</div>
+                <div class="item-quantity">{{ order.itemQuantity }}</div>
                 <div class="item-total-amount">
-                    <span class="item-total" name="orderAmount">{{order.orderAmount}}đ</span>
+                    <span class="item-total">{{ order.orderAmount }}đ</span>
                 </div>
                 <div class="shipping-fee">
-                    <p name="shippingFee">Shipping Fee: {{order.item.product.shippingFee}}đ</p>
+                    <p>Shipping Fee: {{ order.item.product.shippingFee }}đ</p>
                 </div>
+                
+                <!-- Hidden fields for orderAmount and shippingFee -->
+                <input type="hidden" name="orderAmount" value="{{ order.orderAmount }}">
+                <input type="hidden" name="shippingFee" value="{{ order.item.product.shippingFee }}">
             </div>
         {% endfor %}
     
@@ -58,12 +62,24 @@
         </div>
     
         <div class="checkout-summary">
-            <div class="total-products">Total Payment ({{orders|length}} items):</div>
-            <div class="total-price" name="totalAmount">{{totalAmount}}đ</div>
+            <div class="total-products">Total Payment ({{ orders|length }} items):</div>
+            <div class="total-price">{{ totalAmount }}đ</div>
             <button class="checkout-button" type="submit">
                 <span>Payment</span>
             </button>
         </div>
     </form>
+
+    <script>
+        window.addEventListener("beforeunload", function (event) {
+            fetch("{% url 'payment' %}", {
+                method: "DELETE",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                }
+            });
+        });
+    </script>
+    
 </body>
 </html>
