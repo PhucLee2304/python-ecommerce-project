@@ -25,12 +25,6 @@ def productDetailView(request, pid):
     return render(request, 'productDetail/index.html', context)
 
 
-
-
-    
-# views.py
-
-
 class CartViewSet(viewsets.ModelViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
@@ -48,10 +42,9 @@ class CartViewSet(viewsets.ModelViewSet):
         cart, created = Cart.objects.get_or_create(user=user)  # Ensure the user has a cart
         item_id = request.data.get('item_id')
         quantity = request.data.get('quantity', 1)
-        print(item_id)
 
         try:
-            item = Item.objects.get(pk=item_id)
+            item = Item.objects.get(itemID=item_id)
         except Item.DoesNotExist:
             return Response({"error": "Item does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
