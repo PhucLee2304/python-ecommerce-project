@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from core.models import Cart, CartItem
+from core.models import Cart, CartItem, Item, Order
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -26,10 +26,10 @@ def cartShow(request):
             'productImage': product.productImage.url,
             'sizeName': size.sizeName,
             'price': product.price,
-            'priceAfterDiscount': round(product.getNewPrice()),
+            'priceAfterDiscount': product.getNewPrice(),
             'discount': product.discount,
             'quantity': cartItem.quantity,
-            'totalPrice': cartItem.quantity * round(product.getNewPrice()),
+            'totalPrice': cartItem.quantity * product.getNewPrice(),
         }
         items.append(item)
         totalAmount += item['totalPrice']
@@ -56,27 +56,65 @@ def deleteAllFromCart(request, cart):
     CartItem.objects.filter(cart=cart).delete()
     return redirect('cartShow')
 
-def processPurchase(request, cart):
+def getUserInformation(request):
+    user = request.user
+    full_name = user.full_name()
+    address = user.address
+    phone = user.phone
+
+    if full_name == ' ' or not address or not phone:
+        messages.info(request, 'Enter your information')
+        return None
+    
+    return {
+        'full_name': full_name,
+        'address': address,
+        'phone': phone,
+    }
+
+def addToPurchase(request, cart):
+    user = getUserInformation(request)
+    if user is None:
+        return redirect('profile')
+    
     selectedItems = request.POST.getlist('selectProduct[]')
 
     if not selectedItems:
         messages.info(request, 'No products selected for purchase')
         return redirect('cartShow') 
 
-    items = [] 
+    orders = []
+    outOfStockItems = []
+    totalAmount = 0
     for i, itemID in enumerate(selectedItems, 1):
         quantity = request.POST.get(f'quantity{i}')
         if quantity:
-            items.append({
-                'itemID': itemID,
-                'quantity': int(quantity),
-            })
+            item = Item.objects.get(itemID=itemID)
+            availableStock = item.stockQuantity
 
-    if items:
+            if availableStock >= int(quantity):
+                order = Order.objects.create(
+                    user = user,
+                    item = item,
+                    orderAmount = int(quantity) * item.product.getNewPrice(),
+                    itemQuantity = int(quantity),
+                )
+                orders.append(order)
+                totalAmount += order.orderAmount + order.item.product.shippingFee
+            else: 
+                outOfStockItems.append(f'{item.product.productName} (Size: {item.size.sizeName})')
+
+    if outOfStockItems:
+        messages.info(request, f'The following items are out of stock: {'\n'.join(outOfStockItems)}')
+        return redirect('cartShow')
+
+    if orders:
         context = {
-            'items': items,
+            'user': user,
+            'orders': orders,
+            'totalAmount': totalAmount,
         }
-        return render(request, 'purchase.html', context)
+        return render(request, 'checkout.html', context)
 
     return redirect('cartShow')
     
@@ -97,10 +135,6 @@ def cartActions(request):
             return deleteAllFromCart(request, cart)
         
         elif 'buyAll' in request.POST:
-            return processPurchase(request, cart)
+            return addToPurchase(request, cart)
  
     return redirect('cartShow')
-
-@login_required(login_url='login')
-def purchase(request):
-    return render(request, 'purchase.html')

@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="{% static "css/checkout.css" %}">
+</head>
+<body>
+    <div class="recipient-info">
+        <h3>Thông tin người nhận</h3>
+        <p>Tên người nhận: {{user.full_name}}</p>
+        <p>Địa chỉ nhận hàng: {{user.address}}</p>
+        <p>Số điện thoại: {{user.phone}}</p>
+    </div>
+    
+    <div class="order-header">
+        <div class="header-product">
+            <label for="inputCheckboxAll">Sản phẩm</label>
+        </div>
+        <div class="header-unit-price">Đơn giá</div>
+        <div class="header-quantity">Số lượng</div>
+        <div class="header-amount">Số tiền</div>
+    </div>
+    
+    <form action="" method="POST">
+        {% csrf_token %}
+        {% for order in orders %}
+            <div class="order-item">
+                <div class="product-info">
+                    <div class="product-details">
+                        <a class="product-image" href="#">
+                            <img src="{{order.item.product.productImage.url}}" alt="{{order.item.product.productName}}">
+                        </a>
+                        <a class="product-name" title="{{order.item.product.productName}}" href="#">{{order.item.product.productName}}</a>
+                    </div>
+                </div>
+                <div class="item-unit-price">
+                    <span class="discounted-price">{{order.item.product.getNewPrice()}}đ</span>
+                </div>
+                <div class="item-quantity">{{order.itemQuantity}}</div>
+                <div class="item-total-amount">
+                    <span class="item-total" name="orderAmount">{{order.orderAmount}}đ</span>
+                </div>
+                <div class="shipping-fee">
+                    <p name="shippingFee">Shipping Fee: {{order.item.product.shippingFee}}đ</p>
+                </div>
+            </div>
+        {% endfor %}
+    
+        <div class="payment-options">
+            <p>Payment Method:</p>
+            <input type="radio" name="paymentMethod" id="bankTransfer" value="bankTransfer">
+            <label for="bankTransfer">Bank Transfer</label><br>
+            <input type="radio" name="paymentMethod" id="cashOnDelivery" value="cashOnDelivery">
+            <label for="cashOnDelivery">Cash on Delivery</label>
+        </div>
+    
+        <div class="checkout-summary">
+            <div class="total-products">Total Payment ({{orders|length}} items):</div>
+            <div class="total-price" name="totalAmount">{{totalAmount}}đ</div>
+            <button class="checkout-button" type="submit">
+                <span>Payment</span>
+            </button>
+        </div>
+    </form>
+</body>
+</html>

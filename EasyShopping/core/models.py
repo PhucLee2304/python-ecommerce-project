@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.html import mark_safe
 from django.contrib.auth.models import AbstractUser
 from datetime import date
+from django.utils import timezone
 
 class User(AbstractUser):
     phone = models.CharField(max_length=15, null=True, blank=True)
@@ -20,7 +21,7 @@ class User(AbstractUser):
         db_table = 'customer'
     
     def full_name(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name}".strip()
     
     def __str__(self):
         return self.username
@@ -54,6 +55,7 @@ class Product(models.Model):
         ("published", "Published"),
     )
     productStatus = models.CharField(choices=productStatusChoices, max_length=10, default="Published") 
+    
     featured = models.BooleanField(default=False)
     createDate = models.DateTimeField(auto_now_add=True)
     updateDate = models.DateTimeField(null = True, blank = True) 
@@ -63,7 +65,7 @@ class Product(models.Model):
         db_table = 'product'
 
     def getNewPrice(self):
-        return self.price * (1 - self.discount)
+        return int(self.price * (1 - self.discount))
     
     def __str__(self):
         return self.productName
@@ -131,14 +133,24 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)  
     orderDate = models.DateTimeField(auto_now_add=True)
-    orderAmount = models.DecimalField(max_digits=10, decimal_places=2, default=10)
+    orderAmount = models.DecimalField(max_digits=10, decimal_places=0, default=10)
     itemQuantity = models.PositiveIntegerField(default=1)  
+
     statusChoices = (
         ('Processing', 'Processing'),
         ('Completed', 'Completed'),
         ('Cancelled', 'Cancelled'),
     )
     orderStatus = models.CharField(max_length=10, choices=statusChoices, default='Processing') 
+
+    methodChoices = (
+        ('None', 'None'),
+        ('Bank Transfer', 'Bank Transfer'),
+        ('Cash on Delivery', 'Cash on Delivery')
+    )
+    paymentMethod = models.CharField(max_length=20, choices=methodChoices, default='None')
+    
+    paymentDate = models.DateTimeField(default=timezone.now)
 
     class Meta:
         constraints = [
