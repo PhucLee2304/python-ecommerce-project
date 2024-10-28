@@ -14,37 +14,41 @@
                             <span>${{product.getNewPrice}}</span>
                         </div>
                         <p class="lead">{{product.description}}</p>
-                        <div class="row mb-3">
-                            <div class="col-sm-2">
-                                <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
-                            </div>
-                            <div class="col-sm-3">
+                        
+                        <form action="" method="post">
+                            <div class="row mb-3">
+                                <div class="col-sm-2">
+                                    <input name="quantity" class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
+                                </div>
+                                <div class="col-sm-3">
+                                    
+                                    <select class="form-select" aria-label="Default select example">
+                                        {% for item in product.items.all %}
+                                            <option value="{{item.itemID}}">{{item.size}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                                 
-                                <select class="form-select" aria-label="Default select example">
-                                    {% for item in product.items.all %}
-                                        <option value="{{item.size}}">{{item.size}}</option>
-                                    {% endfor %}
-                                </select>
+                                
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <button id="addToCartButton" class="btn btn-outline-dark flex-shrink-0" type="button">
+                                        <i class="bi-cart-fill me-1"></i>
+                                        Add to cart
+                                    </button>
+                                </div>
+                                
+                                <div class="col-sm-3">
+                                    <button id="buyButton" class="btn btn-outline-dark flex-shrink-0" type="button">
+                                        <i class="bi-cart-fill me-1"></i>
+                                        Buy Now
+                                    </button>
+                                </div>
+    
                             </div>
                             
-                            
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <button id="addToCartButton" class="btn btn-outline-dark flex-shrink-0" type="button">
-                                    <i class="bi-cart-fill me-1"></i>
-                                    Add to cart
-                                </button>
-                            </div>
-                            
-                            <div class="col-sm-3">
-                                <button id="buyButton" class="btn btn-outline-dark flex-shrink-0" type="button">
-                                    <i class="bi-cart-fill me-1"></i>
-                                    Buy Now
-                                </button>
-                            </div>
-
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -155,57 +159,43 @@
                 </div>
             </div>
         </section>
-
-        {% comment %} <div id="productDetail">
-            <h1 id="productName"></h1>
-            <p id="productDescription"></p>
-            <p>Price: <span id="productPrice"></span></p>
-            <img id="productImage" src="" alt="Product Image" width="200" />
-            
-            <h3>Available Sizes</h3>
-            <ul id="productSizes"></ul>
         
-            <h3>Reviews</h3>
-            <ul id="productReviews"></ul>
-        </div>
-
         <script>
-            $(document).ready(function(){
-                const productID = 1;  // Replace with the actual product ID you want to fetch
-        
-                // Perform AJAX request to get product detail from the API
-                $.ajax({
-                    url: `/api/product/${productID}/`,  // Your API endpoint
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(data) {
-                        // Data successfully retrieved from the API
-                        console.log(data);  // Log the data to inspect the structure
-        
-                        // Example: Display product information in HTML
-                        $('#productName').text(data.productName);
-                        $('#productDescription').text(data.description);
-                        $('#productPrice').text(data.price);
-                        $('#productImage').attr('src', data.productImage);
-        
-                        // Show sizes and stock quantities
-                        let sizes = '';
-                        data.items.forEach(function(item) {
-                            sizes += `<li>${item.size}: ${item.stockQuantity} in stock</li>`;
-                        });
-                        $('#productSizes').html(sizes);
-        
-                        // Show reviews
-                        let reviews = '';
-                        data.reviews.forEach(function(review) {
-                            reviews += `<li>${review.user}: ${review.rating} stars - ${review.comment}</li>`;
-                        });
-                        $('#productReviews').html(reviews);
-                    },
-                    error: function(error) {
-                        console.log('Error:', error);  // Handle any errors
-                    }
+            document.addEventListener("DOMContentLoaded", function() {
+                // Add event listener for the "Add to Cart" button
+                document.getElementById("addToCartButton").addEventListener("click", function(e) {
+                    e.preventDefault();  // Prevent the form from submitting in the traditional way
+                    const quantity = document.getElementById("inputQuantity").value;
+                    const item_id = document.querySelector("select.form-select").value;
+                    {% comment %} const item_id = document.getElementById("itemId").value; {% endcomment %}
+                    // Prepare data to send via POST
+                    const formData = new FormData();
+                    formData.append('quantity', quantity);
+                    {% comment %} formData.append('size', size); {% endcomment %}
+                    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');  // Ensure CSRF token is included
+                    formData.append('item_id', item_id);  // Append item_id
+
+                    console.log(item_id)
+                    console.log(quantity)
+                    {% comment %} console.log(size) {% endcomment %}
+                    // Send the data using Fetch API
+                    fetch("http://127.0.0.1:8000/api/cart-item/", {
+                        method: "POST",
+                        body: formData
+                    }).then(response => response.json())
+                      .then(data => {
+                        console.log(data);
+                        if (data) {
+                            alert('Product added to cart!');
+                        } else {
+                            alert('There was an issue adding the product to the cart.');
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                    });
                 });
             });
-        </script> {% endcomment %}
+        </script>
+        
+        
 {% endblock content %}

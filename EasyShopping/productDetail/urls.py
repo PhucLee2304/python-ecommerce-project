@@ -10,13 +10,12 @@
 from rest_framework.routers import DefaultRouter
 from .views import *
 from django.urls import path, include
-
-app_name="productDetail"
-
+app_name = 'productDetail'
 router = DefaultRouter()
 router.register(r'products', ProductViewSet, basename='product')
+router.register(r'cart-item', CartViewSet, basename='cart-item')
 
 urlpatterns = [
     path('api/', include(router.urls)),  # Include all the routes for the ProductViewSet
-    path('<pid>', productDetailView, name="product-detail"),
+    path('products/<pid>/', productDetailView, name="product-detail"),
 ]
