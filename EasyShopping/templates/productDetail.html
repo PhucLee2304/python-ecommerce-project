@@ -18,14 +18,13 @@
                         <form action="" method="post">
                             <div class="row mb-3">
                                 <div class="col-sm-2">
-                                    <input name="item_id" class="form-control text-center me-3" id="itemId" type="num" value="1" style="max-width: 3rem; display: none" />
                                     <input name="quantity" class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
                                 </div>
                                 <div class="col-sm-3">
                                     
                                     <select class="form-select" aria-label="Default select example">
                                         {% for item in product.items.all %}
-                                            <option value="{{item.size}}">{{item.size}}</option>
+                                            <option value="{{item.itemID}}">{{item.size}}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -167,18 +166,18 @@
                 document.getElementById("addToCartButton").addEventListener("click", function(e) {
                     e.preventDefault();  // Prevent the form from submitting in the traditional way
                     const quantity = document.getElementById("inputQuantity").value;
-                    const size = document.querySelector("select.form-select").value;
-                    const item_id = document.getElementById("itemId").value;
+                    const item_id = document.querySelector("select.form-select").value;
+                    {% comment %} const item_id = document.getElementById("itemId").value; {% endcomment %}
                     // Prepare data to send via POST
                     const formData = new FormData();
                     formData.append('quantity', quantity);
-                    formData.append('size', size);
+                    {% comment %} formData.append('size', size); {% endcomment %}
                     formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');  // Ensure CSRF token is included
                     formData.append('item_id', item_id);  // Append item_id
 
                     console.log(item_id)
                     console.log(quantity)
-                    console.log(size)
+                    {% comment %} console.log(size) {% endcomment %}
                     // Send the data using Fetch API
                     fetch("http://127.0.0.1:8000/api/cart-item/", {
                         method: "POST",

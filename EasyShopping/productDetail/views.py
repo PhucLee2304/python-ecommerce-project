@@ -22,7 +22,7 @@ def productDetailView(request, pid):
     context = {
         "product" : product
     }
-    return render(request, 'productDetail/index.html', context)
+    return render(request, 'productDetail.html', context)
 
 
 class CartViewSet(viewsets.ModelViewSet):
