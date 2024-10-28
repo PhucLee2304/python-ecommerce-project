@@ -1,0 +1,19 @@
+{% load static %}
+<div class="header">
+    <img src="{% static 'images/shopping-online.png' %}" alt="Logo">
+    <h1>Easy Shopping</h1>
+
+    <div class="header-buttons">
+        <button class="login-btn">
+            <a href="{% url "login" %}">Login</a>
+        </button>
+        <button class="signup-btn">
+            <a href="{% url "register" %}">Sign up</a>
+        </button>
+    </div>
+</div>
+
+<div class="search-bar">
+    <input type="text" placeholder="Search for products">
+    <button>Search</button>
+</div>
