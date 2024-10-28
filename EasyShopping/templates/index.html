@@ -11,7 +11,7 @@
 <body>
 
     <div class="header">
-        <img src="{% static 'css/.css' %}" alt="Logo">
+        <img src="{% static 'images/shopping-online.png' %}" alt="Logo">
         <h1>Easy Shopping</h1>
 
         <div class="header-buttons">
@@ -31,23 +31,23 @@
 
     <div class="categories">
         <div class="category" onclick="window.location.href='category_tees.html'">
-            <img src="images/tee.png" alt="Tees" class="category-img">
+            <img src="{% static 'images/tee.png' %}" alt="Tees" class="category-img">
             <h3>Tees</h3>
         </div>
         <div class="category" onclick="window.location.href='category_pants.html'">
-            <img src="images/pants.png" alt="Pants & Jeans" class="category-img">
+            <img src="{% static 'images/pants.png' %}" alt="Pants & Jeans" class="category-img">
             <h3>Pants & Jeans</h3>
         </div>
         <div class="category" onclick="window.location.href='category_dress.html'">
-            <img src="images/dress.png" alt="Dress" class="category-img">
+            <img src="{% static 'images/dress.png' %}" alt="Dress" class="category-img">
             <h3>Dress</h3>
         </div>
         <div class="category" onclick="window.location.href='category_shoes.html'">
-            <img src="images/shoes.png" alt="Shoes" class="category-img">
+            <img src="{% static 'images/shoes.png' %}" alt="Shoes" class="category-img">
             <h3>Shoes</h3>
         </div>
         <div class="category" onclick="window.location.href='category_bags.html'">
-            <img src="images/handbag.png" alt="Bags" class="category-img">
+            <img src="{% static 'images/handbag.png' %}" alt="Bags" class="category-img">
             <h3>Bags</h3>
         </div>
     </div>
