@@ -191,6 +191,7 @@
                             alert('Product added to cart!');
                         } else {
                             alert('There was an issue adding the product to the cart.');
+                            window.location.href = 'http://127.0.0.1:8000/account/login/';
                         }
                     }).catch(error => {
                         console.error('Error:', error);
