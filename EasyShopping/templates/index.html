@@ -1,0 +1,67 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Shopping</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+<body>
+
+    {% include "components/header.html" %}
+
+    <div class="category-title">
+        <h2>Product Categories</h2>
+    </div>
+
+    <div class="categories">
+        <div class="category" onclick="window.location.href='category_tees.html'">
+            <img src="{% static 'images/tee.png' %}" alt="Tees" class="category-img">
+            <h3>Tees</h3>
+        </div>
+        <div class="category" onclick="window.location.href='category_pants.html'">
+            <img src="{% static 'images/pants.png' %}" alt="Pants & Jeans" class="category-img">
+            <h3>Pants & Jeans</h3>
+        </div>
+        <div class="category" onclick="window.location.href='category_dress.html'">
+            <img src="{% static 'images/dress.png' %}" alt="Dress" class="category-img">
+            <h3>Dress</h3>
+        </div>
+        <div class="category" onclick="window.location.href='category_shoes.html'">
+            <img src="{% static 'images/shoes.png' %}" alt="Shoes" class="category-img">
+            <h3>Shoes</h3>
+        </div>
+        <div class="category" onclick="window.location.href='category_bags.html'">
+            <img src="{% static 'images/handbag.png' %}" alt="Bags" class="category-img">
+            <h3>Bags</h3>
+        </div>
+    </div>
+    
+    <div class="product-title">
+        <h2>Recommended for you</h2>
+    </div>
+
+    <section class="products">
+        <div class="product-grid">
+            {% for product in products %}
+                <a href=" {% url 'product-detail' product.productID %}">
+                    <div class="product-card">
+                        <img src="{{product.productImage.url}}" alt="{{product.productName}}">
+                        <h3>{{product.productName}}</h3>
+                        <p class="old-price"> {{product.price}} VND</p>
+                        <p class="new-price"> Price: {{product.getNewPrice}} VND</p>
+                        <dis>Discount: {{product.discount}}%</dis>
+                    </div>
+                </a>
+                
+            {% endfor %}
+        </div>
+    </section>
+
+    {% include "components/footer.html" %}
+
+    <script src="read_product.js"></script> 
+</body>
+</html>

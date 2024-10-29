@@ -61,8 +61,8 @@ class ItemAdmin(admin.ModelAdmin):
 
 @admin.register(UserInterest)
 class UserInterestAdmin(admin.ModelAdmin):
-    list_display = ('user', 'product', 'timestamp')
-    search_fields = ('user__username', 'product__productName')
+    list_display = ('user', 'category', 'timestamp', 'numberOfView')
+    search_fields = ('user__username', 'category__categoryName')
     ordering = ('-timestamp',)
 
 @admin.register(Cart)

@@ -3,6 +3,7 @@ from django.utils.html import mark_safe
 from django.contrib.auth.models import AbstractUser
 from datetime import date
 from django.utils import timezone
+from decimal import Decimal
 
 class User(AbstractUser):
     phone = models.CharField(max_length=15, null=True, blank=True)
@@ -43,7 +44,7 @@ class Product(models.Model):
     productName = models.CharField(max_length=255, null=False, default='Product Name')
     description = models.TextField(null=False)
     price = models.DecimalField(max_digits=10, decimal_places=0, null=False, default=100000) 
-    discount = models.DecimalField(max_digits=4, decimal_places=2, default=0.0)
+    discount = models.IntegerField(default=0)
     shippingFee = models.DecimalField(max_digits=6, decimal_places=0, default=0) 
     productImage = models.ImageField(upload_to='products/', null=False, blank=True, default='products/productImageDefault.png')
 
@@ -65,7 +66,7 @@ class Product(models.Model):
         db_table = 'product'
 
     def getNewPrice(self):
-        return int(self.price * (1 - self.discount))
+        return int(self.price * (1 - Decimal(self.discount) / Decimal(100)))
     
     def __str__(self):
         return self.productName
@@ -75,11 +76,15 @@ class Product(models.Model):
     
 class UserInterest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)  
+    numberOfView = models.PositiveIntegerField(default=0)
 
     class Meta:
         db_table = 'userInterest' 
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'category'], name='unique_user_interest')
+        ]
     
 class Size(models.Model):
     sizeID = models.AutoField(primary_key=True)  
@@ -117,7 +122,7 @@ class Cart(models.Model):
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    quantity = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.cart}"

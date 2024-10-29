@@ -1,0 +1,28 @@
+{% load static %}
+<div class="header">
+    <img src="{% static 'images/shopping-online.png' %}" alt="Logo">
+    <h1>Easy Shopping</h1>
+
+    <div class="header-buttons">
+        {% if user.is_authenticated %}
+            <button class="login-btn">
+                <a href="{% url 'profile' %}">Profile</a>
+            </button>
+            <button class="signup-btn">
+                <a href="{% url 'logout' %}">Log out</a>
+            </button>
+        {% else %}
+            <button class="login-btn">
+                <a href="{% url 'login' %}">Login</a>
+            </button>
+            <button class="signup-btn">
+                <a href="{% url 'register' %}">Sign up</a>
+            </button>
+        {% endif %}
+    </div>
+</div>
+
+<div class="search-bar">
+    <input type="text" placeholder="Search for products">
+    <button>Search</button>
+</div>
