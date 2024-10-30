@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from core.models import Order
 
-def show(request):
+def showOrder(request):
     user = request.user  # Giả định rằng bạn có một quan hệ một-một từ User đến Customer
     orders = Order.objects.all().filter(user=user).order_by('-orderDate')  # Sắp xếp theo ngày mới nhất
     

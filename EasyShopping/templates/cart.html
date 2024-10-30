@@ -14,13 +14,13 @@
         {% endfor %}
     </div>
 
-    <form action="{% url 'cartActions' %}" method="POST" id="cartForm">
+    <form action="{% url 'cart' %}" method="POST" id="cartForm">
         {% csrf_token %}
         <div class="sectionOne">
             <div class="product">
                 <div class="selectAll">
                     <input type="checkbox" id="inputCheckboxAll" name="selectAll" onclick="toggleCheckboxes(this)">
-                    <label for="inputCheckboxAll">Item ({{ items|length }})</label>
+                    <label for="inputCheckboxAll">Item ({{ cartItems|length }})</label>
                 </div>
             </div>
             <div class="unitPrice">Unit Price</div>
@@ -29,37 +29,37 @@
             <div class="action">Action</div>
         </div>
 
-        {% for item in items %}
+        {% for cartItem in cartItems %}
             <div class="sectionTwo">
                 <div class="product">
                     <div class="select">
-                        <input type="checkbox" id="inputCheckbox{{ forloop.counter }}" name="selectProduct[]" value="{{ item.itemID }}" onclick="toggleCheckboxAll()">
+                        <input type="checkbox" id="inputCheckbox{{ forloop.counter }}" name="selectProduct[]" value="{{ cartItem.item.itemID }}" onclick="toggleCheckboxAll()">
                     </div>
                     <div class="imageNameProduct">
                         <a class="imageProduct" href="#">
-                            <img src="{{ item.productImage }}" alt="Ảnh sản phẩm">
+                            <img src="{{ cartItem.item.product.productImage.url }}" alt="Ảnh sản phẩm">
                         </a>
-                        <a class="nameProduct" title="{{ item.productName }}" href="#">{{ item.productName }}</a>
+                        <a class="nameProduct" title="{{ cartItem.item.product.productName }}" href="#">{{ cartItem.item.product.productName }}</a>
                     </div>
                     <div class="productDetails">
-                        <span class="sizeColor">Size: {{ item.sizeName }}</span>
+                        <span class="sizeColor">Size: {{ cartItem.item.size.sizeName }}</span>
                     </div>
                 </div>
 
                 <div class="unitPrice">
-                    <span class="originalPrice">{{ item.price }}đ</span>
-                    <span class="discountPrice">{{ item.priceAfterDiscount }}đ</span>
+                    <span class="originalPrice">{{ cartItem.item.product.price }}đ</span>
+                    <span class="discountPrice">{{ cartItem.item.product.getNewPrice }}đ</span>
                 </div>
                 <div class="quantity">
                     <button type="button" class="decreaseButton" aria-label="Giảm">-</button>
-                    <input type="number" class="inputQuantity" name="quantity{{ forloop.counter }}" value="{{ item.quantity }}" min="1">
+                    <input type="number" class="inputQuantity" name="quantity{{ forloop.counter }}" value="{{ cartItem.quantity }}" min="1">
                     <button type="button" class="increaseButton" aria-label="Tăng">+</button>
                 </div>
                 <div class="amountUnit">
-                    <span id="totalPrice{{ forloop.counter }}" class="amountUnitDiscount">{{ item.totalPrice }}đ</span>
+                    <span id="totalPrice{{ forloop.counter }}" class="amountUnitDiscount">{{ cartItem.amountUnit }}đ</span>
                 </div>
                 <div class="action">
-                    <button type="submit" class="delete" name="deleteProduct" value="{{ item.itemID }}">Delete</button>
+                    <button type="submit" class="delete" name="deleteProduct" value="{{ cartItem.item.itemID }}">Delete</button>
                 </div>
 
                 <input type="hidden" name="itemID{{ forloop.counter }}" value="{{ item.itemID }}">
