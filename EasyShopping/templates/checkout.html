@@ -27,7 +27,7 @@
     <form action="" method="POST">
         {% csrf_token %}
         {% for order in orders %}
-            <div class="order-item">
+            <div class="order-item" data-order-id="{{ order.orderID }}">
                 <div class="product-info">
                     <div class="product-details">
                         <a class="product-image" href="#">
@@ -47,13 +47,14 @@
                     <p>Shipping Fee: {{ order.item.product.shippingFee }}đ</p>
                 </div>
                 
-                <!-- Hidden fields for orderAmount and shippingFee -->
+                <!-- Hidden fields for orderAmount, shippingFee and order ID -->
                 <input type="hidden" name="orderAmount" value="{{ order.orderAmount }}">
                 <input type="hidden" name="shippingFee" value="{{ order.item.product.shippingFee }}">
+                <input type="hidden" name="orderID" value="{{ order.orderID }}">  
             </div>
-        {% endfor %}
+        {% endfor %}    
     
-        <div class="payment-options">
+        <div class="payment-options"> 
             <p>Payment Method:</p>
             <input type="radio" name="paymentMethod" id="bankTransfer" value="bankTransfer">
             <label for="bankTransfer">Bank Transfer</label><br>
@@ -72,13 +73,41 @@
 
     <script>
         window.addEventListener("beforeunload", function (event) {
-            fetch("{% url 'payment' %}", {
-                method: "DELETE",
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}",
-                }
+            var orderIDs = []; // Khởi tạo mảng orderIDs
+    
+            // Lấy danh sách orderID từ HTML
+            var orderItems = document.querySelectorAll('.order-item');
+            orderItems.forEach(function(item) {
+                orderIDs.push(item.getAttribute('data-order-id'));
             });
+    
+            // Gửi yêu cầu DELETE
+            if (orderIDs.length > 0) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("DELETE", "{% url 'payment' %}", true); // Đảm bảo thay thế với URL chính xác
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                // Thêm CSRF token vào header
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken')); // Gọi hàm getCookie để lấy token
+                xhr.send(JSON.stringify({ orderIDs: orderIDs }));
+            }
         });
+    
+        // Hàm lấy giá trị cookie CSRF
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Kiểm tra cookie có chứa tên mong muốn
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
     </script>
     
 </body>

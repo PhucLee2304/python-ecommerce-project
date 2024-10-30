@@ -1,76 +1,36 @@
 from django.shortcuts import render, redirect
-from core.models import Cart, CartItem, Item, Order
+from core.models import Cart, CartItem, Item, Order, User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-@login_required(login_url='login')
-def cartShow(request):
-    cart = Cart.objects.filter(user=request.user).first()
-    items = []
-    totalAmount = 0
-
-    if cart:
-        cartItems = CartItem.objects.filter(cart=cart)
-        if not cartItems.exists():
-            messages.info(request, "Your cart is empty")
-    else:
-        messages.info(request, "Your cart is empty")
-        cartItems = []
-
-    for cartItem in cartItems:
-        product = cartItem.item.product
-        size = cartItem.item.size
-        item = {
-            'itemID': cartItem.item.itemID,
-            'productName': product.productName,
-            'productImage': product.productImage.url,
-            'sizeName': size.sizeName,
-            'price': product.price,
-            'priceAfterDiscount': product.getNewPrice(),
-            'discount': product.discount,
-            'quantity': cartItem.quantity,
-            'totalPrice': cartItem.quantity * product.getNewPrice(),
-        }
-        items.append(item)
-        totalAmount += item['totalPrice']
-
-    context = { 
-        'items': items,
-        'totalAmount': totalAmount,
-    }
-    return render(request, 'cart.html', context)
-
-def deleteProductFromCart(request, cart):
-    itemID = request.POST.get('deleteProduct')
-
+def deleteProductFromCart(request, cart, itemID):
     try:
         cartItem = CartItem.objects.get(cart=cart, item__itemID=itemID)
         cartItem.delete()
-        return redirect('cartShow')
+        return redirect('cart')
     except CartItem.DoesNotExist:
         messages.info(request, "Item not found in cart")
     
-    return redirect('cartShow')
+    return redirect('cart')
 
 def deleteAllFromCart(request, cart):
     CartItem.objects.filter(cart=cart).delete()
-    return redirect('cartShow')
+    return redirect('cart')
 
 def getUserInformation(request):
     user = request.user
-    full_name = user.full_name()
-    address = user.address
-    phone = user.phone
 
-    if full_name == ' ' or not address or not phone:
-        messages.info(request, 'Enter your information')
-        return None
-    
-    return {
-        'full_name': full_name,
-        'address': address,
-        'phone': phone,
-    }
+    if user.is_authenticated:
+        full_name = user.full_name()
+        address = user.address
+        phone = user.phone
+
+        if not full_name or not address or not phone:
+            messages.info(request, 'Enter your information')
+            return None
+        return user
+
+    return None
 
 def addToPurchase(request, cart):
     user = getUserInformation(request)
@@ -81,7 +41,7 @@ def addToPurchase(request, cart):
 
     if not selectedItems:
         messages.info(request, 'No products selected for purchase')
-        return redirect('cartShow') 
+        return redirect('cart') 
 
     orders = []
     outOfStockItems = []
@@ -106,7 +66,7 @@ def addToPurchase(request, cart):
 
     if outOfStockItems:
         messages.info(request, f'The following items are out of stock: {'\n'.join(outOfStockItems)}')
-        return redirect('cartShow')
+        return redirect('cart')
 
     if orders:
         context = {
@@ -114,27 +74,38 @@ def addToPurchase(request, cart):
             'orders': orders,
             'totalAmount': totalAmount,
         }
-        return render(request, 'checkout.html', context)
+        return redirect('payment')
 
-    return redirect('cartShow')
-    
+    return redirect('cart')
 
-@login_required(login_url='login')
-def cartActions(request):
+def cart(request):
     cart = Cart.objects.filter(user=request.user).first()
+    totalAmount = 0
+    cartItems = []
 
-    if not cart:
+    if cart:
+        cartItems = CartItem.objects.filter(cart=cart)
+        if not cartItems.exists():
+            messages.info(request, "Your cart is empty")
+    else:
         messages.info(request, "Your cart is empty")
-        return redirect('cartShow')
 
+    for cartItem in cartItems:
+        amountUnit = cartItem.quantity * cartItem.item.product.getNewPrice()
+        totalAmount += amountUnit
+        cartItem.amountUnit = amountUnit
+    
     if request.method == 'POST':
         if 'deleteProduct' in request.POST:
-            return deleteProductFromCart(request, cart)
-        
+            itemID = request.POST.get('deleteProduct')
+            return deleteProductFromCart(request, cart, itemID)
         elif 'deleteAll' in request.POST:
             return deleteAllFromCart(request, cart)
-        
         elif 'buyAll' in request.POST:
             return addToPurchase(request, cart)
- 
-    return redirect('cartShow')
+
+    context = { 
+        'cartItems': cartItems,
+        'totalAmount': totalAmount,
+    }
+    return render(request, 'cart.html', context)

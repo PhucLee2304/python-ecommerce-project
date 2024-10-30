@@ -40,7 +40,7 @@
                                 </div>
                                 
                                 <div class="col-sm-3">
-                                    <a href="{% url 'cartShow' %}">
+                                    <a href="{% url 'cart' %}">
                                         <button id="buyButton" class="btn btn-outline-dark flex-shrink-0" type="button">
                                             <i class="bi-cart-fill me-1"></i>
                                             Buy Now
@@ -220,6 +220,7 @@
                             {% comment %} alert('Product added to cart!'); {% endcomment %}
                         } else {
                             alert('please login first');
+                            window.location.href = 'http://127.0.0.1:8000/account/login/';
                         }
                     }).catch(error => {
                         console.error('Error:', error);
