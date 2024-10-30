@@ -5,24 +5,32 @@
 
     <div class="header-buttons">
         {% if user.is_authenticated %}
-            <button class="login-btn">
-                <a href="{% url 'profile' %}">Profile</a>
-            </button>
+        <a href="{% url 'profile' %}">
+            <button class="login-btn">Profile</button>
+        </a>
+        <a href="{% url 'logout' %}">
             <button class="signup-btn">
-                <a href="{% url 'logout' %}">Log out</a>
+                Log out
             </button>
+        </a>
         {% else %}
+        <a href="{% url 'login' %}">
             <button class="login-btn">
-                <a href="{% url 'login' %}">Login</a>
+                Login
             </button>
+        </a>
+        <a href="{% url 'register' %}">
             <button class="signup-btn">
-                <a href="{% url 'register' %}">Sign up</a>
+                Sign up
             </button>
+        </a>
         {% endif %}
     </div>
 </div>
 
 <div class="search-bar">
-    <input type="text" placeholder="Search for products">
-    <button>Search</button>
+    <form action="{% url 'search' %}" method="GET">
+        <input type="text" name="query" placeholder="Search for products">
+        <button type="submit">Search</button>
+    </form>
 </div>

@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404
 import random
 from django.utils import timezone
 from datetime import timedelta
+from django.db.models import Q
+from django.contrib import messages
 from core.models import Category, UserInterest, Product
 
 def suggest(request):
@@ -56,3 +58,35 @@ def home(request):
         
     }
     return render(request, 'index.html', context)
+
+def categoryProducts(request, categoryID):
+    category = get_object_or_404(Category, pk=categoryID)
+    products = Product.objects.filter(category=category)
+
+    context = {
+        'category': category,
+        'products': products,
+    }
+    return render(request, 'categoryProducts.html', context)
+
+def search(request):
+    query = request.GET.get('query')
+
+    if query:
+        products = Product.objects.filter(
+            Q(productName__icontains=query) | 
+            Q(description__icontains=query) | 
+            Q(category__categoryName__icontains=query)
+        )
+    
+    else:
+        products = Product.objects.none()
+    
+    if not products:
+        messages.info(request, 'No results found')
+    
+    context = {
+        'products': products,
+        'query': query,
+    }
+    return render(request, 'searchResult.html', context)
