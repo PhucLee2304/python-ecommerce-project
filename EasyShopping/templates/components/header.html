@@ -1,6 +1,9 @@
 {% load static %}
 <div class="header">
-    <img src="{% static 'images/shopping-online.png' %}" alt="Logo">
+    <a href="{% url "home" %}">
+        <img src="{% static 'images/shopping-online.png' %}" alt="Logo">
+    </a>
+    
     <h1>Easy Shopping</h1>
 
     <div class="header-buttons">
