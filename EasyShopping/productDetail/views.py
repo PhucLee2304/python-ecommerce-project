@@ -10,17 +10,57 @@ from .serializers import CartSerializer
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.db.models import F
+from django.db.models import Sum
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'productID'  # Retrieve by productID instead of default 'id'
 
+def getRating(reviews):
+    rating = 0
+    
+    for review in reviews:
+        rating += review.rating
+    return round(rating/len(reviews), 1)
+
+def getTotalSale(orders):
+    sum = 0
+    for order in orders:
+        sum += order.itemQuantity
+    return sum
+
+def getRatePercent(reviews):
+    rates = {
+        1 : 0,
+        2: 0,
+        3 : 0,
+        4: 0,
+        5 : 0
+    }
+    n = len(reviews)
+    for r in reviews:
+        rates[r.rating] += 1
+    for key in rates.keys():
+        rates[key] /= n
+        rates[key] *= 100
+        rates[key] = round(rates[key], 1)
+    return rates
 
 def productDetailView(request, pid):
     product = Product.objects.get(productID = pid)
-    print(product.items.all())
+    
+    reviews = Review.objects.filter(product = product)
+    rating = getRating(reviews)
+    # total_quantity_sold = Order.objects.filter(item__product__productID=pid).aggregate(total_sold=Sum('itemQuantity'))['total_sold']
+    
+    orders = Order.objects.filter(item__product__productID = pid)
+
     context = {
-        "product" : product
+        "product" : product,
+        "review" : reviews,
+        "rating": rating,
+        "totalSale": getTotalSale(orders),
+        "rates": getRatePercent(reviews)
     }
     return render(request, 'productDetail.html', context)
 
