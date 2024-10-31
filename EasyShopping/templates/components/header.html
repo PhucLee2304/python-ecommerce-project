@@ -16,6 +16,11 @@
                 Log out
             </button>
         </a>
+        <a href="{% url 'cart' %}">
+            <button class="signup-btn">
+                Cart
+            </button>
+        </a>
         {% else %}
         <a href="{% url 'login' %}">
             <button class="login-btn">
