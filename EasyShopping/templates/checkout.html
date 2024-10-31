@@ -8,107 +8,112 @@
     <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
 </head>
 <body>
-    <div class="recipient-info">
-        <h3>Thông tin người nhận</h3>
-        <p>Tên người nhận: {{ user.full_name }}</p>
-        <p>Địa chỉ nhận hàng: {{ user.address }}</p>
-        <p>Số điện thoại: {{ user.phone }}</p>
-    </div>
-    
-    <div class="order-header">
-        <div class="header-product">
-            <label for="inputCheckboxAll">Sản phẩm</label>
-        </div>
-        <div class="header-unit-price">Đơn giá</div>
-        <div class="header-quantity">Số lượng</div>
-        <div class="header-amount">Số tiền</div>
-    </div>
-    
-    <form action="" method="POST">
-        {% csrf_token %}
-        {% for order in orders %}
-            <div class="order-item" data-order-id="{{ order.orderID }}">
-                <div class="product-info">
-                    <div class="product-details">
-                        <a class="product-image" href="#">
-                            <img src="{{ order.item.product.productImage.url }}" alt="{{ order.item.product.productName }}">
-                        </a>
-                        <a class="product-name" title="{{ order.item.product.productName }}" href="#">{{ order.item.product.productName }}</a>
-                    </div>
-                </div>
-                <div class="item-unit-price">
-                    <span class="discounted-price">{{ order.item.product.getNewPrice }}đ</span>
-                </div>
-                <div class="item-quantity">{{ order.itemQuantity }}</div>
-                <div class="item-total-amount">
-                    <span class="item-total">{{ order.orderAmount }}đ</span>
-                </div>
-                <div class="shipping-fee">
-                    <p>Shipping Fee: {{ order.item.product.shippingFee }}đ</p>
-                </div>
-                
-                <!-- Hidden fields for orderAmount, shippingFee and order ID -->
-                <input type="hidden" name="orderAmount" value="{{ order.orderAmount }}">
-                <input type="hidden" name="shippingFee" value="{{ order.item.product.shippingFee }}">
-                <input type="hidden" name="orderID" value="{{ order.orderID }}">  
-            </div>
-        {% endfor %}    
-    
-        <div class="payment-options"> 
-            <p>Payment Method:</p>
-            <input type="radio" name="paymentMethod" id="bankTransfer" value="bankTransfer">
-            <label for="bankTransfer">Bank Transfer</label><br>
-            <input type="radio" name="paymentMethod" id="cashOnDelivery" value="cashOnDelivery">
-            <label for="cashOnDelivery">Cash on Delivery</label>
-        </div>
-    
-        <div class="checkout-summary">
-            <div class="total-products">Total Payment ({{ orders|length }} items):</div>
-            <div class="total-price">{{ totalAmount }}đ</div>
-            <button class="checkout-button" type="submit">
-                <span>Payment</span>
-            </button>
-        </div>
-    </form>
+    {% include "components/header.html" %}
 
-    <script>
-        window.addEventListener("beforeunload", function (event) {
-            var orderIDs = []; // Khởi tạo mảng orderIDs
-    
-            // Lấy danh sách orderID từ HTML
-            var orderItems = document.querySelectorAll('.order-item');
-            orderItems.forEach(function(item) {
-                orderIDs.push(item.getAttribute('data-order-id'));
+    <div class="container">
+        <div class="recipient-info">
+            <h3>Thông Tin Người Nhận</h3>
+            <p>Tên người nhận: <strong>{{ user.full_name }}</strong></p>
+            <p>Địa chỉ nhận hàng: <strong>{{ user.address }}</strong></p>
+            <p>Số điện thoại: <strong>{{ user.phone }}</strong></p>
+        </div>
+        
+        <div class="order-header">
+            <div class="header-product">
+                <label>Sản Phẩm</label>
+            </div>
+            <div class="header-unit-price">Đơn Giá</div>
+            <div class="header-quantity">Số Lượng</div>
+            <div class="header-amount">Số Tiền</div>
+        </div>
+        
+        <form action="" method="POST">
+            {% csrf_token %}
+            {% for order in orders %}
+                <div class="order-item" data-order-id="{{ order.orderID }}">
+                    <div class="product-info">
+                        <div class="product-details">
+                            <a class="product-image" href="#">
+                                <img src="{{ order.productImage }}" alt="{{ order.productName }}">
+                            </a>
+                            <a class="product-name" title="{{ order.productName }}" href="#">{{ order.productName }}</a>
+                        </div>
+                    </div>
+                    <div class="item-unit-price">
+                        {% comment %} <span class="discounted-price">{{ order.item.product.getNewPrice }}đ</span> {% endcomment %}
+                        <span class="discounted-price">{{ order.discountPrice|floatformat:0 }}đ</span>
+                    </div>
+                    {% comment %} <div class="item-quantity">{{ order.itemQuantity }}</div> {% endcomment %}
+                    <div class="item-quantity">{{ order.quantity }}</div>
+                    <div class="item-total-amount">
+                        <span class="item-total">{{ order.orderAmount|floatformat:0 }}đ</span>
+                    </div>
+                    <div class="shipping-fee">
+                        {% comment %} <p>Phí Vận Chuyển: {{ order.item.product.shippingFee }}đ</p> {% endcomment %}
+                        <p>Phí Vận Chuyển: {{ order.shippingFee|floatformat:0 }}đ</p>
+                    </div>
+                    
+                    <input type="hidden" name="orderAmount" value="{{ order.orderAmount|floatformat:0|default:0 }}">
+                    <input type="hidden" name="shippingFee" value="{{ order.shippingFee|floatformat:0|default:0 }}">
+                    <input type="hidden" name="orderID" value="{{ order.orderID }}">  
+                </div>
+            {% endfor %}    
+
+            <div class="payment-options"> 
+                <p>Phương Thức Thanh Toán:</p>
+                <input type="radio" name="paymentMethod" id="bankTransfer" value="bankTransfer" required>
+                <label for="bankTransfer">Chuyển Khoản Ngân Hàng</label><br>
+                <input type="radio" name="paymentMethod" id="cashOnDelivery" value="cashOnDelivery" required>
+                <label for="cashOnDelivery">Thanh Toán Khi Nhận Hàng</label>
+            </div>
+        
+            <div class="checkout-summary">
+                <div class="total-products">Tổng Thanh Toán ({{ orders|length }} sản phẩm):</div>
+                <div class="total-price">{{ totalAmount|floatformat:0 }}đ</div>
+                <button class="checkout-button" type="submit">
+                    <span>Thanh Toán</span>
+                </button>
+            </div>
+        </form>
+
+        <script>
+            window.addEventListener("beforeunload", function (event) {
+                var orderIDs = []; // Khởi tạo mảng orderIDs
+        
+                // Lấy danh sách orderID từ HTML
+                var orderItems = document.querySelectorAll('.order-item');
+                orderItems.forEach(function(item) {
+                    orderIDs.push(item.getAttribute('data-order-id'));
+                });
+        
+                // Gửi yêu cầu DELETE
+                if (orderIDs.length > 0) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("DELETE", "{% url 'payment' %}", true); // Đảm bảo thay thế với URL chính xác
+                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                    // Thêm CSRF token vào header
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken')); // Gọi hàm getCookie để lấy token
+                    xhr.send(JSON.stringify({ orderIDs: orderIDs }));
+                }
             });
-    
-            // Gửi yêu cầu DELETE
-            if (orderIDs.length > 0) {
-                var xhr = new XMLHttpRequest();
-                xhr.open("DELETE", "{% url 'payment' %}", true); // Đảm bảo thay thế với URL chính xác
-                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                // Thêm CSRF token vào header
-                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken')); // Gọi hàm getCookie để lấy token
-                xhr.send(JSON.stringify({ orderIDs: orderIDs }));
-            }
-        });
-    
-        // Hàm lấy giá trị cookie CSRF
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = cookies[i].trim();
-                    // Kiểm tra cookie có chứa tên mong muốn
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
+        
+            // Hàm lấy giá trị cookie CSRF
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        // Kiểm tra cookie có chứa tên mong muốn
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
                     }
                 }
+                return cookieValue;
             }
-            return cookieValue;
-        }
-    </script>
-    
+        </script>
+    </div>
 </body>
 </html>

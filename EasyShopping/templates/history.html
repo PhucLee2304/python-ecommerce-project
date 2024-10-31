@@ -34,7 +34,7 @@
                             <a class="imageProduct" href="#">
                                 <img src="{{ order.item.product.productImage.url }}" alt="Ảnh sản phẩm" class="product-image">
                             </a>
-                            <a class="nameProduct" title="{{ order.item.product.productName }}" href="{% url 'productDetail:product-detail' order.item.product.productID %}">
+                            <a class="nameProduct" title="{{ order.item.product.productName }}" href="{% url 'product-detail' order.item.product.productID %}">
                                 hg
                             </a>
                         </div>
