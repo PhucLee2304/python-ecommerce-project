@@ -38,7 +38,7 @@
     <section class="products">
         <div class="product-grid">
             {% for product in products %}
-                {% comment %} <a href="{% url "product-detail" productID=product.productID %}"> {% endcomment %}
+                <div onclick="window.location.href='{% url 'product-detail' pid=product.productID %}'">
                     <div class="product-card">
                         <img src="{{product.productImage.url}}" alt="{{product.productName}}">
                         <h3>{{product.productName}}</h3>
@@ -46,9 +46,9 @@
                         <p class="new-price"> Price: {{product.getNewPrice}} VND</p>
                         <dis>Discount: {{product.discount}}%</dis>
                     </div>
-                {% comment %} </a> {% endcomment %}
+                </div>
             {% endfor %}
         </div>
     </section>
 
-    {% block content %}{% endblock content %}
+{% endblock content %}
