@@ -40,12 +40,12 @@
                                 </div>
                                 
                                 <div class="col-sm-3">
-                                    <a href="{% url 'cart' %}">
-                                        <button id="buyButton" class="btn btn-outline-dark flex-shrink-0" type="button">
-                                            <i class="bi-cart-fill me-1"></i>
-                                            Buy Now
-                                        </button>
-                                    </a>
+                                    
+                                    <button id="buyButton" class="btn btn-outline-dark flex-shrink-0" type="button">
+                                        <i class="bi-cart-fill me-1"></i>
+                                        Buy Now
+                                    </button>
+                                   
                                     
                                     
                                     
@@ -310,9 +310,9 @@
                         body: formData
                     }).then(response => response.json())
                       .then(data => {
-                        console.log(data);
                         if (data.user != null) {
                             {% comment %} alert('Product added to cart!'); {% endcomment %}
+                            window.location.href = 'http://127.0.0.1:8000/cart/';
                         } else {
                             alert('please login first');
                             window.location.href = 'http://127.0.0.1:8000/account/login/';
