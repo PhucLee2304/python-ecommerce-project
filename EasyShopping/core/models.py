@@ -142,11 +142,13 @@ class Order(models.Model):
     itemQuantity = models.PositiveIntegerField(default=1)  
 
     statusChoices = (
-        ('Processing', 'Processing'),
+        ('Pending', 'Pending'),
+        ('Shipping', 'Shipping'),
+        ('Delivered', 'Delivered'),
         ('Completed', 'Completed'),
         ('Cancelled', 'Cancelled'),
     )
-    orderStatus = models.CharField(max_length=10, choices=statusChoices, default='Processing') 
+    orderStatus = models.CharField(max_length=10, choices=statusChoices, default='Pending') 
 
     methodChoices = (
         ('None', 'None'),
