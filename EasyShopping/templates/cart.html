@@ -8,13 +8,15 @@
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
 </head>
 <body>
+    {% include "components/header.html" %}
+
     <div>
         {% for message in messages %}
             <h5>{{ message }}</h5>
         {% endfor %}
     </div>
 
-    <form action="{% url 'cart' %}" method="POST" id="cartForm">
+    <form action="{% url 'cart' %}" method="POST">
         {% csrf_token %}
         <div class="sectionOne">
             <div class="product">
@@ -32,9 +34,6 @@
         {% for cartItem in cartItems %}
             <div class="sectionTwo">
                 <div class="product">
-                    <div class="select">
-                        <input type="checkbox" id="inputCheckbox{{ forloop.counter }}" name="selectProduct[]" value="{{ cartItem.item.itemID }}" onclick="toggleCheckboxAll()">
-                    </div>
                     <div class="imageNameProduct">
                         <a class="imageProduct" href="#">
                             <img src="{{ cartItem.item.product.productImage.url }}" alt="Ảnh sản phẩm">
@@ -51,9 +50,7 @@
                     <span class="discountPrice">{{ cartItem.item.product.getNewPrice }}đ</span>
                 </div>
                 <div class="quantity">
-                    <button type="button" class="decreaseButton" aria-label="Giảm">-</button>
-                    <input type="number" class="inputQuantity" name="quantity{{ forloop.counter }}" value="{{ cartItem.quantity }}" min="1">
-                    <button type="button" class="increaseButton" aria-label="Tăng">+</button>
+                    <input type="number" class="inputQuantity" name="quantity[]" value="{{ cartItem.quantity }}" min="1" onchange="updateAmountUnit({{ forloop.counter }})">
                 </div>
                 <div class="amountUnit">
                     <span id="totalPrice{{ forloop.counter }}" class="amountUnitDiscount">{{ cartItem.amountUnit }}đ</span>
@@ -62,8 +59,8 @@
                     <button type="submit" class="delete" name="deleteProduct" value="{{ cartItem.item.itemID }}">Delete</button>
                 </div>
 
-                <input type="hidden" name="itemID{{ forloop.counter }}" value="{{ item.itemID }}">
-                {% comment %} <input type="hidden" name="quantity{{ forloop.counter }}" value="{{ item.quantity }}"> {% endcomment %}
+                <input type="hidden" name="itemID[]" value="{{ cartItem.item.itemID }}">
+                <input type="checkbox" id="inputCheckbox{{ forloop.counter }}" name="selectProduct[]" value="{{ cartItem.item.itemID }}" onclick="toggleCheckboxAll()">
             </div>
         {% endfor %}
 
@@ -88,55 +85,16 @@
 
     <script>
         const quantityInputs = document.querySelectorAll('.inputQuantity');
-        const decreaseButtons = document.querySelectorAll('.decreaseButton');
-        const increaseButtons = document.querySelectorAll('.increaseButton');
         const hiddenTotalAmountInput = document.getElementById('hiddenTotalAmount');
 
-        decreaseButtons.forEach((button, index) => {
-            button.addEventListener('click', function() {
-                changeQuantity(index, -1);
-            });
-        });
-
-        increaseButtons.forEach((button, index) => {
-            button.addEventListener('click', function() {
-                changeQuantity(index, 1);
-            });
-        });
-
-        function changeQuantity(index, change) {
-            const input = document.querySelectorAll('.inputQuantity')[index];
-            let value = parseInt(input.value);
-            value += change;
-
-            if (value < 1) {
-                value = 1;
-            }
-
-            input.value = value;
-            updateAmountUnit(index, value);
-        }
-
-        quantityInputs.forEach((input, index) => {
-            input.addEventListener('input', function() {
-                let value = parseInt(input.value);
-        
-                if (value < 1 || isNaN(value)) {
-                    value = 1;
-                    input.value = 1;
-                }
-        
-                updateAmountUnit(index, value);
-            });
-        });
-
-        function updateAmountUnit(index, quantity) {
-            const price = parseFloat(document.querySelectorAll('.discountPrice')[index].textContent.replace('đ', '').replace(/\./g, '').trim());
-            const totalPriceElement = document.getElementById(`totalPrice${index + 1}`);
+        function updateAmountUnit(index) {
+            const quantity = parseInt(quantityInputs[index - 1].value); // Lấy số lượng trực tiếp từ input
+            const price = parseFloat(document.querySelectorAll('.discountPrice')[index - 1].textContent.replace('đ', '').replace(/\./g, '').trim());
+            const totalPriceElement = document.getElementById(`totalPrice${index}`);
             const newTotalPrice = price * quantity;
 
-            totalPriceElement.textContent = `${newTotalPrice}đ`.replace(/\./g, '');
-            updateTotalAmount();
+            totalPriceElement.textContent = `${newTotalPrice}đ`;
+            updateTotalAmount(); 
         }
 
         function updateTotalAmount() {
@@ -145,14 +103,14 @@
 
             document.querySelectorAll('input[name="selectProduct[]"]').forEach((checkbox, index) => {
                 if (checkbox.checked) {
-                    const priceElement = document.getElementById(`totalPrice${index + 1}`);
-                    const price = parseFloat(priceElement.textContent.replace('đ', '').replace(/\./g, '').trim());
-                    totalAmount += price;
+                    const quantity = parseInt(quantityInputs[index].value); // Lấy số lượng trực tiếp từ input
+                    const price = parseFloat(document.querySelectorAll('.discountPrice')[index].textContent.replace('đ', '').replace(/\./g, '').trim());
+                    totalAmount += price * quantity;
                     totalCount++;
                 }
             });
 
-            document.querySelector('.totalAmount').textContent = `${totalAmount}đ`.replace(/\./g, '');
+            document.querySelector('.totalAmount').textContent = `${totalAmount}đ`;
             document.querySelector('.total').textContent = `Total (${totalCount} items):`;
             hiddenTotalAmountInput.value = totalAmount;
         }
