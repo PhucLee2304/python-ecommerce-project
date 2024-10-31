@@ -18,7 +18,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 def getRating(reviews):
     rating = 0
-    
+    if len(reviews) == 0: return 0
     for review in reviews:
         rating += review.rating
     return round(rating/len(reviews), 1)
@@ -38,6 +38,7 @@ def getRatePercent(reviews):
         5 : 0
     }
     n = len(reviews)
+    if n== 0: return rates
     for r in reviews:
         rates[r.rating] += 1
     for key in rates.keys():
