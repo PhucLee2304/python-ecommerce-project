@@ -1,9 +1,9 @@
-{% extends "index.html" %}
+{% extends "layout/myLayout.html" %}
 
 {% block content %}
 <div class="category-products">
     <div class="product-list">
-        {% for product in category_products %}
+        {% for product in products %}
             <div class="product-card">
                 <img src="{{ product.productImage.url }}" alt="{{ product.productName }}">
                 <h3>{{ product.productName }}</h3>
