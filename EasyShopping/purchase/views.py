@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 import base64
 from io import BytesIO
 from core.models import Order
-
+'''
 @login_required(login_url='login')
 def payment(request):
     if request.method == 'POST':
@@ -68,8 +68,8 @@ def payment(request):
             'totalAmount': float(totalAmount),
         }
         return render(request, 'checkout.html', context)
-
 '''
+@login_required(login_url='login')
 def payment(request):
     if request.method == 'POST':
         paymentMethod = request.POST.get('paymentMethod')
@@ -77,7 +77,8 @@ def payment(request):
         totalAmount = int(request.session.get('totalAmount', 0))
         orderIDs = [order['orderID'] for order in request.session.get('orders', [])]
 
-        qrData = "" 
+        qrData = ';'.join(map(str, orderIDs)) 
+        request.session['qrData'] = qrData
 
         for orderID in orderIDs:
             try:
@@ -85,25 +86,19 @@ def payment(request):
                 order.orderAmount += shippingFee
                 order.orderStatus = 'Pending'  
                 order.paymentMethod = paymentMethod
-                order.save()
-
-                qrData += f"{order.orderID};"  
+                order.save() 
 
             except Order.DoesNotExist:
                 messages.warning(request, f"Order {orderID} does not exist.")
                 continue
 
-        qrImage = qrcode.make(qrData.strip())
-        
-        # Lưu mã QR vào bộ nhớ
+        qrImage = qrcode.make(qrData)
         buffered = BytesIO()
         qrImage.save(buffered, format="PNG")
-        qr_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
-
-        # Lưu thời gian tạo mã QR vào session
-        request.session['qr_timestamp'] = timezone.now().timestamp()
+        qr_base64 = base64.b64encode(buffered.getvalue()).decode()
 
         return render(request, 'qr.html', {'qr_base64': qr_base64, 'totalAmount': totalAmount})
+    
     else:
         user = request.user  
         orders = request.session.get('orders', [])  
@@ -119,29 +114,37 @@ def payment(request):
 @csrf_exempt
 def scan(request):
     if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            qrInput = data.get('qrInput')
+        qrInput = request.POST.get('qrInput')
+        
+        if not qrInput:
+            return redirect('scan')
+        
+        if qrInput == request.session.get('qrData', ''):
+            qrCodeList = qrInput.split(';')
+            for qrCode in qrCodeList:
+                try:
+                    order = Order.objects.get(orderID=int(qrCode))
+                    order.orderStatus = 'Shipping'  
+                    order.paymentDate = timezone.now()
+                    order.save()
 
-            if not qrInput:
-                return JsonResponse({'success': False, 'error': 'No QR code provided', 'redirect_url': reverse('qr')}, status=400)
+                    item = order.item  
+                    item.stockQuantity -= order.itemQuantity 
+                    item.save()
 
-            try:
-                order = Order.objects.get(orderID=int(qrInput.strip()))
-                order.orderStatus = 'Shipping'  
-                order.paymentDate = timezone.now()
-                order.save()
-
-                item = order.item  
-                item.stockQuantity -= order.itemQuantity 
-                item.save()
-
-                return JsonResponse({'success': True, 'redirect_url': reverse('showOrder')})
-            except Order.DoesNotExist:
-                return JsonResponse({'success': False, 'error': 'Order does not exist', 'redirect_url': reverse('qr')}, status=404)
-
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'error': 'Invalid JSON data', 'redirect_url': reverse('qr')}, status=400)
+                except Order.DoesNotExist:
+                    messages.info(request, 'Order {qrCode} does not exist')
+                    return redirect('payment')
+                
+            return redirect('showOrder')
+        else:
+            messages.info(request, 'Wrong code. Scan again to get correct code')
+            qrData = request.session.get('qrData', '')
+            qrImage = qrcode.make(qrData)
+            buffered = BytesIO()
+            qrImage.save(buffered, format="PNG")
+            qr_base64 = base64.b64encode(buffered.getvalue()).decode()
+            return render(request, 'qr.html', {'qr_base64': qr_base64})
+            
     else:
-        return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
-'''
+        return render(request, 'qr.html')

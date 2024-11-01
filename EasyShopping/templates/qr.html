@@ -3,60 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Mã QR Thanh Toán</title>
-    <script>
-        function refreshQR() {
-            const currentTime = Math.floor(Date.now() / 1000); // Thời gian hiện tại (giây)
-            const qrTimestamp = {{ request.session.qr_timestamp|default:"0" }};
-            const timeLimit = 10; // 1 phút
-
-            if (currentTime - qrTimestamp > timeLimit) {
-                // Nếu quá thời gian quy định, refresh lại mã QR
-                location.reload(); // Tải lại trang để tạo mã QR mới
-            }
-        }
-
-        setInterval(refreshQR, 1000); // Kiểm tra mỗi giây
-    </script>
 </head>
 <body>
+    {% for message in messages %}
+        <h5>{{message}}</h5>
+    {% endfor %}
     <h2>Mã QR Thanh Toán</h2>
     <p>Tổng số tiền: {{ totalAmount }}</p>
-    
+
     <div class="qr-code">
         <img src="data:image/png;base64,{{ qr_base64 }}" alt="QR Code" style="width: 200px; height: auto;">
     </div>
 
-    <form id="qr-form" onsubmit="submitForm(event)">
+    <form id="qr-form" action="{% url 'scan' %}" method="post">
         {% csrf_token %}
         <input type="text" name="qrInput" placeholder="Nhập mã QR" required>
         <button type="submit">Xác nhận</button>
     </form>
-    
-    <script>
-        document.getElementById('qr-form').onsubmit = function(event) {
-            event.preventDefault(); // Ngăn chặn gửi form mặc định
-
-            const qrInput = document.querySelector('input[name="qrInput"]').value;
-
-            fetch("{% url 'scan' %}", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: JSON.stringify({ qrInput: qrInput })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = data.redirect_url; // Redirect nếu thành công
-                } else {
-                    alert(data.error); // Hiển thị thông báo lỗi
-                    location.reload(); // Tải lại trang để sinh mã QR mới
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        };
-    </script>
 </body>
 </html>
