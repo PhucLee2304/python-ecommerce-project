@@ -28,26 +28,33 @@
             <tbody>
                 {% for order in orders %}
                 <tr>
-                    <td>{{ forloop.counter }}</td> <!-- Hiển thị số thứ tự -->
+                    <td>{{ forloop.counter }}</td>
                     <td>
                         <div class="imageNameProduct">
                             <a class="imageProduct" href="#">
                                 <img src="{{ order.item.product.productImage.url }}" alt="Ảnh sản phẩm" class="product-image">
                             </a>
                             <a class="nameProduct" title="{{ order.item.product.productName }}" href="{% url 'product-detail' order.item.product.productID %}">
-                                hg
+                                {{ order.item.product.productName }}
                             </a>
                         </div>
                     </td>
                     <td>{{ order.item.product.productName }}</td>       
                     <td>{{ order.itemQuantity }}</td>
                     <td>{{ order.orderDate }}</td>  
-                    <td class="status {% if order.orderStatus == 'Pending' %}pending{% elif order.orderStatus == 'Canceled' %}canceled{% else %}completed{% endif %}">
+                    <td class="status {% if order.orderStatus == 'Pending' %}pending{% elif order.orderStatus == 'Cancelled' %}canceled{% else %}completed{% endif %}">
                         {{ order.orderStatus }}
+                    </td>
+                    <td>
+                        <form action="{% url 'history' %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="orderID" value="{{ order.orderID }}">
+                            <button type="submit" class="cancel-button">Cancel</button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}
-            </tbody>            
+            </tbody>                       
         </table>
     </div>
     {% else %}

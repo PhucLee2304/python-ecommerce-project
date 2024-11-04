@@ -6,7 +6,6 @@ from django.http import JsonResponse
 from django.urls import reverse
 import json
 import qrcode
-import os
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import base64
@@ -41,7 +40,7 @@ def payment(request):
         del request.session['orders']
         del request.session['totalAmount']
 
-        return redirect('showOrder')
+        return redirect('history')
 
     elif request.method == 'DELETE':
         # Cancel order
@@ -136,7 +135,7 @@ def scan(request):
                     messages.info(request, 'Order {qrCode} does not exist')
                     return redirect('payment')
                 
-            return redirect('showOrder')
+            return redirect('history')
         else:
             messages.info(request, 'Wrong code. Scan again to get correct code')
             qrData = request.session.get('qrData', '')
