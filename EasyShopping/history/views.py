@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from core.models import Order
+from core.models import Order, Review
 
 def history(request):
     user = request.user 
