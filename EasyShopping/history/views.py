@@ -1,15 +1,21 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from core.models import Order
 
-def showOrder(request):
-    user = request.user  # Giả định rằng bạn có một quan hệ một-một từ User đến Customer
-    orders = Order.objects.all().filter(user=user).order_by('-orderDate')  # Sắp xếp theo ngày mới nhất
-    
-    # Truyền danh sách đơn hàng vào context để hiển thị trong template
-    # for order in orders:
-    #     print(f"Order ID: {order.orderID}, Customer: {order.customer}, "
-    #           f"Item: {order.item}, Date: {order.orderDate}, "
-    #           f"Quantity: {order.itemQuantity}, Status: {order.orderStatus}")
+def history(request):
+    user = request.user 
+    orders = Order.objects.filter(user=user).order_by('-orderDate')
+
+    for order in orders:
+        if order.orderStatus == 'Delivered':
+            order.orderStatus = 'Completed'
+            order.save()
+
+    if request.method == 'POST':
+        orderID = request.POST.get('orderID')
+        order = get_object_or_404(Order, orderID=orderID)
+        if order.orderStatus == 'Pending':
+            order.orderStatus = 'Cancelled'
+            order.save()
+        return redirect('history') 
 
     return render(request, 'history.html', {'orders': orders})
-
