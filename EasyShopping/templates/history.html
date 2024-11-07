@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/history.css' %}"> <!-- Liên kết đến file CSS -->
 </head>
 <body>
-
+{% include "components/header.html" %}
 <div class="container">
     <h1>Order History</h1>
 
@@ -55,6 +55,11 @@
                     <td>
                         <button class="rate-button" onclick="toggleRatingForm('{{ order.orderID }}')">Đánh giá</button>
                         <div id="rating-form-{{ order.orderID }}" class="rating-form" style="display:none;">
+                            <div>
+                                {% for message in messages %}
+                                    <h5>{{ message }}</h5>
+                                {% endfor %}
+                            </div>
                             <form action="{% url 'review' %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="orderID" value="{{ order.orderID }}">
@@ -94,6 +99,6 @@
         
 
 </div>
-
+{% include "components/footer.html" %}
 </body>
 </html>

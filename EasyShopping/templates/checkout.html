@@ -26,6 +26,12 @@
             <div class="header-quantity">Số Lượng</div>
             <div class="header-amount">Số Tiền</div>
         </div>
+
+        <div>
+            {% for message in messages %}
+                <h5>{{ message }}</h5>
+            {% endfor %}
+        </div>
         
         <form action="" method="POST">
             {% csrf_token %}
@@ -115,5 +121,7 @@
             }
         </script>
     </div>
+
+    {% include "components/footer.html" %}
 </body>
 </html>

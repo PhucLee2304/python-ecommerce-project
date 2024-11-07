@@ -37,6 +37,11 @@
 </div>
 
 <div class="search-bar">
+    <div>
+        {% for message in messages %}
+            <h5>{{ message }}</h5>
+        {% endfor %}
+    </div>
     <form action="{% url 'search' %}" method="GET">
         <input type="text" name="query" placeholder="Search for products">
         <button type="submit">Search</button>
