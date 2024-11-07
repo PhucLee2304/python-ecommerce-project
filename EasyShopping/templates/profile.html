@@ -23,7 +23,7 @@
                     </div>
                     <div class="iconOrders">
                         <i class="fas fa-shopping-basket icon"></i>
-                        <a class="name" href="#">Đơn mua</a>
+                        <a class="name" href="{% url "history" %}">Đơn mua</a>
                     </div>
                     <div class="iconCart">
                         <i class="fas fa-shopping-cart icon"></i>
@@ -154,6 +154,8 @@
             }
         });        
     </script>
+
+    {% include "components/footer.html" %}
 </body>
 
 </html>

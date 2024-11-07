@@ -5,6 +5,7 @@
     <title>Mã QR Thanh Toán</title>
 </head>
 <body>
+    {% include "components/header.html" %}
     {% for message in messages %}
         <h5>{{message}}</h5>
     {% endfor %}
@@ -20,5 +21,6 @@
         <input type="text" name="qrInput" placeholder="Nhập mã QR" required>
         <button type="submit">Xác nhận</button>
     </form>
+    {% include "components/footer.html" %}
 </body>
 </html>
