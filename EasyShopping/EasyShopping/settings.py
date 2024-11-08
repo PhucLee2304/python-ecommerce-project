@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'productDetail',
     'purchase',
     'review',
+    'myPurchased',
+    'feedback',
 ]
 
 MIDDLEWARE = [

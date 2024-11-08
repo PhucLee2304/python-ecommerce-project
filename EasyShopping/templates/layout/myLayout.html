@@ -6,7 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Shop Homepage - Start Bootstrap Template</title>
+        <title>{% block title %}{% endblock title %}</title>
+        {% block style %}{% endblock style %}
        <link rel="stylesheet" href=" {% static "bootstrap/css/bootstrap.min.css" %} ">
        <link rel="stylesheet" href="{% static 'css/index.css' %}">
        <link rel="stylesheet" href="{% static 'css/productDetail.css' %}">
@@ -26,5 +27,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="read_product.js"></script> 
+
+        {% block script %}{% endblock script %}
     </body>
 </html>

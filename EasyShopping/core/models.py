@@ -147,8 +147,9 @@ class Order(models.Model):
         ('Delivered', 'Delivered'),
         ('Completed', 'Completed'),
         ('Cancelled', 'Cancelled'),
+        ('Processing', 'Processing'),
     )
-    orderStatus = models.CharField(max_length=10, choices=statusChoices, default='Pending') 
+    orderStatus = models.CharField(max_length=10, choices=statusChoices, default='Processing') 
 
     methodChoices = (
         ('None', 'None'),
@@ -158,6 +159,9 @@ class Order(models.Model):
     paymentMethod = models.CharField(max_length=20, choices=methodChoices, default='None')
     
     paymentDate = models.DateTimeField(default=timezone.now)
+    
+    def getTotal(self):
+        return self.item.product.price * self.itemQuantity
 
     class Meta:
         constraints = [
