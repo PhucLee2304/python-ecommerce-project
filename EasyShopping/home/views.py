@@ -52,10 +52,10 @@ def suggest(request):
 
 def home(request):
     products = suggest(request)
-
+    categories = Category.objects.all()
     context = {
         'products': products,
-        
+        'categories' : categories
     }
     return render(request, 'index.html', context)
 

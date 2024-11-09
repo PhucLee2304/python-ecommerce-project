@@ -1,328 +1,168 @@
 {% extends "layout/myLayout.html" %}
 {% load static %}
+
+{% block addHead %}
+<link rel="stylesheet" href="{% static '/css/product-detail.css' %}">
+{% endblock addHead %}
+
+
+
 {% block content %}
-        <!-- Product section-->
-        
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="row gx-4 gx-lg-5 align-items-center">
-                    <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{{product.productImage.url}}" alt="..." /></div>
-                    <div class="col-md-6">
-                        <h1 class="display-5 fw-bolder">{{product.productName}}</h1>
-                        <div class="fs-5 mb-5">
-                            <span class="text-decoration-line-through">{{product.price}}VND</span>
-                            <span>${{product.getNewPrice}}VND</span>
-                        </div>
-                        <p class="lead">{{product.description}}</p>
-                        
-                        <form action="" method="post">
-                            <div class="row mb-3">
-                                <div class="col-sm-2">
-                                    <input name="quantity" class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
-                                </div>
-                                <div class="col-sm-3">
-                                    
-                                    <select class="form-select" aria-label="Default select example">
-                                        {% for item in product.items.all %}
-                                            <option value="{{item.itemID}}">{{item.size}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                
-                                
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <button id="addToCartButton" class="btn btn-outline-dark flex-shrink-0" type="button">
-                                        <i class="bi-cart-fill me-1"></i>
-                                        Add to cart
-                                    </button>
-                                </div>
-                                
-                                <div class="col-sm-3">
-                                    
-                                    <button id="buyButton" class="btn btn-outline-dark flex-shrink-0" type="button">
-                                        <i class="bi-cart-fill me-1"></i>
-                                        Buy Now
-                                    </button>
-                                   
-                                    
-                                    
-                                    
-                                </div>
-    
-                            </div>
-                            
-                        </form>
-                    </div>
-                </div>
+<div id='buffer'></div>
+<!-- content -->
+<section class="py-5">
+    <div class="container">
+      <div class="row gx-5">
+        <aside class="col-lg-6">
+          <div class="border rounded-4 mb-3 d-flex justify-content-center">
+            <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp">
+              <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp" />
+            </a>
+          </div>
+          <div class="d-flex justify-content-center mb-3">
+            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big1.webp" class="item-thumb">
+              <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big1.webp" />
+            </a>
+            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big2.webp" class="item-thumb">
+              <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big2.webp" />
+            </a>
+            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big3.webp" class="item-thumb">
+              <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big3.webp" />
+            </a>
+            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big4.webp" class="item-thumb">
+              <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big4.webp" />
+            </a>
+            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp" class="item-thumb">
+              <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp" />
+            </a>
+          </div>
+          <!-- thumbs-wrap.// -->
+          <!-- gallery-wrap .end// -->
+        </aside>
+        <main class="col-lg-6">
+          <div class="ps-lg-3">
+            <h4 class="title text-dark">
+              {{product.productName}}
+            </h4>
+            <div class="d-flex flex-row my-3">
+              <div class="text-warning mb-1 me-2">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <span class="ms-1">
+                  {{rating}}
+                </span>
+              </div>
+              <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>{{totalSale}} orders</span>
+              <span class="text-success ms-2">In stock</span>
             </div>
-        </section>
-
-        {% comment %} rating {% endcomment %}
-        <div class="container">
+  
+            <div class="mb-3">
+              <span class="h5">${{product.price}}</span>
+              <span class="text-muted">/piece</span>
+            </div>
+  
+            <p>
+              {{product.description}}
+            </p>
+  
             <div class="row">
-                <div class="col-xs-12 col-md-6">
-                    <div class="well well-sm">
-                        <div class="row">
-                            <div class="col-xs-12 col-md-6 text-center">
-                                <h1 class="rating-num">
-                                    {{rating}}</h1>
-                                <div class="rating">
-                                    <span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star">
-                                    </span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star">
-                                    </span><span class="glyphicon glyphicon-star-empty"></span>
-                                </div>
-                                <div>
-                                    <span class="glyphicon glyphicon-user"></span>{{totalSale}} total
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-6">
-                                <div class="row rating-desc">
-                                    {% for key, value in rates.items  %}
-                                        <div class="col-xs-3 col-md-3 text-right">
-                                            <span class="glyphicon glyphicon-star"></span>{{key}}
-                                        </div>
-                                        <div class="col-xs-8 col-md-9">
-                                            <div class="progress progress-striped">
-                                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
-                                                    aria-valuemin="0" aria-valuemax="100" style="width: {{value}}%">
-                                                    <span class="sr-only">{{value}}%</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                    
-                                    <!-- end 5 -->
-                                    {% comment %} <div class="col-xs-3 col-md-3 text-right">
-                                        <span class="glyphicon glyphicon-star"></span>4
-                                    </div>
-                                    <div class="col-xs-8 col-md-9">
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
-                                                aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                                                <span class="sr-only">60%</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end 4 -->
-                                    <div class="col-xs-3 col-md-3 text-right">
-                                        <span class="glyphicon glyphicon-star"></span>3
-                                    </div>
-                                    <div class="col-xs-8 col-md-9">
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20"
-                                                aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                                <span class="sr-only">40%</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end 3 -->
-                                    <div class="col-xs-3 col-md-3 text-right">
-                                        <span class="glyphicon glyphicon-star"></span>2
-                                    </div>
-                                    <div class="col-xs-8 col-md-9">
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="20"
-                                                aria-valuemin="0" aria-valuemax="100" style="width: 20%">
-                                                <span class="sr-only">20%</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end 2 -->
-                                    <div class="col-xs-3 col-md-3 text-right">
-                                        <span class="glyphicon glyphicon-star"></span>1
-                                    </div>
-                                    <div class="col-xs-8 col-md-9">
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80"
-                                                aria-valuemin="0" aria-valuemax="100" style="width: 15%">
-                                                <span class="sr-only">15%</span>
-                                            </div>
-                                        </div>
-                                    </div> {% endcomment %}
-                                    <!-- end 1 -->
-                                </div>
-                                <!-- end row -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              <dt class="col-3">Type:</dt>
+              <dd class="col-9">Regular</dd>
+  
+              <dt class="col-3">Color</dt>
+              <dd class="col-9">Brown</dd>
+  
+              <dt class="col-3">Material</dt>
+              <dd class="col-9">Cotton, Jeans</dd>
+  
+              <dt class="col-3">Brand</dt>
+              <dd class="col-9">Reebook</dd>
             </div>
-        </div>
-
-        <!-- Related items section-->
-        <section class="py-5 bg-light">
-            <div class="container px-4 px-lg-5 mt-5">
-                <h2 class="fw-bolder mb-4">Related products</h2>
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Fancy Product</h5>
-                                    <!-- Product price-->
-                                    $40.00 - $80.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Special Item</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">$20.00</span>
-                                    $18.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Sale Item</h5>
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">$50.00</span>
-                                    $25.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Popular Item</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    $40.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
+  
+            <hr />
+            <form action="">
+              <div class="row mb-4">
+                <div class="col-md-4 col-6">
+                  <label class="mb-2">Size</label>
+                  <select class="form-select border border-secondary" style="height: 35px;" name="size">
+                    {% for i in product.items.all %}
+                      <option>{{i.size.sizeName}}</option>  
+                    {% endfor %}
+                    
+                    <option value="">{{p.size.sizeName}}</option>
+                    
+                  </select>
                 </div>
-            </div>
-        </section>
-        
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                // Add event listener for the "Add to Cart" button
-                document.getElementById("addToCartButton").addEventListener("click", function(e) {
-                    e.preventDefault();  // Prevent the form from submitting in the traditional way
-                    const quantity = document.getElementById("inputQuantity").value;
-                    const item_id = document.querySelector("select.form-select").value;
-                    {% comment %} const item_id = document.getElementById("itemId").value; {% endcomment %}
-                    // Prepare data to send via POST
-                    const formData = new FormData();
-                    formData.append('quantity', quantity);
-                    {% comment %} formData.append('size', size); {% endcomment %}
-                    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');  // Ensure CSRF token is included
-                    formData.append('item_id', item_id);  // Append item_id
+                <!-- col.// -->
+                <div class="col-md-4 col-6 mb-3">
+                  <label class="mb-2 d-block">Quantity</label>
+                  <div class="input-group mb-3" style="width: 170px;">
+                    <button class="btn btn-white border border-secondary px-3" type="button" id="button-addon1" data-mdb-ripple-color="dark">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <input type="text" class="form-control text-center border border-secondary" placeholder="14" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+                    <button class="btn btn-white border border-secondary px-3" type="button" id="button-addon2" data-mdb-ripple-color="dark">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            
+            <a href="#" class="btn btn-warning shadow-0"> Buy now </a>
+            <a href="#" class="btn btn-primary shadow-0"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
+            <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Save </a>
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
+  <!-- content -->
 
+  <script>
+    // Define the URL of the API
+    const url = 'https://example.com/api/endpoint';
 
-                    {% comment %} console.log(size) {% endcomment %}
-                    // Send the data using Fetch API
-                    fetch("http://127.0.0.1:8000/api/cart-item/", {
-                        method: "POST",
-                        body: formData
-                    }).then(response => response.json())
-                      .then(data => {
-                        console.log(data);
-                        if (data.user != null) {
-                            alert('Product added to cart!');
-                        } else {
-                            alert('There was an issue adding the product to the cart.');
-                            window.location.href = 'http://127.0.0.1:8000/account/login/';
-                        }
-                    }).catch(error => {
-                        console.error('Error:', error);
-                    });
-                });
-                document.getElementById("buyButton").addEventListener("click", function(e) {
-                    // e.preventDefault();  // Prevent the form from submitting in the traditional way 
-                    const quantity = 1;
-                    const item_id = document.querySelector("select.form-select").value;
-                    // Prepare data to send via POST
-                    const formData = new FormData();
-                    formData.append('quantity', quantity);
-                    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');  // Ensure CSRF token is included
-                    formData.append('item_id', item_id);  // Append item_id
+    // Define the data you want to send in the request
+    const data = {
+        key1: 'value1',
+        key2: 'value2'
+    };
 
-
-          
-                    // Send the data using Fetch API
-                    fetch("http://127.0.0.1:8000/api/cart-item/", {
-                        method: "POST",
-                        body: formData
-                    }).then(response => response.json())
-                      .then(data => {
-                        if (data.user != null) {
-                            {% comment %} alert('Product added to cart!'); {% endcomment %}
-                            window.location.href = 'http://127.0.0.1:8000/cart/';
-                        } else {
-                            alert('please login first');
-                            window.location.href = 'http://127.0.0.1:8000/account/login/';
-                        }
-                    }).catch(error => {
-                        console.error('Error:', error);
-                    });
-                });
+    // Function to make a POST request
+    async function postData(url = '', data = {}) {
+        try {
+            // Make the POST request
+            const response = await fetch(url, {
+                method: 'POST', // Specify the HTTP method
+                headers: {
+                    'Content-Type': 'application/json' // Set the request headers
+                },
+                body: JSON.stringify(data) // Convert data to JSON string
             });
-        </script>
+
+            // Check if the response is ok (status code 200-299)
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // Parse the JSON response
+            const responseData = await response.json();
+            console.log('Response:', responseData);
+            return responseData;
+        } catch (error) {
+            // Handle any errors that occur
+            console.error('Error:', error);
+        }
+    }
+
+    // Call the function with the URL and data
+    postData(url, data);
+
+  </script>
         
         
 {% endblock content %}
