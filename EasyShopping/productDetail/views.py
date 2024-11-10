@@ -76,17 +76,21 @@ class CartViewSet(viewsets.ModelViewSet):
         return Cart.objects.filter(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
+        print("ok")
         """
         Handle adding items to the cart. If the item already exists in the cart, update its quantity.
         """
         user = request.user
         cart, created = Cart.objects.get_or_create(user=user)  # Ensure the user has a cart
-        item_id = request.data.get('item_id')
+        productID = request.data.get('productID')
         quantity = request.data.get('quantity', 1)
+        sizeID = request.data.get("size")
 
         try:
-            item = Item.objects.get(itemID=item_id)
+           item = Item.objects.get(product__productID=productID, size__sizeID=sizeID)
+
         except Item.DoesNotExist:
+            print("not found item")
             return Response({"error": "Item does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
         # Check if the item is already in the cart

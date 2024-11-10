@@ -1,5 +1,6 @@
-from django.shortcuts import render, redirect
-from core.models import Cart, CartItem, Item, Order
+import json
+from django.shortcuts import get_object_or_404, render, redirect
+from core.models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -141,3 +142,67 @@ def cart(request):
         'totalAmount': totalAmount,
     }
     return render(request, 'cart.html', context)
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+
+@csrf_exempt
+def update_cart_item(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+        cart_item = CartItem.objects.get(id=data['cartItemID'])
+        cart_item.quantity = data['quantity']
+        cart_item.save()
+        return JsonResponse({'success': True})
+
+@csrf_exempt
+def update_cart_item_size(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        
+        # Get the CartItem
+        cart_item = get_object_or_404(CartItem, id=data['cartItemID'])
+        
+        # Get the new Size
+        new_size = get_object_or_404(Size, sizeID=data['sizeID'])
+        
+        # print(new_size)
+        
+        items = Item.objects.filter(product = cart_item.item.product)
+        
+        for i in items:
+            if i.size == new_size:
+                newItem = i
+        
+        
+        # Update the item's size
+        cart_item.item = newItem
+        
+        # Save the updated item
+        cart_item.save()
+        
+
+
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+@csrf_exempt
+def remove_cart_item(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        try:
+            cart_item_id = data['cartItemID']
+            
+            print(cart_item_id)
+            
+            cart_item = get_object_or_404(CartItem, id=cart_item_id)
+        
+            cart_item.delete()
+            
+        except :
+            pass
+            
+        
+        return JsonResponse({'success': True})

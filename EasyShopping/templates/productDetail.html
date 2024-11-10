@@ -16,28 +16,11 @@
         <aside class="col-lg-6">
           <div class="border rounded-4 mb-3 d-flex justify-content-center">
             <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp">
-              <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp" />
+              <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="{{product.productImage.url}}" />
             </a>
           </div>
-          <div class="d-flex justify-content-center mb-3">
-            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big1.webp" class="item-thumb">
-              <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big1.webp" />
-            </a>
-            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big2.webp" class="item-thumb">
-              <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big2.webp" />
-            </a>
-            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big3.webp" class="item-thumb">
-              <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big3.webp" />
-            </a>
-            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big4.webp" class="item-thumb">
-              <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big4.webp" />
-            </a>
-            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp" class="item-thumb">
-              <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp" />
-            </a>
-          </div>
-          <!-- thumbs-wrap.// -->
-          <!-- gallery-wrap .end// -->
+         
+          
         </aside>
         <main class="col-lg-6">
           <div class="ps-lg-3">
@@ -83,16 +66,20 @@
             </div>
   
             <hr />
-            <form action="">
+            <form action="" id="productForm" >
+              {% csrf_token %}
+              <!-- Add a hidden element that contains the checkout URL -->
+              <input type="hidden" id="checkoutURL" value="{% url 'checkout' %}">
+
+              <input type="hidden" value={{product.productID}} name="productID">
               <div class="row mb-4">
                 <div class="col-md-4 col-6">
                   <label class="mb-2">Size</label>
                   <select class="form-select border border-secondary" style="height: 35px;" name="size">
                     {% for i in product.items.all %}
-                      <option>{{i.size.sizeName}}</option>  
+                      <option value={{i.size.sizeID}}>{{i.size.sizeName}}</option>  
                     {% endfor %}
                     
-                    <option value="">{{p.size.sizeName}}</option>
                     
                   </select>
                 </div>
@@ -103,66 +90,143 @@
                     <button class="btn btn-white border border-secondary px-3" type="button" id="button-addon1" data-mdb-ripple-color="dark">
                       <i class="fas fa-minus"></i>
                     </button>
-                    <input type="text" class="form-control text-center border border-secondary" placeholder="14" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+                    <input id="quantityInput" name="quantity" type="text" class="form-control text-center border border-secondary" value=1 aria-label="Example text with button addon" aria-describedby="button-addon1" />
                     <button class="btn btn-white border border-secondary px-3" type="button" id="button-addon2" data-mdb-ripple-color="dark">
                       <i class="fas fa-plus"></i>
                     </button>
                   </div>
                 </div>
               </div>
+
             </form>
             
-            <a href="#" class="btn btn-warning shadow-0"> Buy now </a>
-            <a href="#" class="btn btn-primary shadow-0"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
+            <a href="#" id="buyNow" class="btn btn-warning shadow-0"> Buy now </a>
+
+            <a id="addToCart" class="btn btn-primary shadow-0"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
             <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Save </a>
           </div>
         </main>
+        <div class="col-lg-12">
+          <nav>
+              <div class="nav nav-tabs mb-3">
+                  <button class="nav-link active border-white border-bottom-0" type="button" role="tab"
+                      id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about"
+                      aria-controls="nav-about" aria-selected="true">Description</button>
+                  <button class="nav-link border-white border-bottom-0" type="button" role="tab"
+                      id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission"
+                      aria-controls="nav-mission" aria-selected="false">Reviews</button>
+              </div>
+          </nav>
+          <div class="tab-content mb-5">
+              <div class="tab-pane active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
+                  <p>The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic words etc. 
+                      Susp endisse ultricies nisi vel quam suscipit </p>
+                  <p>Sabertooth peacock flounder; chain pickerel hatchetfish, pencilfish snailfish filefish Antarctic 
+                      icefish goldeye aholehole trumpetfish pilot fish airbreathing catfish, electric ray sweeper.</p>
+                  <div class="px-2">
+                      <div class="row g-4">
+                          <div class="col-6">
+                              <div class="row bg-light align-items-center text-center justify-content-center py-2">
+                                  <div class="col-6">
+                                      <p class="mb-0">Weight</p>
+                                  </div>
+                                  <div class="col-6">
+                                      <p class="mb-0">1 kg</p>
+                                  </div>
+                              </div>
+                              <div class="row text-center align-items-center justify-content-center py-2">
+                                  <div class="col-6">
+                                      <p class="mb-0">Country of Origin</p>
+                                  </div>
+                                  <div class="col-6">
+                                      <p class="mb-0">Agro Farm</p>
+                                  </div>
+                              </div>
+                              <div class="row bg-light text-center align-items-center justify-content-center py-2">
+                                  <div class="col-6">
+                                      <p class="mb-0">Quality</p>
+                                  </div>
+                                  <div class="col-6">
+                                      <p class="mb-0">Organic</p>
+                                  </div>
+                              </div>
+                              <div class="row text-center align-items-center justify-content-center py-2">
+                                  <div class="col-6">
+                                      <p class="mb-0">Сheck</p>
+                                  </div>
+                                  <div class="col-6">
+                                      <p class="mb-0">Healthy</p>
+                                  </div>
+                              </div>
+                              <div class="row bg-light text-center align-items-center justify-content-center py-2">
+                                  <div class="col-6">
+                                      <p class="mb-0">Min Weight</p>
+                                  </div>
+                                  <div class="col-6">
+                                      <p class="mb-0">250 Kg</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="tab-pane" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
+                  <div class="d-flex">
+                      <img src="img/avatar.jpg" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+                      <div class="">
+                          <p class="mb-2" style="font-size: 14px;">April 12, 2024</p>
+                          <div class="d-flex justify-content-between">
+                              <h5>Jason Smith</h5>
+                              <div class="d-flex mb-3">
+                                  <i class="fa fa-star text-secondary"></i>
+                                  <i class="fa fa-star text-secondary"></i>
+                                  <i class="fa fa-star text-secondary"></i>
+                                  <i class="fa fa-star text-secondary"></i>
+                                  <i class="fa fa-star"></i>
+                              </div>
+                          </div>
+                          <p>The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic 
+                              words etc. Susp endisse ultricies nisi vel quam suscipit </p>
+                      </div>
+                  </div>
+                  <div class="d-flex">
+                      <img src="img/avatar.jpg" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+                      <div class="">
+                          <p class="mb-2" style="font-size: 14px;">April 12, 2024</p>
+                          <div class="d-flex justify-content-between">
+                              <h5>Sam Peters</h5>
+                              <div class="d-flex mb-3">
+                                  <i class="fa fa-star text-secondary"></i>
+                                  <i class="fa fa-star text-secondary"></i>
+                                  <i class="fa fa-star text-secondary"></i>
+                                  <i class="fa fa-star"></i>
+                                  <i class="fa fa-star"></i>
+                              </div>
+                          </div>
+                          <p class="text-dark">The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic 
+                              words etc. Susp endisse ultricies nisi vel quam suscipit </p>
+                      </div>
+                  </div>
+              </div>
+              <div class="tab-pane" id="nav-vision" role="tabpanel">
+                  <p class="text-dark">Tempor erat elitr rebum at clita. Diam dolor diam ipsum et tempor sit. Aliqu diam
+                      amet diam et eos labore. 3</p>
+                  <p class="mb-0">Diam dolor diam ipsum et tempor sit. Aliqu diam amet diam et eos labore.
+                      Clita erat ipsum et lorem et sit</p>
+              </div>
+          </div>
+      </div>    
       </div>
     </div>
+
+    
+
   </section>
   <!-- content -->
 
-  <script>
-    // Define the URL of the API
-    const url = 'https://example.com/api/endpoint';
 
-    // Define the data you want to send in the request
-    const data = {
-        key1: 'value1',
-        key2: 'value2'
-    };
+  {% endblock content %}
 
-    // Function to make a POST request
-    async function postData(url = '', data = {}) {
-        try {
-            // Make the POST request
-            const response = await fetch(url, {
-                method: 'POST', // Specify the HTTP method
-                headers: {
-                    'Content-Type': 'application/json' // Set the request headers
-                },
-                body: JSON.stringify(data) // Convert data to JSON string
-            });
-
-            // Check if the response is ok (status code 200-299)
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            // Parse the JSON response
-            const responseData = await response.json();
-            console.log('Response:', responseData);
-            return responseData;
-        } catch (error) {
-            // Handle any errors that occur
-            console.error('Error:', error);
-        }
-    }
-
-    // Call the function with the URL and data
-    postData(url, data);
-
-  </script>
-        
-        
-{% endblock content %}
+  {% block addScript %}
+  <script src=" {% static "/js/product-detail.js" %} "></script>
+  {% endblock addScript %}
