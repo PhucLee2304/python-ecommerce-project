@@ -1,5 +1,6 @@
 {% extends "layout/myLayout.html" %}
 {% comment %} {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,14 +26,12 @@
                     <div class="iconOrders">
                         <i class="fas fa-shopping-basket icon"></i>
                         <a class="name" href="{% url 'my-purchased' 'All' %}">Đơn mua</a>
-
                     </div>
                     <div class="iconCart">
                         <i class="fas fa-shopping-cart icon"></i>
                         <a class="name" href="{% url "cart" %}">Giỏ hàng</a>
                     </div>
                 </div>
-
             </div>
         </div>
         <div class="sectionTwo">
@@ -44,7 +43,7 @@
                 <div class="content">
                     {% if messages %}
                         {% for message in messages %}
-                            {{message}}
+                            {{ message }}
                         {% endfor %}
                     {% endif %}
                     <form action="" method="POST" enctype="multipart/form-data">
@@ -53,8 +52,10 @@
                             <div class="imageEdit">
                                 <div class="innerWrap">
                                     <div class="image">
-                                        <img id="previewImage" src="{% static '{{user.userImage.url}}' %}" alt="Ảnh đại diện" class="iconImage">
-                                        <input type="file" accept=".jpg, .jpeg, .png" id="imageInput" name="imageInput" style="display: none;">
+                                        <img id="previewImage" src="{% static '{{ user.userImage.url }}' %}"
+                                            alt="Ảnh đại diện" class="iconImage">
+                                        <input type="file" accept=".jpg, .jpeg, .png" id="imageInput" name="imageInput"
+                                            style="display: none;">
                                         <button type="button" class="selectImage">
                                             <span>Choose file</span>
                                         </button>
@@ -69,7 +70,8 @@
                                             <label>Full Name</label>
                                         </td>
                                         <td>
-                                            <input type="text" name="full_name" placeholder="Full Name" value="{% if user.full_name != ' ' %}{{ user.full_name }}{% endif %}">
+                                            <input type="text" name="full_name" placeholder="Full Name"
+                                                value="{% if user.full_name != ' ' %}{{ user.full_name }}{% endif %}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -85,7 +87,8 @@
                                             <label>Phone Number</label>
                                         </td>
                                         <td>
-                                            <input type="text" name="phone" placeholder="Phone Number" value="{% if user.phone %}{{ user.phone }}{% endif %}">
+                                            <input type="text" name="phone" placeholder="Phone Number"
+                                                value="{% if user.phone %}{{ user.phone }}{% endif %}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -96,6 +99,7 @@
                                             <div class="genderTick">
                                                 <div class="tick">
                                                     <input type="radio" name="gender" value="Male" id="male" {% if user.gender == 'Male' %}checked{% endif %}>
+
                                                     <label for="male">Male</label>
                                                 </div>
                                                 <div class="tick">
@@ -111,9 +115,12 @@
                                         </td>
                                         <td>
                                             <div class="dateInputs">
-                                                <input class="dateOfBirth" type="text" name="day" placeholder="Day" value="{{user.dateOfBirth.day}}">
-                                                <input class="dateOfBirth" type="text" name="month" placeholder="Month" value="{{user.dateOfBirth.month}}">
-                                                <input class="dateOfBirth" type="text" name="year" placeholder="Year" value="{{user.dateOfBirth.year}}">
+                                                <input class="dateOfBirth" type="text" name="day" placeholder="Day"
+                                                    value="{{user.dateOfBirth.day}}">
+                                                <input class="dateOfBirth" type="text" name="month" placeholder="Month"
+                                                    value="{{user.dateOfBirth.month}}">
+                                                <input class="dateOfBirth" type="text" name="year" placeholder="Year"
+                                                    value="{{user.dateOfBirth.year}}">
                                             </div>
                                         </td>
                                     </tr>
@@ -122,7 +129,8 @@
                                             <label>Address</label>
                                         </td>
                                         <td>
-                                            <input type="text" name="address" placeholder="Adress" value="{% if user.address %}{{ user.address }}{% endif %}">
+                                            <input type="text" name="address" placeholder="Address"
+                                                value="{% if user.address %}{{ user.address }}{% endif %}">
                                         </td>
                                     </tr>
                                 </table>
@@ -134,23 +142,23 @@
                         </div>
                     </form>
                 </div>
-            </div>            
+            </div>
         </div>
     </div>
 
     <script>
-        document.querySelector('.selectImage').addEventListener('click', function() {
+        document.querySelector('.selectImage').addEventListener('click', function () {
             document.getElementById('imageInput').click();
         });
 
-        document.getElementById('imageInput').addEventListener('change', function(event) {
+        document.getElementById('imageInput').addEventListener('change', function (event) {
             const preview = document.getElementById('previewImage');
             const file = event.target.files[0];
-        
+
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result; 
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -164,6 +172,8 @@
 
 
 
+
+
 {% load static %}
 
 {% block addHead %}
@@ -171,59 +181,119 @@
 {% endblock addHead %}
 
 {% block content %}
-<section class="vh-100" style="background-color: #f4f5f7;">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col col-lg-6 mb-4 mb-lg-0">
-          <div class="card mb-3" style="border-radius: .5rem;">
-            <div class="row g-0">
-              <div class="col-md-4 gradient-custom text-center text-white"
-                style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
-                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                  alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
-                  <h5>{{ user.first_name }} {{ user.last_name }}</h5>
-
-          
-                <i class="far fa-edit mb-5"></i>
-              </div>
-              <div class="col-md-8">
-                <div class="card-body p-4">
-                  <h6>Information</h6>
-                  <hr class="mt-0 mb-4">
-                  <div class="row pt-1">
-                    <div class="col-6 mb-3">
-                      <h6>Email</h6>
-                      <p class="text-muted">{{user.email}}</p>
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <section class="vh-100" style="background-color: #f4f5f7;">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col col-lg-6 mb-4 mb-lg-0">
+                    <div class="card mb-3" style="border-radius: .5rem;">
+                        <div class="row g-0">
+                            <div class="col-md-4 gradient-custom text-center text-white"
+                                style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                                <img src="{{ user.userImage.url }}" alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
+                                <input type="file" accept=".jpg, .jpeg, .png" id="imageInput" name="imageInput" style="display: none;">
+                                <button type="button" class="selectImage">
+                                    <span>Choose file</span>
+                                </button>
+                                <h5>
+                                    {% if user.full_name %}
+                                        {{ user.full_name }}
+                                    {% elif user.last_name %}
+                                        {{ user.last_name }}
+                                    {% else %}
+                                        Your Name
+                                    {% endif %}
+                                </h5>
+                                <i class="far fa-edit mb-5"></i>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body p-4">
+                                    <h6>Information</h6>
+                                    <hr class="mt-0 mb-4">
+                                    <div class="row pt-1">
+                                        <div class="col-6 mb-3">
+                                            <h6>Full Name</h6>
+                                            <input class="text-muted" type="text" name="full_name" placeholder="Full Name"
+                                                value="{{ user.full_name }}">
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <h6>Email</h6>
+                                            <input class="text-muted" type="text" name="email" placeholder="Email"
+                                                value="{{ user.email }}">
+                                        </div>
+                                    </div>
+                                    <div class="row pt-1">
+                                        <div class="col-6 mb-3">
+                                            <h6>Phone</h6>
+                                            <input class="text-muted" type="text" name="phone" placeholder="Phone Number"
+                                                value="{{ user.phone }}">
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <h6>Address</h6>
+                                            <input class="text-muted" type="text" name="address" placeholder="Address"
+                                                value="{{ user.address }}">
+                                        </div>
+                                    </div>
+                                    <div class="row pt-1">
+                                        <div class="col-6 mb-3">
+                                            <h6>Gender</h6>
+                                            <div class="genderTick">
+                                                <div class="tick">
+                                                    <input type="radio" name="gender" value="Male" id="male"
+                                                        {% if user.gender == 'Male' %}checked{% endif %}>
+                                                    <label for="male">Male</label>
+                                                </div>
+                                                <div class="tick">
+                                                    <input type="radio" name="gender" value="Female" id="female"
+                                                        {% if user.gender == 'Female' %}checked{% endif %}>
+                                                    <label for="female">Female</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <h6>Date Of Birth</h6>
+                                            <div class="dateInputs">
+                                                <input class="dateOfBirth" type="text" name="day" placeholder="Day"
+                                                    value="{{ user.dateOfBirth.day }}">
+                                                <input class="dateOfBirth" type="text" name="month" placeholder="Month"
+                                                    value="{{ user.dateOfBirth.month }}">
+                                                <input class="dateOfBirth" type="text" name="year" placeholder="Year"
+                                                    value="{{ user.dateOfBirth.year }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr class="mt-0 mb-4">
+                                    <div class="d-flex justify-content-start">
+                                        <button type="submit">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-6 mb-3">
-                      <h6>Phone</h6>
-                      <p class="text-muted">{{user.phone}}</p>
-                    </div>
-                  </div>
-                  <div class="row pt-1">
-                    <div class="col-6 mb-3">
-                      <h6>address</h6>
-                      <p class="text-muted">{{user.address}}</p>
-                    </div>
-                    <div class="col-6 mb-3">
-                      <h6>Gender</h6>
-                      <p class="text-muted">{{user.gender}}</p>
-                    </div>
-                  </div>
-                  <hr class="mt-0 mb-4">
-                  
-                  <div class="d-flex justify-content-start">
-                    <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
-                    <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
-                    <a href="#!"><i class="fab fa-instagram fa-lg"></i></a>
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
+</form>
+
+<script>
+    document.querySelector('.selectImage').addEventListener('click', function () {
+        document.getElementById('imageInput').click();
+    });
+
+    document.getElementById('imageInput').addEventListener('change', function (event) {
+        const preview = document.getElementById('previewImage');
+        const file = event.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });        
+</script>
 
 {% endblock content %}
