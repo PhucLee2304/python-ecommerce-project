@@ -1,127 +1,185 @@
+{% extends "layout/myLayout.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout</title>
-    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
-</head>
-<body>
-    {% include "components/header.html" %}
 
-    <div class="container">
-        <div class="recipient-info">
-            <h3>Thông Tin Người Nhận</h3>
-            <p>Tên người nhận: <strong>{{ user.full_name }}</strong></p>
-            <p>Địa chỉ nhận hàng: <strong>{{ user.address }}</strong></p>
-            <p>Số điện thoại: <strong>{{ user.phone }}</strong></p>
-        </div>
-        
-        <div class="order-header">
-            <div class="header-product">
-                <label>Sản Phẩm</label>
-            </div>
-            <div class="header-unit-price">Đơn Giá</div>
-            <div class="header-quantity">Số Lượng</div>
-            <div class="header-amount">Số Tiền</div>
-        </div>
+{% block content %}
+   <!-- Single Page Header start -->
+   <div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Checkout</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+        <li class="breadcrumb-item active text-white">Checkout</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
 
-        <div>
-            {% for message in messages %}
-                <h5>{{ message }}</h5>
-            {% endfor %}
-        </div>
-        
-        <form action="" method="POST">
-            {% csrf_token %}
-            {% for order in orders %}
-                <div class="order-item" data-order-id="{{ order.orderID }}">
-                    <div class="product-info">
-                        <div class="product-details">
-                            <a class="product-image" href="#">
-                                <img src="{{ order.productImage }}" alt="{{ order.productName }}">
-                            </a>
-                            <a class="product-name" title="{{ order.productName }}" href="#">{{ order.productName }}</a>
+
+<!-- Checkout Page Start -->
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <h1 class="mb-4">Billing details</h1>
+        <form action="#">
+            <div class="row g-5">
+                <div class="col-md-12 col-lg-6 col-xl-7">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">First Name<sup>*</sup></label>
+                                <input type="text" class="form-control" value={{ request.user.first_name }}>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Last Name<sup>*</sup></label>
+                                <input type="text" class="form-control" value={{ request.user.last_name }}>
+                            </div>
                         </div>
                     </div>
-                    <div class="item-unit-price">
-                        {% comment %} <span class="discounted-price">{{ order.item.product.getNewPrice }}đ</span> {% endcomment %}
-                        <span class="discounted-price">{{ order.discountPrice|floatformat:0 }}đ</span>
+                    {% comment %} <div class="form-item">
+                        <label class="form-label my-3">Company Name<sup>*</sup></label>
+                        <input type="text" class="form-control">
+                    </div> {% endcomment %}
+                    <div class="form-item">
+                        <label class="form-label my-3">Address <sup>*</sup></label>
+                        <input type="text" class="form-control" value={{request.user.address}}>
                     </div>
-                    {% comment %} <div class="item-quantity">{{ order.itemQuantity }}</div> {% endcomment %}
-                    <div class="item-quantity">{{ order.quantity }}</div>
-                    <div class="item-total-amount">
-                        <span class="item-total">{{ order.orderAmount|floatformat:0 }}đ</span>
+                    {% comment %} <div class="form-item">
+                        <label class="form-label my-3">Town/City<sup>*</sup></label>
+                        <input type="text" class="form-control">
                     </div>
-                    <div class="shipping-fee">
-                        {% comment %} <p>Phí Vận Chuyển: {{ order.item.product.shippingFee }}đ</p> {% endcomment %}
-                        <p>Phí Vận Chuyển: {{ order.shippingFee|floatformat:0 }}đ</p>
+                    <div class="form-item">
+                        <label class="form-label my-3">Country<sup>*</sup></label>
+                        <input type="text" class="form-control">
                     </div>
-                    
-                    <input type="hidden" name="orderAmount" value="{{ order.orderAmount|floatformat:0|default:0 }}">
-                    <input type="hidden" name="shippingFee" value="{{ order.shippingFee|floatformat:0|default:0 }}">
-                    <input type="hidden" name="orderID" value="{{ order.orderID }}">  
+                    <div class="form-item">
+                        <label class="form-label my-3">Postcode/Zip<sup>*</sup></label>
+                        <input type="text" class="form-control">
+                    </div> {% endcomment %}
+                    <div class="form-item">
+                        <label class="form-label my-3">Mobile<sup>*</sup></label>
+                        <input type="tel" class="form-control" value={{request.user.phone}}>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label my-3">Email Address<sup>*</sup></label>
+                        <input type="email" class="form-control" value={{request.user.email}}>
+                    </div>
+                    {% comment %} <div class="form-check my-3">
+                        <input type="checkbox" class="form-check-input" id="Account-1" name="Accounts" value="Accounts">
+                        <label class="form-check-label" for="Account-1">Create an account?</label>
+                    </div>
+                    <hr>
+                    <div class="form-check my-3">
+                        <input class="form-check-input" type="checkbox" id="Address-1" name="Address" value="Address">
+                        <label class="form-check-label" for="Address-1">Ship to a different address?</label>
+                    </div> {% endcomment %}
+                    <div class="form-item">
+                        <textarea name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
+                    </div>
                 </div>
-            {% endfor %}    
-
-            <div class="payment-options"> 
-                <p>Phương Thức Thanh Toán:</p>
-                <input type="radio" name="paymentMethod" id="bankTransfer" value="Bank Transfer" required>
-                <label for="bankTransfer">Chuyển Khoản Ngân Hàng</label><br>
-                <input type="radio" name="paymentMethod" id="cashOnDelivery" value="Cash On Delivery" required>
-                <label for="cashOnDelivery">Thanh Toán Khi Nhận Hàng</label>
-            </div>
-        
-            <div class="checkout-summary">
-                <div class="total-products">Tổng Thanh Toán ({{ orders|length }} sản phẩm):</div>
-                <div class="total-price">{{ totalAmount|floatformat:0 }}đ</div>
-                <button class="checkout-button" type="submit">
-                    <span>Thanh Toán</span>
-                </button>
+                <div class="col-md-12 col-lg-6 col-xl-5">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Products</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">
+                                        <div class="d-flex align-items-center mt-2">
+                                            <img src="{{product.productImage.url}}" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
+                                        </div>
+                                    </th>
+                                    <td class="py-5">{{product.productName}}</td>
+                                    <td class="py-5">${{product.price}}</td>
+                                    <td class="py-5">{{quantity}}</td>
+                                    <td class="py-5">${{total}}</td>
+                                </tr>
+                                
+                                
+                                <tr>
+                                    <th scope="row">
+                                    </th>
+                                    <td class="py-5">
+                                        <p class="mb-0 text-dark py-4">Shipping</p>
+                                    </td>
+                                    <td colspan="3" class="py-5">
+                                        <div class="form-check text-start">
+                                            <input type="checkbox" class="form-check-input bg-primary border-0" id="Shipping-1" name="Shipping-1" value="Shipping">
+                                            <label class="form-check-label" for="Shipping-1">Free Shipping</label>
+                                        </div>
+                                        <div class="form-check text-start">
+                                            <input type="checkbox" class="form-check-input bg-primary border-0" id="Shipping-2" name="Shipping-1" value="Shipping">
+                                            <label class="form-check-label" for="Shipping-2">Flat rate: $15.00</label>
+                                        </div>
+                                        <div class="form-check text-start">
+                                            <input type="checkbox" class="form-check-input bg-primary border-0" id="Shipping-3" name="Shipping-1" value="Shipping">
+                                            <label class="form-check-label" for="Shipping-3">Local Pickup: $8.00</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                    </th>
+                                    <td class="py-5">
+                                        <p class="mb-0 text-dark text-uppercase py-3">TOTAL</p>
+                                    </td>
+                                    <td class="py-5"></td>
+                                    <td class="py-5"></td>
+                                    <td class="py-5">
+                                        <div class="py-3 border-bottom border-top">
+                                            <p class="mb-0 text-dark">$135.00</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
+                        <div class="col-12">
+                            <div class="form-check text-start my-3">
+                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Transfer-1" name="Transfer" value="Transfer">
+                                <label class="form-check-label" for="Transfer-1">Direct Bank Transfer</label>
+                            </div>
+                            <p class="text-start text-dark">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
+                        </div>
+                    </div>
+                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
+                        <div class="col-12">
+                            <div class="form-check text-start my-3">
+                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Payments-1" name="Payments" value="Payments">
+                                <label class="form-check-label" for="Payments-1">Check Payments</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
+                        <div class="col-12">
+                            <div class="form-check text-start my-3">
+                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Delivery-1" name="Delivery" value="Delivery">
+                                <label class="form-check-label" for="Delivery-1">Cash On Delivery</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
+                        <div class="col-12">
+                            <div class="form-check text-start my-3">
+                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Paypal-1" name="Paypal" value="Paypal">
+                                <label class="form-check-label" for="Paypal-1">Paypal</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-4 text-center align-items-center justify-content-center pt-4">
+                        <button type="button" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Place Order</button>
+                    </div>
+                </div>
             </div>
         </form>
-
-        <script>
-            window.addEventListener("beforeunload", function (event) {
-                var orderIDs = []; // Khởi tạo mảng orderIDs
-        
-                // Lấy danh sách orderID từ HTML
-                var orderItems = document.querySelectorAll('.order-item');
-                orderItems.forEach(function(item) {
-                    orderIDs.push(item.getAttribute('data-order-id'));
-                });
-        
-                // Gửi yêu cầu DELETE
-                if (orderIDs.length > 0) {
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("DELETE", "{% url 'payment' %}", true); // Đảm bảo thay thế với URL chính xác
-                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                    // Thêm CSRF token vào header
-                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken')); // Gọi hàm getCookie để lấy token
-                    xhr.send(JSON.stringify({ orderIDs: orderIDs }));
-                }
-            });
-        
-            // Hàm lấy giá trị cookie CSRF
-            function getCookie(name) {
-                var cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    var cookies = document.cookie.split(';');
-                    for (var i = 0; i < cookies.length; i++) {
-                        var cookie = cookies[i].trim();
-                        // Kiểm tra cookie có chứa tên mong muốn
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
-        </script>
     </div>
-
-    {% include "components/footer.html" %}
-</body>
-</html>
+</div>
+<!-- Checkout Page End -->
+{% endblock content %}

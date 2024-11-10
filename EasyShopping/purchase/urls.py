@@ -5,4 +5,5 @@ urlpatterns = [
     # path('', views.payment, name='payment'),
     path('payment/', views.payment, name='payment'),
     path('scan/', views.scan, name='scan'),
+    path('checkout/', views.checkoutView, name='checkout'),
 ]

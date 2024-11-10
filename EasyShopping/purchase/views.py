@@ -10,7 +10,7 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import base64
 from io import BytesIO
-from core.models import Order
+from core.models import *
 '''
 @login_required(login_url='login')
 def payment(request):
@@ -147,3 +147,25 @@ def scan(request):
             
     else:
         return render(request, 'qr.html')
+    
+    
+
+# views.py
+from django.shortcuts import render
+
+def checkoutView(request):
+    product_id = request.GET.get('pid')  # Get product ID from the query parameter
+    size_id = request.GET.get('sid')  # Get size ID from the query parameter
+    quantity = request.GET.get('quantity')  # Get quantity from the query parameter
+    product = Product.objects.get(productID = product_id)
+    total = int(quantity) * float(product.price)
+    context = {
+        "product" : product,
+        "total" : total,
+        "quantity": quantity
+    }
+
+    # Process the data (e.g., retrieve product, size, and validate quantity)
+    # Your logic to handle the checkout goes here
+
+    return render(request, 'checkout.html', context)
