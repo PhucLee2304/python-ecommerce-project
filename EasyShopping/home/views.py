@@ -5,14 +5,14 @@ from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Q
 from django.contrib import messages
-from core.models import Category, UserInterest, Product
+from core.models import Category, UserInterest, Product, Cart, CartItem
 
 def suggest(request):
     user = request.user
 
     # If user has no interests yet or not authenticated, return 25 random prducts
     if not user.is_authenticated or not UserInterest.objects.filter(user=user).exists():
-        return Product.objects.order_by('?')[:25]
+        return Product.objects.order_by('?')[:24]
     
     userInterests = UserInterest.objects.filter(user=user)
     categoryScores = {}
@@ -42,20 +42,25 @@ def suggest(request):
         products = Product.objects.filter(category=category).order_by('?')[:count]
         suggestions.extend(products)
     
-    if len(suggestions) < 25:
-        emptyCount = 25 - len(suggestions)
+    if len(suggestions) < 24:
+        emptyCount = 24 - len(suggestions)
         topCategory = max(categoryScores, key=categoryScores.get)
         suggestions.extend(Product.objects.filter(category=topCategory).order_by('?')[:emptyCount])
 
     random.shuffle(suggestions)
-    return suggestions[:25]
+    return suggestions[:24]
 
 def home(request):
+    user = request.user
+    cart = Cart.objects.filter(user=user).first()
+    totalItemsInCart = CartItem.objects.filter(cart=cart).count()
     products = suggest(request)
     categories = Category.objects.all()
     context = {
         'products': products,
-        'categories' : categories
+        'categories' : categories,
+        'user': user,
+        'totalItemsInCart': totalItemsInCart,
     }
     return render(request, 'index.html', context)
 
