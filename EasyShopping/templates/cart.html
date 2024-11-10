@@ -199,7 +199,7 @@
                                         <th scope="row">
                                             <div class="d-flex align-items-center">
                                                 <a href="{% url "product-detail" ci.item.product.productID %}">
-                                                    <img src="{% static '{{ ci.item.product.productImage.url }}' %}" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
+                                                    <img src="{{ ci.item.product.productImage.url }}" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
                                                 </a>
                                                 
                                             </div>
@@ -238,11 +238,11 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <p class="mb-0 mt-4">{{ ci.getTotal }} $</p>
+                                            <p id="totalAmount" class="mb-0 mt-4">{{ ci.getTotal }} $</p>
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-md rounded-circle bg-light border mt-4 remove-item-btn" data-cartitem-id="{{ ci.id }}">
-                                                <i class="fa fa-times text-danger"></i>
+                                                xoa
                                             </button>
                                         </td>
                                     </tr>
@@ -288,7 +288,8 @@
 {% endblock content %}
 
 {% block addScript %}
-
+    <script src="{% static '/js/cart.js' %}"></script>
+    <source src="{% static "/js/cart2.js" %}" type="">
 {% endblock addScript %}
 
 

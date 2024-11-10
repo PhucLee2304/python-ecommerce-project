@@ -155,7 +155,8 @@ def update_cart_item(request):
         cart_item = CartItem.objects.get(id=data['cartItemID'])
         cart_item.quantity = data['quantity']
         cart_item.save()
-        return JsonResponse({'success': True})
+        newTotal = cart_item.quantity * cart_item.item.product.price;
+        return JsonResponse({'success': True, 'newTotal' : newTotal})
 
 @csrf_exempt
 def update_cart_item_size(request):
@@ -206,3 +207,5 @@ def remove_cart_item(request):
             
         
         return JsonResponse({'success': True})
+
+

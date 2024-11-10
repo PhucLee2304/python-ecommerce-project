@@ -1,8 +1,8 @@
 document.addEventListener('click', (event) => {
     if (event.target.matches('.remove-item-btn')) {
         const cartItemId = event.target.dataset.cartitemId;
-        console.log('Cart item ID:', cartItemId);
-        // removeCartItem(cartItemId);
+        console.log(cartItemId);
+        removeCartItem(cartItemId);
     }
 });
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,19 +20,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle quantity change events (increase and decrease)
     document.querySelectorAll('.btn-plus, .btn-minus').forEach(button => {
         button.addEventListener('click', (event) => {
+            event.preventDefault();
             const cartItemID = event.target.closest('button').dataset.cartitemId;
+
             const action = event.target.closest('button').dataset.action;
+
             let quantityInput = document.querySelector(`input[data-cartitem-id="${cartItemID}"]`);
             let currentQuantity = parseInt(quantityInput.value);
 
             // Handle increase and decrease actions
             if (action === 'increase') {
-                currentQuantity++;
+                // currentQuantity++;
             } else if (action === 'decrease' && currentQuantity > 1) {
-                currentQuantity--;
+                // currentQuantity--;
+            }
+            else{
+                currentQuantity = 1;
             }
 
             quantityInput.value = currentQuantity;
+            console.log(cartItemID);
 
             // Update the cart item quantity on the server (via AJAX)
             updateCartItemQuantity(cartItemID, currentQuantity);
@@ -99,7 +106,7 @@ function updateCartItemSize(cartItemID, sizeID) {
 
 // Function to update the cart item quantity
 function updateCartItemQuantity(cartItemID, quantity) {
-    fetch('http://127.0.0.1:8000/update-cart-item-quantity/', {
+    fetch('http://127.0.0.1:8000/update-cart-item/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -110,6 +117,8 @@ function updateCartItemQuantity(cartItemID, quantity) {
     .then(response => response.json())
     .then(data => {
         console.log('Cart item quantity updated:', data);
+        document.getElementById('totalAmount').innerText = `${data.newTotal} $`;
+        // window.location.href = 'http://127.0.0.1:8000/cart/';
     })
     .catch(error => {
         console.error('Error updating cart item quantity:', error);
@@ -136,6 +145,7 @@ function removeCartItem(cartItemID) {
     .catch(error => {
         console.error('Error removing cart item:', error);
     });
+    return redirect('cart.html')
 }
 
 // Function to update the entire cart (on form submit)
@@ -151,6 +161,7 @@ function updateCart(updatedCartItems) {
     .then(response => response.json())
     .then(data => {
         console.log('Cart updated:', data);
+        window.location.href = 'http://127.0.0.1:8000/cart/';
         // Optionally, update the DOM to reflect new cart totals
     })
     .catch(error => {
