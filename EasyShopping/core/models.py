@@ -30,7 +30,7 @@ class User(AbstractUser):
 class Category(models.Model):
     categoryID = models.AutoField(primary_key=True)
     categoryName = models.CharField(max_length=255, null=False)
-    categoryImage = models.ImageField(upload_to='categories/', null=False, blank=False, default='\categories\category_image.jfif')
+    categoryImage = models.ImageField(upload_to='categories/', null=False, blank=False, default='/categories/category_image.jfif')
 
     class Meta:
         verbose_name_plural = "Categories"
