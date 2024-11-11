@@ -51,10 +51,23 @@ def suggest(request):
     return suggestions[:24]
 
 def home(request):
-    user = request.user
-    cart = Cart.objects.filter(user=user).first()
-    totalItemsInCart = CartItem.objects.filter(cart=cart).count()
-    products = suggest(request)
+    try:
+        totalItemsInCart = 0
+        if request.user != None:
+            user = request.user
+            cart = Cart.objects.filter(user=user).first()
+            totalItemsInCart = CartItem.objects.filter(cart=cart).count()
+            products = suggest(request)
+        else:
+            # cart = Cart.objects.filter(user=user).first()
+            # totalItemsInCart = CartItem.objects.filter(cart=cart).count()
+            products = Product.objects.all()
+    except :
+        context = {
+            
+        }
+        return render(request, 'index.html', context)
+
     categories = Category.objects.all()
     context = {
         'products': products,
@@ -89,6 +102,7 @@ def search(request):
     
     if not products:
         messages.info(request, 'No results found')
+        
     
     context = {
         'products': products,
