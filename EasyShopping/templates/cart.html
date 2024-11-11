@@ -164,14 +164,14 @@
 
 
         <!-- Single Page Header start -->
-        <div class="container-fluid page-header py-5">
+        {% comment %} <div class="container-fluid page-header py-5">
             <h1 class="text-center text-white display-6">Cart</h1>
             <ol class="breadcrumb justify-content-center mb-0">
                 <li class="breadcrumb-item"><a href="{% url "home" %}">Home</a></li>
          
                 <li class="breadcrumb-item active text-white">Cart</li>
             </ol>
-        </div>
+        </div> {% endcomment %}
         <!-- Single Page Header End -->
 
 
@@ -179,7 +179,7 @@
         <div class="container-fluid py-5">
             <div class="container py-5">
                 <div class="table-responsive">
-                    <form method="POST" id="cartForm">
+                    <form action="{% url 'cart' %}" method="POST" id="cartForm">
                         {% csrf_token %}
                         <table class="table">
                             <thead>
@@ -227,11 +227,11 @@
                                                 <div class="input-group-btn">
                                                     <button class="btn btn-sm btn-minus rounded-circle bg-light border" type="button" data-action="decrease" data-cartitem-id="{{ ci.id }}">
                                                         <i class="fa fa-minus"></i>
-                                                    </button>
+                                                    </button> 
                                                 </div>
-                                                <input type="text" class="form-control form-control-sm text-center border-0" value="{{ ci.quantity }}" data-cartitem-id="{{ ci.id }}" name="quantity">
+                                                <input readonly type="text" class="form-control form-control-sm text-center border-0" value="{{ ci.quantity }}" data-cartitem-id="{{ ci.id }}" name="quantity">
                                                 <div class="input-group-btn">
-                                                    <button class="btn btn-sm btn-plus rounded-circle bg-light border" type="button" data-action="increase" data-cartitem-id="{{ ci.id }}">
+                                                     <button class="btn btn-sm btn-plus rounded-circle bg-light border" type="button" data-action="increase" data-cartitem-id="{{ ci.id }}">
                                                         <i class="fa fa-plus"></i>
                                                     </button>
                                                 </div>
@@ -239,6 +239,9 @@
                                         </td>
                                         <td>
                                             <p id="totalAmount" class="mb-0 mt-4">{{ ci.getTotal }} $</p>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" class="mb-0 mt-4" name="checkbox" id="">
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-md rounded-circle bg-light border mt-4 remove-item-btn" data-cartitem-id="{{ ci.id }}">
@@ -249,17 +252,17 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <button type="submit" class="btn btn-primary">Update Cart</button>
+                        <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
                     </form>
                     
                     
                 </div>
                 
-                <div class="row g-4 justify-content-end">
+                {% comment %} <div class="row g-4 justify-content-end">
                     <div class="col-8"></div>
                     <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
                         <div class="bg-light rounded">
-                            <div class="p-4">
+                             <div class="p-4">
                                 <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
                                 <div class="d-flex justify-content-between mb-4">
                                     <h5 class="mb-0 me-4">Subtotal:</h5>
@@ -276,20 +279,92 @@
                             <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                                 <h5 class="mb-0 ps-4 me-4">Total</h5>
                                 <p class="mb-0 pe-4">$99.00</p>
-                            </div>
+                            </div> 
                             <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
-        </div>
+        </div> 
         <!-- Cart Page End -->
+
+
+    
 
 {% endblock content %}
 
 {% block addScript %}
     <script src="{% static '/js/cart.js' %}"></script>
     <source src="{% static "/js/cart2.js" %}" type="">
+
+    <script>
+        const quantityInputs = document.querySelectorAll('.inputQuantity');
+        const hiddenTotalAmountInput = document.getElementById('hiddenTotalAmount');
+
+        function updateAmountUnit(index) {
+            const quantity = parseInt(quantityInputs[index - 1].value); // Lấy số lượng trực tiếp từ input
+            const price = parseFloat(document.querySelectorAll('.discountPrice')[index - 1].textContent.replace('đ', '').replace(/\./g, '').trim());
+            const totalPriceElement = document.getElementById(`totalPrice${index}`);
+            const newTotalPrice = price * quantity;
+
+            totalPriceElement.textContent = `${newTotalPrice}đ`;
+            updateTotalAmount(); 
+        }
+
+        function updateTotalAmount() {
+            let totalAmount = 0;
+            let totalCount = 0;
+
+            document.querySelectorAll('input[name="selectProduct[]"]').forEach((checkbox, index) => {
+                if (checkbox.checked) {
+                    const quantity = parseInt(quantityInputs[index].value); // Lấy số lượng trực tiếp từ input
+                    const price = parseFloat(document.querySelectorAll('.discountPrice')[index].textContent.replace('đ', '').replace(/\./g, '').trim());
+                    totalAmount += price * quantity;
+                    totalCount++;
+                }
+            });
+
+            document.querySelector('.totalAmount').textContent = `${totalAmount}đ`;
+            document.querySelector('.total').textContent = `Total (${totalCount} items):`;
+            hiddenTotalAmountInput.value = totalAmount;
+        }
+
+        function toggleCheckboxes(master) {
+            const checkboxes = document.querySelectorAll('input[name="selectProduct[]"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = master.checked;
+            });
+            updateTotalAmount();
+        }
+
+        function toggleCheckboxAll() {
+            const checkboxes = document.querySelectorAll('input[name="selectProduct[]"]');
+            const allCheckbox = document.getElementById('inputCheckboxAll');
+            const allCheckboxThree = document.getElementById('inputCheckboxAllThree');
+
+            const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+            allCheckbox.checked = allChecked;
+            allCheckboxThree.checked = allChecked;
+
+            updateTotalAmount();
+        }
+
+        function validateSelectedItems() {
+            const checkboxes = document.querySelectorAll('input[name="selectProduct[]"]');
+            const selectedItems = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+
+            if (selectedItems.length === 0) {
+                alert("You have not chosen any items");
+                return false;
+            }
+
+            return true;
+        }
+
+        window.onload = function() {
+            updateTotalAmount();
+        };
+    </script>
 {% endblock addScript %}
 
 

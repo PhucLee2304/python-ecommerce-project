@@ -85,11 +85,11 @@
                     <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
                             class="text-white">{{user.email}}</a></small> {% endcomment %}
                 </div>
-                <div class="top-link pe-2">
+                {% comment %} <div class="top-link pe-2">
                     <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
                     <a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
                     <a href="#" class="text-white"><small class="text-white ms-2">Sales and Refunds</small></a>
-                </div>
+                </div> {% endcomment %}
             </div>
         </div>
         <div class="container px-0">
@@ -136,7 +136,7 @@
                         <a href="{% url "login" %}" class="position-relative me-4 my-auto btn btn-success">
                             login
                         </a>
-                        <a href="register" class="my-auto btn btn-danger">
+                        <a href="{% url "register" %}" class="my-auto btn btn-danger">
                             register
                         </a>
                         {% endif %}

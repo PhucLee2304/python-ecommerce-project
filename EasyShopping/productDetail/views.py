@@ -11,10 +11,6 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.db.models import F
 from django.db.models import Sum
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    lookup_field = 'productID'  # Retrieve by productID instead of default 'id'
 
 def getRating(reviews):
     rating = 0
