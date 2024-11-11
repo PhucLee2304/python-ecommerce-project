@@ -38,20 +38,20 @@
                   {{rating}}
                 </span>
               </div>
-              <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>{{totalSale}} orders</span>
+              <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>{{totalSale}} sold</span>
               <span class="text-success ms-2">In stock</span>
             </div>
   
             <div class="mb-3">
               <span class="h5">${{product.price}}</span>
-              <span class="text-muted">/piece</span>
+              <span class="text-muted"></span>
             </div>
   
             <p>
               {{product.description}}
             </p>
   
-            <div class="row">
+            {% comment %} <div class="row">
               <dt class="col-3">Type:</dt>
               <dd class="col-9">Regular</dd>
   
@@ -63,7 +63,7 @@
   
               <dt class="col-3">Brand</dt>
               <dd class="col-9">Reebook</dd>
-            </div>
+            </div> {% endcomment %}
   
             <hr />
             <form action="" id="productForm" >

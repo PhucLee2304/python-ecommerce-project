@@ -14,7 +14,6 @@ from django.urls import path, include
 # app_name = 'productDetail'
 
 router = DefaultRouter()
-router.register(r'products', ProductViewSet, basename='product')
 router.register(r'cart-item', CartViewSet, basename='cart-item')
 
 urlpatterns = [
