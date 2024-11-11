@@ -183,7 +183,7 @@
 {% block content %}
 <form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <section class="vh-100" style="background-color: #f4f5f7;">
+    <section style="margin-top: 100px;" class="vh-100" style="background-color: #f4f5f7;">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col col-lg-6 mb-4 mb-lg-0">
@@ -191,11 +191,11 @@
                         <div class="row g-0">
                             <div class="col-md-4 gradient-custom text-center text-white"
                                 style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
-                                <img src="{{ user.userImage.url }}" alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
+                                <img src="{{ user.userImage.url }}" alt="Avatar" class="img-fluid my-5" style="width: 150px;" />
                                 <input type="file" accept=".jpg, .jpeg, .png" id="imageInput" name="imageInput" style="display: none;">
-                                <button type="button" class="selectImage">
-                                    <span>Choose file</span>
-                                </button>
+                                <div ><button  type="button" class="selectImage">
+                                    <small>Choose file</small>
+                                </button></div>
                                 <h5>
                                     {% if user.full_name %}
                                         {{ user.full_name }}
@@ -265,7 +265,8 @@
                                     </div>
                                     <hr class="mt-0 mb-4">
                                     <div class="d-flex justify-content-start">
-                                        <button type="submit">Save</button>
+                                        <button class="btn btn-submit" type="submit">Logout</button>
+                                        <button class="btn btn-primary">Save</button>
                                     </div>
                                 </div>
                             </div>
