@@ -27,32 +27,36 @@
     color: white;
   }
 </style>
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+  <h1 class="text-center text-white display-6">My Purchase</h1>
+  <ol class="breadcrumb justify-content-center mb-0">
+      <li class="breadcrumb-item"><a href="{% url "home" %}">Home</a></li>
+
+      <li class="breadcrumb-item active text-white">My Purchase</li>
+  </ol>
+</div>
+<!-- Single Page Header End -->
 <div class="container mt-4">
-  <nav class="nav nav-pills nav-fill">
+   <nav class="nav nav-pills nav-fill">
     {% if message == 'All' %}
       <a class="nav-link active" aria-current="page" href="{% url 'my-purchased' 'All' %}">All</a>
-      <a class="nav-link" href="{% url 'my-purchased' 'Pending' %}">To pay</a>
       <a class="nav-link" href="{% url 'my-purchased' 'Shipping' %}">To ship</a>
       <a class="nav-link" href="{% url 'my-purchased' 'Completed' %}">completed</a>
     {% elif message == 'Completed' %}
       <a class="nav-link " aria-current="page" href="{% url 'my-purchased' 'All' %}">All</a>
-      <a class="nav-link" href="{% url 'my-purchased' 'Pending' %}">To pay</a>
       <a class="nav-link" href="{% url 'my-purchased' 'Shipping' %}">To ship</a>
       <a class="nav-link active" href="{% url 'my-purchased' 'Completed' %}">completed</a>
     {% elif message == 'Shipping' %}
       <a class="nav-link " aria-current="page" href="{% url 'my-purchased' 'All' %}">All</a>
-      <a class="nav-link" href="{% url 'my-purchased' 'Pending' %}">To pay</a>
       <a class="nav-link active" href="{% url 'my-purchased' 'Shipping' %}">To ship</a>
       <a class="nav-link " href="{% url 'my-purchased' 'Completed' %}">completed</a>
-    {% elif message == 'Pending' %}
-      <a class="nav-link " aria-current="page" href="{% url 'my-purchased' 'All' %}">All</a>
-      <a class="nav-link active" href="{% url 'my-purchased' 'Pending' %}">To pay</a>
-      <a class="nav-link " href="{% url 'my-purchased' 'Shipping' %}">To ship</a>
-      <a class="nav-link " href="{% url 'my-purchased' 'Completed' %}">completed</a>
+
     {% endif %}
     
-  </nav>
-<h2 class="text-center mb-4">Your Orders</h2>
+  </nav> 
+
+
 <!-- Loop through orders -->
  {% for order in orders %}
   <div class="order-card">
@@ -79,7 +83,7 @@
           <button class="btn btn-buy-again mr-2">Buy Again</button>
         </a>
         <a href="{% url "product-detail" order.item.product.productID %}">
-          <button class="btn btn-outline-secondary mr-2">Rate</button>
+          <a href="{% url "feedback" %}" class="btn btn-outline-secondary mr-2">Rate</a>
         </a>
       {% endif %}
       {% if order.orderStatus == 'Shipping' %}
