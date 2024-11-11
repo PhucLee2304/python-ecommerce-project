@@ -1,177 +1,19 @@
 {% extends "layout/myLayout.html" %}
 
-{% comment %} {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart</title>
-    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
-</head>
-<body>
-    {% include "components/header.html" %}
-
-    <div>
-        {% for message in messages %}
-            <h5>{{ message }}</h5>
-        {% endfor %}
-    </div>
-
-    <form action="{% url 'cart' %}" method="POST">
-        {% csrf_token %}
-        <div class="sectionOne">
-            <div class="product">
-                <div class="selectAll">
-                    <input type="checkbox" id="inputCheckboxAll" name="selectAll" onclick="toggleCheckboxes(this)">
-                    <label for="inputCheckboxAll">Item ({{ cartItems|length }})</label>
-                </div>
-            </div>
-            <div class="unitPrice">Unit Price</div>
-            <div class="quantity">Quantity</div>
-            <div class="amountUnit">Unit Amount</div>
-            <div class="action">Action</div>
-        </div>
-
-        {% for cartItem in cartItems %}
-            <div class="sectionTwo">
-                <div class="product">
-                    <div class="imageNameProduct">
-                        <a class="imageProduct" href="#">
-                            <img src="{% static '{{ cartItem.item.product.productImage.url }}' %}" alt="Ảnh sản phẩm">
-                        </a>
-                        <a class="nameProduct" title="{{ cartItem.item.product.productName }}" href="#">{{ cartItem.item.product.productName }}</a>
-                    </div>
-                    <div class="productDetails">
-                        <span class="sizeColor">Size: {{ cartItem.item.size.sizeName }}</span>
-                    </div>
-                </div>
-
-                <div class="unitPrice">
-                    <span class="originalPrice">{{ cartItem.item.product.price }}đ</span>
-                    <span class="discountPrice">{{ cartItem.item.product.getNewPrice }}đ</span>
-                </div>
-                <div class="quantity">
-                    <input type="number" class="inputQuantity" name="quantity[]" value="{{ cartItem.quantity }}" min="1" onchange="updateAmountUnit({{ forloop.counter }})">
-                </div>
-                <div class="amountUnit">
-                    <span id="totalPrice{{ forloop.counter }}" class="amountUnitDiscount">{{ cartItem.amountUnit }}đ</span>
-                </div>
-                <div class="action">
-                    <button type="submit" class="delete" name="deleteProduct" value="{{ cartItem.item.itemID }}">Delete</button>
-                </div>
-
-                <input type="hidden" name="itemID[]" value="{{ cartItem.item.itemID }}">
-                <input type="checkbox" id="inputCheckbox{{ forloop.counter }}" name="selectProduct[]" value="{{ cartItem.item.itemID }}" onclick="toggleCheckboxAll()">
-            </div>
-        {% endfor %}
-
-        <div class="sectionThree">
-            <div class="product">
-                <div class="selectAll">
-                    <input type="checkbox" id="inputCheckboxAllThree" name="selectAllThree" onclick="toggleCheckboxes(this)">
-                    <label for="inputCheckboxAllThree">Select All ({{ items|length }})</label>
-                </div>
-            </div>
-            <div class="deleteAllContainer">
-                <button type="submit" class="deleteAll" name="deleteAll">Delete All</button>
-            </div>
-            <div class="purchase">
-                <div class="total">Total (0 items):</div>
-                <div class="totalAmount">0đ</div>
-                <input type="hidden" id="hiddenTotalAmount" name="hiddenTotalAmount" value="0">
-                <button type="submit" class="buy" name="buyAll" onclick="return validateSelectedItems()">Buy</button>
-            </div>
-        </div>
-    </form>
-
-    <script>
-        const quantityInputs = document.querySelectorAll('.inputQuantity');
-        const hiddenTotalAmountInput = document.getElementById('hiddenTotalAmount');
-
-        function updateAmountUnit(index) {
-            const quantity = parseInt(quantityInputs[index - 1].value); // Lấy số lượng trực tiếp từ input
-            const price = parseFloat(document.querySelectorAll('.discountPrice')[index - 1].textContent.replace('đ', '').replace(/\./g, '').trim());
-            const totalPriceElement = document.getElementById(`totalPrice${index}`);
-            const newTotalPrice = price * quantity;
-
-            totalPriceElement.textContent = `${newTotalPrice}đ`;
-            updateTotalAmount(); 
-        }
-
-        function updateTotalAmount() {
-            let totalAmount = 0;
-            let totalCount = 0;
-
-            document.querySelectorAll('input[name="selectProduct[]"]').forEach((checkbox, index) => {
-                if (checkbox.checked) {
-                    const quantity = parseInt(quantityInputs[index].value); // Lấy số lượng trực tiếp từ input
-                    const price = parseFloat(document.querySelectorAll('.discountPrice')[index].textContent.replace('đ', '').replace(/\./g, '').trim());
-                    totalAmount += price * quantity;
-                    totalCount++;
-                }
-            });
-
-            document.querySelector('.totalAmount').textContent = `${totalAmount}đ`;
-            document.querySelector('.total').textContent = `Total (${totalCount} items):`;
-            hiddenTotalAmountInput.value = totalAmount;
-        }
-
-        function toggleCheckboxes(master) {
-            const checkboxes = document.querySelectorAll('input[name="selectProduct[]"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = master.checked;
-            });
-            updateTotalAmount();
-        }
-
-        function toggleCheckboxAll() {
-            const checkboxes = document.querySelectorAll('input[name="selectProduct[]"]');
-            const allCheckbox = document.getElementById('inputCheckboxAll');
-            const allCheckboxThree = document.getElementById('inputCheckboxAllThree');
-
-            const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
-            allCheckbox.checked = allChecked;
-            allCheckboxThree.checked = allChecked;
-
-            updateTotalAmount();
-        }
-
-        function validateSelectedItems() {
-            const checkboxes = document.querySelectorAll('input[name="selectProduct[]"]');
-            const selectedItems = Array.from(checkboxes).filter(checkbox => checkbox.checked);
-
-            if (selectedItems.length === 0) {
-                alert("You have not chosen any items");
-                return false;
-            }
-
-            return true;
-        }
-
-        window.onload = function() {
-            updateTotalAmount();
-        };
-    </script>
-
-    {% include "components/footer.html" %}
-</body>
-</html> {% endcomment %}
-
 {% load static %}
 
 {% block content %}
 
 
         <!-- Single Page Header start -->
-        {% comment %} <div class="container-fluid page-header py-5">
+        <div class="container-fluid page-header py-5">
             <h1 class="text-center text-white display-6">Cart</h1>
             <ol class="breadcrumb justify-content-center mb-0">
                 <li class="breadcrumb-item"><a href="{% url "home" %}">Home</a></li>
          
                 <li class="breadcrumb-item active text-white">Cart</li>
             </ol>
-        </div> {% endcomment %}
+        </div>
         <!-- Single Page Header End -->
 
 
@@ -296,75 +138,6 @@
 {% block addScript %}
     <script src="{% static '/js/cart.js' %}"></script>
     <source src="{% static "/js/cart2.js" %}" type="">
-
-    <script>
-        const quantityInputs = document.querySelectorAll('.inputQuantity');
-        const hiddenTotalAmountInput = document.getElementById('hiddenTotalAmount');
-
-        function updateAmountUnit(index) {
-            const quantity = parseInt(quantityInputs[index - 1].value); // Lấy số lượng trực tiếp từ input
-            const price = parseFloat(document.querySelectorAll('.discountPrice')[index - 1].textContent.replace('đ', '').replace(/\./g, '').trim());
-            const totalPriceElement = document.getElementById(`totalPrice${index}`);
-            const newTotalPrice = price * quantity;
-
-            totalPriceElement.textContent = `${newTotalPrice}đ`;
-            updateTotalAmount(); 
-        }
-
-        function updateTotalAmount() {
-            let totalAmount = 0;
-            let totalCount = 0;
-
-            document.querySelectorAll('input[name="selectProduct[]"]').forEach((checkbox, index) => {
-                if (checkbox.checked) {
-                    const quantity = parseInt(quantityInputs[index].value); // Lấy số lượng trực tiếp từ input
-                    const price = parseFloat(document.querySelectorAll('.discountPrice')[index].textContent.replace('đ', '').replace(/\./g, '').trim());
-                    totalAmount += price * quantity;
-                    totalCount++;
-                }
-            });
-
-            document.querySelector('.totalAmount').textContent = `${totalAmount}đ`;
-            document.querySelector('.total').textContent = `Total (${totalCount} items):`;
-            hiddenTotalAmountInput.value = totalAmount;
-        }
-
-        function toggleCheckboxes(master) {
-            const checkboxes = document.querySelectorAll('input[name="selectProduct[]"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = master.checked;
-            });
-            updateTotalAmount();
-        }
-
-        function toggleCheckboxAll() {
-            const checkboxes = document.querySelectorAll('input[name="selectProduct[]"]');
-            const allCheckbox = document.getElementById('inputCheckboxAll');
-            const allCheckboxThree = document.getElementById('inputCheckboxAllThree');
-
-            const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
-            allCheckbox.checked = allChecked;
-            allCheckboxThree.checked = allChecked;
-
-            updateTotalAmount();
-        }
-
-        function validateSelectedItems() {
-            const checkboxes = document.querySelectorAll('input[name="selectProduct[]"]');
-            const selectedItems = Array.from(checkboxes).filter(checkbox => checkbox.checked);
-
-            if (selectedItems.length === 0) {
-                alert("You have not chosen any items");
-                return false;
-            }
-
-            return true;
-        }
-
-        window.onload = function() {
-            updateTotalAmount();
-        };
-    </script>
 {% endblock addScript %}
 
 
