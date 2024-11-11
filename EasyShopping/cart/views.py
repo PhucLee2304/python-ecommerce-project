@@ -155,7 +155,7 @@ def update_cart_item(request):
         cart_item = CartItem.objects.get(id=data['cartItemID'])
         cart_item.quantity = data['quantity']
         cart_item.save()
-        newTotal = cart_item.quantity * cart_item.item.product.price;
+        newTotal = cart_item.quantity * cart_item.item.product.price
         return JsonResponse({'success': True, 'newTotal' : newTotal})
 
 @csrf_exempt

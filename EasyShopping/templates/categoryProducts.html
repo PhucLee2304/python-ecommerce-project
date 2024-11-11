@@ -1,15 +1,34 @@
 {% extends "layout/myLayout.html" %}
 
 {% block content %}
-<div class="category-products">
-    <div class="product-list">
-        {% for product in products %}
-            <div class="product-card">
-                <img src="{{ product.productImage.url }}" alt="{{ product.productName }}">
-                <h3>{{ product.productName }}</h3>
-                <p>Giá: {{ product.price }} VND</p>
+<div class="tab-content">
+    <div id="tab-1" class="tab-pane fade show p-0 active">
+        <div class="row g-4">
+            <div class="col-lg-12">
+                <div class="row g-4">
+                    {% for product in products %}
+                        <div class="col-md-6 col-lg-4 col-xl-3">
+                            <div class="rounded position-relative fruite-item">
+                                <a href="{% url "product-detail" product.productID %}">
+                                    <div class="fruite-img">
+                                        <img src="{{product.productImage.url}}" class="img-fluid w-100 rounded-top" alt="">
+                                    </div>
+                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">{{product.category.categoryName}}</div>
+                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                        <h4>{{product.productName}}</h4>
+                                        <p>{{product.description}}</p>
+                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                            <p class="text-dark fs-5 fw-bold mb-0">{{product.price}}VND</p>
+                                            <a href="{% url "product-detail" product.productID %}" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>View Detail</a>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-        {% endfor %}
+        </div>
     </div>
-</div> 
+</div>
 {% endblock content %}
