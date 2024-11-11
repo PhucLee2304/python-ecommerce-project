@@ -30,6 +30,7 @@ class User(AbstractUser):
 class Category(models.Model):
     categoryID = models.AutoField(primary_key=True)
     categoryName = models.CharField(max_length=255, null=False)
+    categoryImage = models.ImageField(upload_to='categories/', null=False, blank=False, default='\categories\category_image.jfif')
 
     class Meta:
         verbose_name_plural = "Categories"
@@ -43,6 +44,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     productName = models.CharField(max_length=255, null=False, default='Product Name')
     description = models.TextField(null=False)
+    shortDescription = models.CharField(max_length=255, null=False, default='this is short description')
     price = models.DecimalField(max_digits=10, decimal_places=0, null=False, default=100000) 
     discount = models.IntegerField(default=0)
     shippingFee = models.DecimalField(max_digits=6, decimal_places=0, default=0) 
