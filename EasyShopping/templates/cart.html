@@ -52,7 +52,7 @@
                                         <td>
                                             <p class="mb-0 mt-4">
                                      
-                                                <select class="form-select border size" style="height: 35px;" name="size" data-cartitem-id="{{ ci.id }}">
+                                                <select class="form-select border size" style="height: 35px;" name="size{{ci.id}}" data-cartitem-id="{{ ci.id }}">
                                                     {% for item in ci.item.product.items.all %}
                                                         <option value="{{ item.size.sizeID }}" {% if item.size.sizeID == ci.item.size.sizeID %} selected {% endif %}>
                                                             {{ item.size.sizeName }}
@@ -62,7 +62,7 @@
                                             </p>
                                         </td>
                                         <td>
-                                            <p class="mb-0 mt-4">{{ ci.item.product.price }} $</p>
+                                            <p class="mb-0 mt-4">{{ ci.item.product.getNewPrice }} $</p>
                                         </td>
                                         <td>
                                             <div class="input-group quantity mt-4" style="width: 100px;">
@@ -71,7 +71,10 @@
                                                         <i class="fa fa-minus"></i>
                                                     </button> 
                                                 </div>
-                                                <input readonly type="text" class="form-control form-control-sm text-center border-0" value="{{ ci.quantity }}" data-cartitem-id="{{ ci.id }}" name="quantity">
+                                                <input readonly type="text" class="form-control form-control-sm text-center border-0" value="{{ ci.quantity }}" data-cartitem-id="{{ ci.id }}" name="quantity[]">
+                                                <input type="hidden" name="itemID[]" value="{{ ci.item.itemID }}">
+                                                <input type="hidden" name="cartItemID[]" value="{{ ci.id }}">
+
                                                 <div class="input-group-btn">
                                                      <button class="btn btn-sm btn-plus rounded-circle bg-light border" type="button" data-action="increase" data-cartitem-id="{{ ci.id }}">
                                                         <i class="fa fa-plus"></i>
@@ -83,7 +86,7 @@
                                             <p id="totalAmount" class="mb-0 mt-4">{{ ci.getTotal }} $</p>
                                         </td>
                                         <td>
-                                            <input type="checkbox" class="mb-0 mt-4" name="checkbox" id="">
+                                            <input type="checkbox" class="mb-0 mt-4" name="selectProduct[]" value="{{ ci.item.itemID }}">
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-md rounded-circle bg-light border mt-4 remove-item-btn" data-cartitem-id="{{ ci.id }}">
@@ -94,7 +97,7 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
+                        <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit">Proceed Checkout</button>
                     </form>
                     
                     

@@ -45,6 +45,16 @@ def getRatePercent(reviews):
 
 def productDetailView(request, pid):
     product = Product.objects.get(productID = pid)
+
+    if request.user.is_authenticated:
+        user = request.user
+        category = product.category
+
+        userInterest, created = UserInterest.objects.get_or_create(user=user, category=category)
+        
+        userInterest.numberOfView += 1
+        userInterest.timestamp = timezone.now()
+        userInterest.save()
     
     reviews = Review.objects.filter(product = product)
     rating = getRating(reviews)
