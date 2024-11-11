@@ -254,7 +254,7 @@
                                         <div class="col-6 mb-3">
                                             <h6>Date Of Birth</h6>
                                             <div class="dateInputs">
-                                                {% comment %} <input class="dateOfBirth" type="text" name="day" placeholder="Day"
+                                                 {% comment %} <input class="dateOfBirth" type="text" name="day" placeholder="Day"
                                                     value="{{ user.dateOfBirth.day }}">
                                                 <input class="dateOfBirth" type="text" name="month" placeholder="Month"
                                                     value="{{ user.dateOfBirth.month }}">
@@ -267,7 +267,7 @@
                                     </div>
                                     <hr class="mt-0 mb-4">
                                     <div class="d-flex justify-content-start">
-                                        <button class="btn btn-success" type="submit">Logout</button>
+                                        <a href="{% url "logout" %}" class="btn btn-success" type="submit">Logout</a>
                                         <button class="btn btn-primary">Save</button>
                                         <a href="{% url "my-purchased" "All" %}" class="btn btn-danger">My Purchase</a>
                                     </div>

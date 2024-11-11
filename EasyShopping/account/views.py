@@ -71,9 +71,13 @@ def profile(request):
         email = request.POST.get('email').strip()
         phone = request.POST.get('phone').strip()
         gender = request.POST.get('gender')
-        day = request.POST.get('day')
-        month = request.POST.get('month')
-        year = request.POST.get('year')
+        
+        # day = request.POST.get('day')
+        # month = request.POST.get('month')
+        # year = request.POST.get('year')
+        
+        date_of_birth = request.POST.get('dateOfBirth')
+        
         address = request.POST.get('address').strip()
         userImage = request.FILES.get('imageInput')
 
@@ -111,7 +115,8 @@ def profile(request):
 
         # Date of birth
         try:
-            userObject.dateOfBirth = datetime.strptime(f'{year}-{str(month).zfill(2)}-{str(day).zfill(2)}', "%Y-%m-%d")
+            # userObject.dateOfBirth = datetime.strptime(f'{year}-{str(month).zfill(2)}-{str(day).zfill(2)}', "%Y-%m-%d")
+            userObject.dateOfBirth = date_of_birth
         except ValueError:
             messages.info(request, "Invalid date of birth")
             return redirect('profile')
