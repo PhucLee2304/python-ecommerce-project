@@ -43,9 +43,9 @@ def addToPurchase(request, cart):
     quantities = request.POST.getlist('quantity[]')  
     itemIDs = request.POST.getlist('itemID[]') 
 
-    print("Selected Items:", selectedItems)
-    print("Quantities:", quantities)
-    print("Item IDs:", itemIDs)
+    # print("Selected Items:", selectedItems)
+    # print("Quantities:", quantities)
+    # print("Item IDs:", itemIDs)
 
     if not selectedItems:
         messages.info(request, 'No products selected for purchase')
