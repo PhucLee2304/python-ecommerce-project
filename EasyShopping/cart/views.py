@@ -4,20 +4,6 @@ from core.models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-def deleteProductFromCart(request, cart, itemID):
-    try:
-        cartItem = CartItem.objects.get(cart=cart, item__itemID=itemID)
-        cartItem.delete()
-        return redirect('cart')
-    except CartItem.DoesNotExist:
-        messages.info(request, "Item not found in cart")
-    
-    return redirect('cart')
-
-def deleteAllFromCart(request, cart):
-    CartItem.objects.filter(cart=cart).delete()
-    return redirect('cart')
-
 def getUserInformation(request):
     user = request.user
 
@@ -35,6 +21,7 @@ def getUserInformation(request):
 
 def addToPurchase(request, cart):
     user = getUserInformation(request)
+    print("ok")
     if user is None:
         messages.info(request, 'Complete your profile information')
         return redirect('profile')
@@ -129,6 +116,7 @@ def cart(request):
         cartItem.amountUnit = amountUnit
     
     if request.method == 'POST':
+        print("ok")
         if 'deleteProduct' in request.POST:
             itemID = request.POST.get('deleteProduct')
             return deleteProductFromCart(request, cart, itemID)
