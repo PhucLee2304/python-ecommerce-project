@@ -13,11 +13,13 @@ $(':radio').change(function() {
         // Collect data from the comment form
         const comment = document.querySelector('textarea[name="comment"]').value;
         const product_id = document.getElementById('product_id').value;
+        const order_id = document.getElementById('order_id').value;
         // Prepare data for POST request
         const formData = {
             rating: rating,
             comment: comment,
-            product_id: product_id
+            product_id: product_id,
+            order_id: order_id
         };
         console.log(formData);
 

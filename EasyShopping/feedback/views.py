@@ -23,12 +23,14 @@ def submit_feedback(request):
             data = json.loads(request.body)
             
             product_id = data.get('product_id')  # Product ID from the frontend
-            print(product_id)
+          
             # user_id = data.get('user_id')       # User ID from the frontend
             rating = data.get('rating')         # Rating from the frontend
-            print(rating)
+           
             comment = data.get('comment')       # Comment from the frontend
-
+            order_id = data.get('order_id')
+            print(order_id)
+            order = Order.objects.get(orderID = order_id)
             # Validate product and user
             product = Product.objects.get(productID=product_id)
             print(product)
@@ -39,7 +41,8 @@ def submit_feedback(request):
                 product=product,
                 user=user,
                 rating=rating,
-                comment=comment
+                comment=comment,
+                order = order
             )
             review.save()
 
