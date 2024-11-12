@@ -6,41 +6,171 @@ from django.http import JsonResponse
 from django.urls import reverse
 import json
 import qrcode
-from django.conf import settings
+# from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import base64
 from io import BytesIO
 from core.models import *
-'''
+
+# @login_required(login_url='login')
+# def cashOnDelivery(request):
+#     if request.method == 'POST':
+#         paymentMethod = request.POST.get('paymentMethod')
+#         shippingFee = int(request.POST.get('shippingFee', 0))
+#         totalAmount = int(request.session.get('totalAmount', 0))
+#         orderIDs = [order['orderID'] for order in request.session.get('orders', [])]
+
+#         for orderID in orderIDs:
+#             try:
+#                 order = Order.objects.get(orderID=orderID)  
+#                 order.orderAmount += shippingFee
+#                 order.orderStatus = 'Completed'  
+#                 order.paymentMethod = paymentMethod
+#                 order.paymentDate = timezone.now()
+#                 order.save()
+
+#                 item = order.item  
+#                 item.stockQuantity -= order.itemQuantity 
+#                 item.save()
+
+#             except Order.DoesNotExist:
+#                 messages.warning(request, f"Order {orderID} does not exist.")
+#                 continue
+        
+#         del request.session['orders']
+#         del request.session['totalAmount']
+
+#         return redirect('history')
+
+#     elif request.method == 'DELETE':
+#         # Cancel order
+#         data = json.loads(request.body)  # Get JSON data from body
+#         orderIDs = data.get('orderIDs', [])  # Get orderIDs list from data
+#         for orderID in orderIDs:
+#             try:
+#                 order = Order.objects.get(orderID=orderID)  
+#                 order.orderStatus = 'Cancelled'  
+#                 order.save() 
+#             except Order.DoesNotExist:
+#                 pass
+
+#         return JsonResponse({'success': True})
+    
+#     else:
+#         user = request.user  
+#         orders = request.session.get('orders', [])  
+#         totalAmount = float(request.session.get('totalAmount'))
+
+#         context = {
+#             'user': user,
+#             'orders': orders,
+#             'totalAmount': float(totalAmount),
+#         }
+#         return render(request, 'checkout.html', context)
+
+# @login_required(login_url='login')
+# def bankTransfer(request):
+#     if request.method == 'POST':
+#         paymentMethod = request.POST.get('paymentMethod')
+#         shippingFee = int(request.POST.get('shippingFee', 0))
+#         totalAmount = int(request.session.get('totalAmount', 0))
+#         orderIDs = [order['orderID'] for order in request.session.get('orders', [])]
+
+#         qrData = ';'.join(map(str, orderIDs)) 
+#         request.session['qrData'] = qrData
+
+#         for orderID in orderIDs:
+#             try:
+#                 order = Order.objects.get(orderID=orderID)  
+#                 order.orderAmount += shippingFee
+#                 order.orderStatus = 'Pending'  
+#                 order.paymentMethod = paymentMethod
+#                 order.save() 
+
+#             except Order.DoesNotExist:
+#                 messages.warning(request, f"Order {orderID} does not exist.")
+#                 continue
+
+#         qrImage = qrcode.make(qrData)
+#         buffered = BytesIO()
+#         qrImage.save(buffered, format="PNG")
+#         qr_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+#         return render(request, 'qr.html', {'qr_base64': qr_base64, 'totalAmount': totalAmount})
+    
+#     else:
+#         user = request.user  
+#         orders = request.session.get('orders', [])  
+#         totalAmount = float(request.session.get('totalAmount'))
+
+#         context = {
+#             'user': user,
+#             'orders': orders,
+#             'totalAmount': float(totalAmount),
+#         }
+#         return render(request, 'checkout.html', context)
+
 @login_required(login_url='login')
 def payment(request):
     if request.method == 'POST':
+        print("Received POST request")
         paymentMethod = request.POST.get('paymentMethod')
         shippingFee = int(request.POST.get('shippingFee', 0))
         totalAmount = int(request.session.get('totalAmount', 0))
         orderIDs = [order['orderID'] for order in request.session.get('orders', [])]
 
-        for orderID in orderIDs:
-            try:
-                order = Order.objects.get(orderID=orderID)  
-                order.orderAmount += shippingFee
-                order.orderStatus = 'Completed'  
-                order.paymentMethod = paymentMethod
-                order.paymentDate = timezone.now()
-                order.save()
-
-                item = order.item  
-                item.stockQuantity -= order.itemQuantity 
-                item.save()
-
-            except Order.DoesNotExist:
-                messages.warning(request, f"Order {orderID} does not exist.")
-                continue
+        print(f"Payment Method: {paymentMethod}")
+        print(f"Order IDs: {orderIDs}")
         
-        del request.session['orders']
-        del request.session['totalAmount']
+        if not paymentMethod:
+            messages.error(request, 'Select a payment method')
+            return redirect('payment')
+        
+        if paymentMethod == 'Cash On Delivery':
+            for orderID in orderIDs:
+                try:
+                    order = Order.objects.get(orderID=orderID)  
+                    order.orderAmount += shippingFee
+                    order.orderStatus = 'Completed'  
+                    order.paymentMethod = paymentMethod
+                    order.paymentDate = timezone.now()
+                    order.save()
 
-        return redirect('history')
+                    item = order.item  
+                    item.stockQuantity -= order.itemQuantity 
+                    item.save()
+
+                except Order.DoesNotExist:
+                    messages.warning(request, f"Order {orderID} does not exist.")
+                    continue
+            
+            del request.session['orders']
+            del request.session['totalAmount']
+
+            return redirect('history')
+    
+        elif paymentMethod == 'Bank Transfer':
+            qrData = ';'.join(map(str, orderIDs)) 
+            request.session['qrData'] = qrData
+
+            for orderID in orderIDs:
+                try:
+                    order = Order.objects.get(orderID=orderID)  
+                    order.orderAmount += shippingFee
+                    order.orderStatus = 'Pending'  
+                    order.paymentMethod = paymentMethod
+                    order.save() 
+
+                except Order.DoesNotExist:
+                    messages.warning(request, f"Order {orderID} does not exist.")
+                    continue
+
+            qrImage = qrcode.make(qrData)
+            buffered = BytesIO()
+            qrImage.save(buffered, format="PNG")
+            qr_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+            return render(request, 'qr.html', {'qr_base64': qr_base64, 'totalAmount': totalAmount})
 
     elif request.method == 'DELETE':
         # Cancel order
@@ -67,49 +197,7 @@ def payment(request):
             'totalAmount': float(totalAmount),
         }
         return render(request, 'checkout.html', context)
-'''
-@login_required(login_url='login')
-def payment(request):
-    if request.method == 'POST':
-        paymentMethod = request.POST.get('paymentMethod')
-        shippingFee = int(request.POST.get('shippingFee', 0))
-        totalAmount = int(request.session.get('totalAmount', 0))
-        orderIDs = [order['orderID'] for order in request.session.get('orders', [])]
-
-        qrData = ';'.join(map(str, orderIDs)) 
-        request.session['qrData'] = qrData
-
-        for orderID in orderIDs:
-            try:
-                order = Order.objects.get(orderID=orderID)  
-                order.orderAmount += shippingFee
-                order.orderStatus = 'Pending'  
-                order.paymentMethod = paymentMethod
-                order.save() 
-
-            except Order.DoesNotExist:
-                messages.warning(request, f"Order {orderID} does not exist.")
-                continue
-
-        qrImage = qrcode.make(qrData)
-        buffered = BytesIO()
-        qrImage.save(buffered, format="PNG")
-        qr_base64 = base64.b64encode(buffered.getvalue()).decode()
-
-        return render(request, 'qr.html', {'qr_base64': qr_base64, 'totalAmount': totalAmount})
     
-    else:
-        user = request.user  
-        orders = request.session.get('orders', [])  
-        totalAmount = float(request.session.get('totalAmount'))
-
-        context = {
-            'user': user,
-            'orders': orders,
-            'totalAmount': float(totalAmount),
-        }
-        return render(request, 'checkout.html', context)
-
 @csrf_exempt
 def scan(request):
     if request.method == 'POST':
@@ -147,8 +235,7 @@ def scan(request):
             
     else:
         return render(request, 'qr.html')
-    
-    
+            
 
 # views.py
 from django.shortcuts import render

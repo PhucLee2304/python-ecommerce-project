@@ -77,8 +77,8 @@ def addToPurchase(request, cart):
         return redirect('cart')
 
     if orders:
-        print("Orders to be processed:", orders)  
-        print("Total amount:", totalAmount)
+        # print("Orders to be processed:", orders)  
+        # print("Total amount:", totalAmount)
         request.session['orders'] = [
             {
                 'orderID': order.orderID,
