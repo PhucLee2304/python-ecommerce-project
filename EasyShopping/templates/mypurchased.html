@@ -83,7 +83,7 @@
           <button class="btn btn-buy-again mr-2">Buy Again</button>
         </a>
         <a href="{% url "product-detail" order.item.product.productID %}">
-          <a href="{% url "feedback" %}" class="btn btn-outline-secondary mr-2">Rate</a>
+          <a href="{% url "feedback" order.orderID %}" class="btn btn-outline-secondary mr-2">Rate</a>
         </a>
       {% endif %}
       {% if order.orderStatus == 'Shipping' %}

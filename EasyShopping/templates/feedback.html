@@ -1,24 +1,17 @@
 {% extends "layout/myLayout.html" %}
 {% load static %}
 
-{% block title %}
-review san pham
-{% endblock title %}
-
-{% block style %}
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<link rel="stylesheet" href="{% static 'css/feedback.css' %}">
-{% endblock style %}
+{% block addHead %}
+<link rel="stylesheet" href="{% static "/css/feedback.css" %}">
+{% endblock addHead %}
 
 
 
 
 {% block content %}
 
- <!-- Single Page Header start -->
- <div class="container-fluid page-header py-5">
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
     <h1 class="text-center text-white display-6">Contact</h1>
     <ol class="breadcrumb justify-content-center mb-0">
         <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -35,488 +28,126 @@ review san pham
             <div class="row g-4">
                 <div class="col-12">
                     <div class="text-center mx-auto" style="max-width: 700px;">
+
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="d-flex justify-content-center container mt-5">
+                        <div class="card p-3 bg-white"><i class="fa fa-apple"></i>
+                            <div class="about-product text-center mt-2"><img
+                                    src="{{order.item.product.productImage.url}}" width="300">
+                                <div>
+                                    <h4>{{order.item.product.productName}}</h4>
+                                    <h6 class="mt-0 text-black-50">{{order.item.product.shortDescription}}</h6>
+                                </div>
+                            </div>
+                            <div class="stats mt-2">
+                                <div class="d-flex justify-content-between p-price"><span>
+                                        Size</span><span>{{order.item.size.sizeName}}</span></div>
+                                <div class="d-flex justify-content-between p-price"><span>
+                                        Quantity</span><span>{{order.itemQuantity}}</span></div>
+                                <div class="d-flex justify-content-between p-price"><span>
+                                        Shipping fee</span><span>{{order.item.product.shippingFee}}VND</span></div>
+                                <div class="d-flex justify-content-between p-price"><span>
+                                        Order Date</span><span>{{order.orderDate}}</span></div>
+                            </div>
+                            <div class="d-flex justify-content-between total font-weight-bold mt-4">
+                                <span>Total</span><span>{{order.getTotal}}VND</span></div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+            <div class="container-fluid contact py-5">
+                <div class="container py-5">
+                    <div class="p-5 bg-light rounded">
+                        <div class="row g-4">
+                            
+                            <div class="col-lg-7">
+                                <form class="rating">
                         
-                    </div>
-                </div>
-                {% comment %} <div class="col-lg-12">
-                    <div class="h-100 rounded">
-                        <iframe class="rounded w-100" 
-                        style="height: 400px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387191.33750346623!2d-73.97968099999999!3d40.6974881!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sbd!4v1694259649153!5m2!1sen!2sbd" 
-                        loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                </div> {% endcomment %}
-                <div class="col-lg-7">
-                    <form action="" class="">
-                        <div class="star-rating">
-                            <input type="radio" id="sr-0-5" name="star-rating-0" value="5" />
-                            <label for="sr-0-5">★</label>
-                    
-                            <input type="radio" id="sr-0-4" name="star-rating-0" value="4" />
-                            <label for="sr-0-4">★</label>
-                            <input type="radio" id="sr-0-3" name="star-rating-0" value="3" />
-                            <label for="sr-0-3">★</label>
-                            <input type="radio" id="sr-0-2" name="star-rating-0" value="2" />
-                            <label for="sr-0-2">★</label>
-                            <input type="radio" id="sr-0-1" name="star-rating-0" value="1" />
-                            <label for="sr-0-1">★</label>
-                          </div>
-                        <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Your Name">
-                        <input type="email" class="w-100 form-control border-0 py-3 mb-4" placeholder="Enter Your Email">
-                        <textarea class="w-100 form-control border-0 mb-4" rows="5" cols="10" placeholder="Your Message"></textarea>
-                        <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary " type="submit">Submit</button>
-                    </form>
-                </div>
-                <div class="col-lg-5">
-                    <div class="d-flex p-4 rounded mb-4 bg-white">
-                        <i class="fas fa-map-marker-alt fa-2x text-primary me-4"></i>
-                        <div>
-                            <h4>Address</h4>
-                            <p class="mb-2">123 Street New York.USA</p>
-                        </div>
-                    </div>
-                    <div class="d-flex p-4 rounded mb-4 bg-white">
-                        <i class="fas fa-envelope fa-2x text-primary me-4"></i>
-                        <div>
-                            <h4>Mail Us</h4>
-                            <p class="mb-2">info@example.com</p>
-                        </div>
-                    </div>
-                    <div class="d-flex p-4 rounded bg-white">
-                        <i class="fa fa-phone-alt fa-2x text-primary me-4"></i>
-                        <div>
-                            <h4>Telephone</h4>
-                            <p class="mb-2">(+012) 3456 7890</p>
+                                    <label>
+                                        <input type="radio" name="stars" value="1" />
+                                        <span class="icon">★</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="stars" value="2" />
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="stars" value="3" />
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="stars" value="4" />
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="stars" value="5" />
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                    </label>
+                                </form>
+                                <form action="" class="">
+                                    {% comment %} <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Your Name">
+                                    <input type="email" class="w-100 form-control border-0 py-3 mb-4" placeholder="Enter Your Email"> {% endcomment %}
+                                    <textarea class="w-100 form-control border-0 mb-4" rows="5" cols="10" placeholder="Your Message" name="comment"></textarea>
+                                    <button id="submit" class="w-100 btn form-control border-secondary py-3 bg-white text-primary " type="button">Submit</button>
+                                    <input type="hidden" id = "product_id" name="product_id" value={{order.item.product.productID}}>
+                                </form>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="d-flex p-4 rounded mb-4 bg-white">
+                                    <i class="fas fa-map-marker-alt fa-2x text-primary me-4"></i>
+                                    <div>
+                                        <h4>Address</h4>
+                                        <p class="mb-2">123 Street New York.USA</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex p-4 rounded mb-4 bg-white">
+                                    <i class="fas fa-envelope fa-2x text-primary me-4"></i>
+                                    <div>
+                                        <h4>Mail Us</h4>
+                                        <p class="mb-2">info@example.com</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex p-4 rounded bg-white">
+                                    <i class="fa fa-phone-alt fa-2x text-primary me-4"></i>
+                                    <div>
+                                        <h4>Telephone</h4>
+                                        <p class="mb-2">(+012) 3456 7890</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+         
     </div>
+</div>
+</div>
 </div>
 <!-- Contact End -->
 
 {% endblock content %}
 
-{% block script %}
+{% block addScript %}
 
-<script>
-    /*!
- * @copyright © Kartik Visweswaran, Krajee.com, 2014
- * @version 2.5.0
- *
- * A simple yet powerful JQuery star rating plugin that allows rendering
- * fractional star ratings and supports Right to Left (RTL) input.
- * 
- * For more JQuery plugins visit http://plugins.krajee.com
- * For more Yii related demos visit http://demos.krajee.com
- */
-(function ($) {
-    var DEFAULT_MIN = 0;
-    var DEFAULT_MAX = 5;
-    var DEFAULT_STEP = 0.5;
+<script src="{% static "/js/feedback.js" %}"></script>
 
-    var isEmpty = function (value, trim) {
-        return typeof value === 'undefined' || value === null || value === undefined || value == []
-            || value === '' || trim && $.trim(value) === '';
-    };
-
-    var validateAttr = function ($input, vattr, options) {
-        var chk = isEmpty($input.data(vattr)) ? $input.attr(vattr) : $input.data(vattr);
-        if (chk) {
-            return chk;
-        }
-        return options[vattr];
-    };
-
-    var getDecimalPlaces = function (num) {
-        var match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
-        if (!match) {
-            return 0;
-        }
-        return Math.max(0, (match[1] ? match[1].length : 0) - (match[2] ? +match[2] : 0));
-    };
-
-    var applyPrecision = function (val, precision) {
-        return parseFloat(val.toFixed(precision));
-    };
-
-    // Rating public class definition
-    var Rating = function (element, options) {
-        this.$element = $(element);
-        this.init(options);
-    };
-
-    Rating.prototype = {
-        constructor: Rating,
-        _parseAttr: function (vattr, options) {
-            var self = this, $input = self.$element;
-            if ($input.attr('type') === 'range' || $input.attr('type') === 'number') {
-                var val = validateAttr($input, vattr, options);
-                var chk = DEFAULT_STEP;
-                if (vattr === 'min') {
-                    chk = DEFAULT_MIN;
-                }
-                else if (vattr === 'max') {
-                    chk = DEFAULT_MAX;
-                }
-                else if (vattr === 'step') {
-                    chk = DEFAULT_STEP;
-                }
-                var final = isEmpty(val) ? chk : val;
-                return parseFloat(final);
-            }
-            return parseFloat(options[vattr]);
-        },
-        /**
-         * Listens to events
-         */
-        listen: function () {
-            var self = this;
-            self.$rating.on("click", function (e) {
-                if (!self.inactive) {
-                    w = e.pageX - self.$rating.offset().left;
-                    self.setStars(w);
-                    self.$element.trigger('change');
-                    self.$element.trigger('rating.change', [self.$element.val(), self.$caption.html()]);
-                }
-            });
-            self.$clear.on("click", function (e) {
-                if (!self.inactive) {
-                    self.clear();
-                }
-            });
-            $(self.$element[0].form).on("reset", function (e) {
-                if (!self.inactive) {
-                    self.reset();
-                }
-            });
-        },
-        initSlider: function (options) {
-            var self = this;
-            if (isEmpty(self.$element.val())) {
-                self.$element.val(0);
-            }
-            self.initialValue = self.$element.val();
-            self.min = (typeof options.min !== 'undefined') ? options.min : self._parseAttr('min', options);
-            self.max = (typeof options.max !== 'undefined') ? options.max : self._parseAttr('max', options);
-            self.step = (typeof options.step !== 'undefined') ? options.step : self._parseAttr('step', options);
-            if (isNaN(self.min) || isEmpty(self.min)) {
-                self.min = DEFAULT_MIN;
-            }
-            if (isNaN(self.max) || isEmpty(self.max)) {
-                self.max = DEFAULT_MAX;
-            }
-            if (isNaN(self.step) || isEmpty(self.step) || self.step == 0) {
-                self.step = DEFAULT_STEP;
-            }
-            self.diff = self.max - self.min;
-        },
-        /**
-         * Initializes the plugin
-         */
-        init: function (options) {
-            var self = this;
-            self.options = options;
-            self.initSlider(options);
-            self.checkDisabled();
-            $element = self.$element;
-            self.containerClass = options.containerClass;
-            self.glyphicon = options.glyphicon;
-            var defaultStar = (self.glyphicon) ? '\ue006' : '\u2605';
-            self.symbol = isEmpty(options.symbol) ? defaultStar : options.symbol;
-            self.rtl = options.rtl || self.$element.attr('dir');
-            if (self.rtl) {
-                self.$element.attr('dir', 'rtl');
-            }
-            self.showClear = options.showClear;
-            self.showCaption = options.showCaption;
-            self.size = options.size;
-            self.stars = options.stars;
-            self.defaultCaption = options.defaultCaption;
-            self.starCaptions = options.starCaptions;
-            self.starCaptionClasses = options.starCaptionClasses;
-            self.clearButton = options.clearButton;
-            self.clearButtonTitle = options.clearButtonTitle;
-            self.clearButtonBaseClass = !isEmpty(options.clearButtonBaseClass) ? options.clearButtonBaseClass : 'clear-rating';
-            self.clearButtonActiveClass = !isEmpty(options.clearButtonActiveClass) ? options.clearButtonActiveClass : 'clear-rating-active';
-            self.clearCaption = options.clearCaption;
-            self.clearCaptionClass = options.clearCaptionClass;
-            self.clearValue = options.clearValue;
-            self.$element.removeClass('form-control').addClass('form-control');
-            self.$clearElement = isEmpty(options.clearElement) ? null : $(options.clearElement);
-            self.$captionElement = isEmpty(options.captionElement) ? null : $(options.captionElement);
-            if (typeof self.$rating == 'undefined' && typeof self.$container == 'undefined') {
-                self.$rating = $(document.createElement("div")).html('<div class="rating-stars"></div>');
-                self.$container = $(document.createElement("div"));
-                self.$container.before(self.$rating);
-                self.$container.append(self.$rating);
-                self.$element.before(self.$container).appendTo(self.$rating);
-            }
-            self.$stars = self.$rating.find('.rating-stars');
-            self.generateRating();
-            self.$clear = !isEmpty(self.$clearElement) ? self.$clearElement : self.$container.find('.' + self.clearButtonBaseClass);
-            self.$caption = !isEmpty(self.$captionElement) ? self.$captionElement : self.$container.find(".caption");
-            self.setStars();
-            self.$element.hide();
-            self.listen();
-            if (self.showClear) {
-                self.$clear.attr({"class": self.getClearClass()});
-            }
-            self.$element.removeClass('rating-loading');
-        },
-        checkDisabled: function () {
-            var self = this;
-            self.disabled = validateAttr(self.$element, 'disabled', self.options);
-            self.readonly = validateAttr(self.$element, 'readonly', self.options);
-            self.inactive = (self.disabled || self.readonly);
-        },
-        getClearClass: function () {
-            return this.clearButtonBaseClass + ' ' + ((this.inactive) ? '' : this.clearButtonActiveClass);
-        },
-        generateRating: function () {
-            var self = this, clear = self.renderClear(), caption = self.renderCaption(),
-                css = (self.rtl) ? 'rating-container-rtl' : 'rating-container',
-                stars = self.getStars();
-            css += (self.glyphicon) ? ((self.symbol == '\ue006') ? ' rating-gly-star' : ' rating-gly') : ' rating-uni';
-            self.$rating.attr('class', css);
-            self.$rating.attr('data-content', stars);
-            self.$stars.attr('data-content', stars);
-            var css = self.rtl ? 'star-rating-rtl' : 'star-rating';
-            self.$container.attr('class', css + ' rating-' + self.size);
-
-            if (self.inactive) {
-                self.$container.removeClass('rating-active').addClass('rating-disabled');
-            }
-            else {
-                self.$container.removeClass('rating-disabled').addClass('rating-active');
-            }
-
-            if (typeof self.$caption == 'undefined' && typeof self.$clear == 'undefined') {
-                if (self.rtl) {
-                    self.$container.prepend(caption).append(clear);
-                }
-                else {
-                    self.$container.prepend(clear).append(caption);
-                }
-            }
-            if (!isEmpty(self.containerClass)) {
-                self.$container.removeClass(self.containerClass).addClass(self.containerClass);
-            }
-        },
-        getStars: function () {
-            var self = this, numStars = self.stars, stars = '';
-            for (var i = 1; i <= numStars; i++) {
-                stars += self.symbol;
-            }
-            return stars;
-        },
-        renderClear: function () {
-            var self = this;
-            if (!self.showClear) {
-                return '';
-            }
-            var css = self.getClearClass();
-            if (!isEmpty(self.$clearElement)) {
-                self.$clearElement.removeClass(css).addClass(css).attr({"title": self.clearButtonTitle});
-                self.$clearElement.html(self.clearButton);
-                return '';
-            }
-            return '<div class="' + css + '" title="' + self.clearButtonTitle + '">' + self.clearButton + '</div>';
-        },
-        renderCaption: function () {
-            var self = this, val = self.$element.val();
-            if (!self.showCaption) {
-                return '';
-            }
-            var html = self.fetchCaption(val);
-            if (!isEmpty(self.$captionElement)) {
-                self.$captionElement.removeClass('caption').addClass('caption').attr({"title": self.clearCaption});
-                self.$captionElement.html(html);
-                return '';
-            }
-            return '<div class="caption">' + html + '</div>';
-        },
-        fetchCaption: function (rating) {
-            var self = this;
-            var val = parseFloat(rating), css, cap;
-            if (typeof(self.starCaptionClasses) == "function") {
-                css = isEmpty(self.starCaptionClasses(val)) ? self.clearCaptionClass : self.starCaptionClasses(val);
-            } else {
-                css = isEmpty(self.starCaptionClasses[val]) ? self.clearCaptionClass : self.starCaptionClasses[val];
-            }
-            if (typeof(self.starCaptions) == "function") {
-                var cap = isEmpty(self.starCaptions(val)) ? self.defaultCaption.replace(/\{rating\}/g, val) : self.starCaptions(val);
-            } else {
-                var cap = isEmpty(self.starCaptions[val]) ? self.defaultCaption.replace(/\{rating\}/g, val) : self.starCaptions[val];
-            }
-            var caption = (val == self.clearValue) ? self.clearCaption : cap;
-            return '<span class="' + css + '">' + caption + '</span>';
-        },
-        getValueFromPosition: function (pos) {
-            var self = this, precision = getDecimalPlaces(self.step),
-                percentage, val, maxWidth = self.$rating.width();
-            percentage = (pos / maxWidth);
-            if (self.rtl) {
-                val = (self.min + Math.floor(self.diff * percentage / self.step) * self.step);
-            }
-            else {
-                val = (self.min + Math.ceil(self.diff * percentage / self.step) * self.step);
-            }
-            if (val < self.min) {
-                val = self.min;
-            }
-            else if (val > self.max) {
-                val = self.max;
-            }
-            val = applyPrecision(parseFloat(val), precision);
-            if (self.rtl) {
-                val = self.max - val;
-            }
-            return val;
-        },
-        setStars: function (pos) {
-            var self = this, min = self.min, max = self.max, step = self.step,
-                val = arguments.length ? self.getValueFromPosition(pos) : (isEmpty(self.$element.val()) ? 0 : self.$element.val()),
-                width = 0, maxWidth = self.$rating.width(), caption = self.fetchCaption(val);
-            width = (val - min) / max * 100;
-            if (self.rtl) {
-                width = 100 - width;
-            }
-            self.$element.val(val);
-            width += '%';
-            self.$stars.css('width', width);
-            self.$caption.html(caption);
-        },
-        clear: function () {
-            var self = this;
-            var title = '<span class="' + self.clearCaptionClass + '">' + self.clearCaption + '</span>';
-            self.$stars.removeClass('rated');
-            if (!self.inactive) {
-                self.$caption.html(title);
-            }
-            self.$element.val(self.clearValue);
-            self.setStars();
-            self.$element.trigger('rating.clear');
-        },
-        reset: function () {
-            var self = this;
-            self.$element.val(self.initialValue);
-            self.setStars();
-            self.$element.trigger('rating.reset');
-        },
-        update: function (val) {
-            if (arguments.length > 0) {
-                var self = this;
-                self.$element.val(val);
-                self.setStars();
-            }
-        },
-        refresh: function (options) {
-            var self = this;
-            if (arguments.length) {
-                var cap = '';
-                self.init($.extend(self.options, options));
-                if (self.showClear) {
-                    self.$clear.show();
-                }
-                else {
-                    self.$clear.hide();
-                }
-                if (self.showCaption) {
-                    self.$caption.show();
-                }
-                else {
-                    self.$caption.hide();
-                }
-            }
-        }
-    };
-
-    //Star rating plugin definition
-    $.fn.rating = function (option) {
-        var args = Array.apply(null, arguments);
-        args.shift();
-        return this.each(function () {
-            var $this = $(this),
-                data = $this.data('rating'),
-                options = typeof option === 'object' && option;
-
-            if (!data) {
-                $this.data('rating', (data = new Rating(this, $.extend({}, $.fn.rating.defaults, options, $(this).data()))));
-            }
-
-            if (typeof option === 'string') {
-                data[option].apply(data, args);
-            }
-        });
-    };
-
-    $.fn.rating.defaults = {
-        stars: 5,
-        glyphicon: true,
-        symbol: null,
-        disabled: false,
-        readonly: false,
-        rtl: false,
-        size: 'md',
-        showClear: true,
-        showCaption: true,
-        defaultCaption: '{rating} Stars',
-        starCaptions: {
-            0.5: 'Half Star',
-            1: 'One Star',
-            1.5: 'One & Half Star',
-            2: 'Two Stars',
-            2.5: 'Two & Half Stars',
-            3: 'Three Stars',
-            3.5: 'Three & Half Stars',
-            4: 'Four Stars',
-            4.5: 'Four & Half Stars',
-            5: 'Five Stars'
-        },
-        starCaptionClasses: {
-            0.5: 'label label-danger',
-            1: 'label label-danger',
-            1.5: 'label label-warning',
-            2: 'label label-warning',
-            2.5: 'label label-info',
-            3: 'label label-info',
-            3.5: 'label label-primary',
-            4: 'label label-primary',
-            4.5: 'label label-success',
-            5: 'label label-success'
-        },
-        clearButton: '<i class="glyphicon glyphicon-minus-sign"></i>',
-        clearButtonTitle: 'Clear',
-        clearButtonBaseClass: 'clear-rating',
-        clearButtonActiveClass: 'clear-rating-active',
-        clearCaption: 'Not Rated',
-        clearCaptionClass: 'label label-default',
-        clearValue: 0,
-        captionElement: null,
-        clearElement: null,
-        containerClass: null
-    };
-
-
-    /**
-     * Convert automatically number inputs with class 'rating'
-     * into the star rating control.
-     */
-    $('input.rating').addClass('rating-loading');
-
-    $(document).ready(function () {
-        var $input = $('input.rating'), count = Object.keys($input).length;
-        if (count > 0) {
-            $input.rating();
-        }
-    });
-}(jQuery));
-</script>
-
-{% endblock script %}
-
-
-
-
-
+{% endblock addScript %}

@@ -177,6 +177,7 @@ class Order(models.Model):
 class Review(models.Model):
     reviewID = models.AutoField(primary_key=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null = True)
 
     RATING = (

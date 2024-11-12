@@ -164,3 +164,4 @@ class ReviewAdmin(admin.ModelAdmin):
         extra_context['total_reviews'] = total_reviews 
 
         return super().changelist_view(request, extra_context=extra_context)
+
