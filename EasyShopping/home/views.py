@@ -65,7 +65,8 @@ def home(request):
             user = request.user
             cart = Cart.objects.filter(user=user).first()
             totalItemsInCart = CartItem.objects.filter(cart=cart).count()
-            products = suggest(request)
+            # products = suggest(request)
+            products = Product.objects.all()
         else:
             products = Product.objects.all()
     except Exception as e:
