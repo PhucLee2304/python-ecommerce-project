@@ -238,21 +238,21 @@ def scan(request):
             
 
 # views.py
-from django.shortcuts import render
+# from django.shortcuts import render
 
-def checkoutView(request):
-    product_id = request.GET.get('pid')  # Get product ID from the query parameter
-    size_id = request.GET.get('sid')  # Get size ID from the query parameter
-    quantity = request.GET.get('quantity')  # Get quantity from the query parameter
-    product = Product.objects.get(productID = product_id)
-    total = int(quantity) * float(product.price)
-    context = {
-        "product" : product,
-        "total" : total,
-        "quantity": quantity
-    }
+# def checkoutView(request):
+#     product_id = request.GET.get('pid')  # Get product ID from the query parameter
+#     size_id = request.GET.get('sid')  # Get size ID from the query parameter
+#     quantity = request.GET.get('quantity')  # Get quantity from the query parameter
+#     product = Product.objects.get(productID = product_id)
+#     total = int(quantity) * float(product.price)
+#     context = {
+#         "product" : product,
+#         "total" : total,
+#         "quantity": quantity
+#     }
 
-    # Process the data (e.g., retrieve product, size, and validate quantity)
-    # Your logic to handle the checkout goes here
+#     # Process the data (e.g., retrieve product, size, and validate quantity)
+#     # Your logic to handle the checkout goes here
 
-    return render(request, 'checkout.html', context)
+#     return render(request, 'checkout.html', context)

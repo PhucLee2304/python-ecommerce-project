@@ -4,9 +4,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import auth
 from core.models import User
 from django.views.decorators.cache import never_cache
-from datetime import datetime
 from django.core.files.storage import default_storage
-import re, os
+import re
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
 
 @never_cache
 def register(request):
@@ -92,8 +97,10 @@ def profile(request):
         
         # Email
         if email != '' and email != 'None':
-            if re.match(r'^[\w\.-]+@gmail\.com$', email):
+
+            if re.match(r'^[\w\.-]+@(gmail\.com|stu\.ptit\.edu\.vn)$', email):
                 userObject.email = email
+
             else:
                 messages.info(request, "Invalid email format. Enter a valid @gmail.com email")
                 return redirect('profile')
@@ -151,3 +158,53 @@ def profile(request):
 def logout(request):
     auth.logout(request)
     return redirect('home')
+
+def forgotPassword(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        user = User.objects.filter(email=email).first()
+        if user:
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(str(user.pk).encode('utf-8'))
+
+            resetLink = f'http://{get_current_site(request).domain}/account/resetPassword/{uid}/{token}/'
+            send_mail(
+                'Password Reset Request',  # Subject
+                f'Click the link to reset your password: {resetLink}',  # Message
+                settings.DEFAULT_FROM_EMAIL,  # From email
+                [email],  # To email
+                fail_silently=False,
+            )
+            return redirect('sendToEmail')
+    return render(request, 'forgotPassword.html')
+
+def sendToEmail(request):
+    return render(request, 'sendToEmail.html')
+
+def resetPassword(request, uidb64, token):
+    # In ra giá trị của uidb64 và token để kiểm tra
+    print(f"Received uidb64: {uidb64}")
+    print(f"Received token: {token}")
+    
+    try:
+        # Giải mã UID từ URL
+        uid = urlsafe_base64_decode(uidb64).decode('utf-8')
+        print(f"Decoded uid: {uid}")
+        
+        user = User.objects.get(pk=uid)
+
+        # Kiểm tra token
+        if default_token_generator.check_token(user, token):
+            print("Token is valid.")
+            if request.method == 'POST':
+                new_password = request.POST.get('password')
+                user.set_password(new_password)
+                user.save()
+                return redirect('login')  # Sau khi reset mật khẩu, chuyển về trang login
+            return render(request, 'resetPassword.html', {'uid': uid, 'token': token})
+        else:
+            print("Invalid token.")
+            return redirect('login')  # Nếu token không hợp lệ
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return redirect('login')  # Nếu không tìm thấy user hoặc UID không hợp lệ

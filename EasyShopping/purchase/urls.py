@@ -7,5 +7,5 @@ urlpatterns = [
     # path('bankTransfer/', views.bankTransfer, name='bankTransfer'),
     path('payment/', views.payment, name='payment'),
     path('scan/', views.scan, name='scan'),
-    path('checkout/', views.checkoutView, name='checkout'),
+    # path('checkout/', views.checkoutView, name='checkout'),
 ]
