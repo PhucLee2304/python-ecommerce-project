@@ -56,18 +56,18 @@ def productDetailView(request, pid):
         userInterest.timestamp = timezone.now()
         userInterest.save()
     
-    reviews = Review.objects.filter(product = product)
+    reviews = Review.objects.filter(product=product).order_by('-reviewDate')
+
     rating = getRating(reviews)
     # total_quantity_sold = Order.objects.filter(item__product__productID=pid).aggregate(total_sold=Sum('itemQuantity'))['total_sold']
     
     orders = Order.objects.filter(item__product__productID = pid)
-
     context = {
         "product" : product,
         "review" : reviews,
         "rating": rating,
         "totalSale": getTotalSale(orders),
-        "rates": getRatePercent(reviews)
+        "rates": getRatePercent(reviews),
     }
     return render(request, 'productDetail.html', context)
 
