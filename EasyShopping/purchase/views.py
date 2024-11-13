@@ -157,7 +157,7 @@ def payment(request):
                 try:
                     order = Order.objects.get(orderID=orderID)  
                     order.orderAmount += shippingFee
-                    order.orderStatus = 'Pending'  
+                    # order.orderStatus = 'Pending'  
                     order.paymentMethod = paymentMethod
                     order.save() 
 
