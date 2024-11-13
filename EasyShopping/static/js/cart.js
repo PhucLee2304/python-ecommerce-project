@@ -1,3 +1,6 @@
+document.querySelectorAll('.btn-plus, .btn-minus').forEach(button => {
+    console.log("Gắn sự kiện click cho nút:", button);
+});
 document.addEventListener('click', (event) => {
     if (event.target.matches('.remove-item-btn')) {
         const cartItemId = event.target.dataset.cartitemId;
@@ -17,30 +20,48 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+   
+    
+
     // Handle quantity change events (increase and decrease)
     document.querySelectorAll('.btn-plus, .btn-minus').forEach(button => {
         button.addEventListener('click', (event) => {
+            console.log("ok");
             event.preventDefault();
+            
             const cartItemID = event.target.closest('button').dataset.cartitemId;
-
             const action = event.target.closest('button').dataset.action;
-
+    
+            // Kiểm tra nếu cartItemID tồn tại
+            if (!cartItemID) {
+                console.error("cartItemID không tồn tại");
+                return;
+            }
+    
             let quantityInput = document.querySelector(`input[data-cartitem-id="${cartItemID}"]`);
+            
+            // Kiểm tra nếu quantityInput tồn tại
+            if (!quantityInput) {
+                console.error(`Không tìm thấy input với cartItemID: ${cartItemID}`);
+                return;
+            }
+    
             let currentQuantity = parseInt(quantityInput.value);
-
+    
             // Handle increase and decrease actions
             if (action === 'increase') {
-                // currentQuantity++;
+                // currentQuantity+=1;
             } else if (action === 'decrease' && currentQuantity > 1) {
                 // currentQuantity--;
-            }
-            else{
+            } else {
                 currentQuantity = 1;
             }
-
+    
+            console.log("Current quantity:", currentQuantity);
+    
             quantityInput.value = currentQuantity;
-            console.log(cartItemID);
-
+            console.log("cartItemID:", cartItemID);
+    
             // Update the cart item quantity on the server (via AJAX)
             updateCartItemQuantity(cartItemID, currentQuantity);
         });

@@ -147,7 +147,7 @@ def payment(request):
             del request.session['orders']
             del request.session['totalAmount']
 
-            return redirect('history')
+            return redirect('my-purchased', detail='All')
     
         elif paymentMethod == 'Bank Transfer':
             qrData = ';'.join(map(str, orderIDs)) 
