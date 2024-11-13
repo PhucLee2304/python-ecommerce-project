@@ -131,7 +131,7 @@ def payment(request):
                 try:
                     order = Order.objects.get(orderID=orderID)  
                     order.orderAmount += shippingFee
-                    order.orderStatus = 'Completed'  
+                    order.orderStatus = 'Shipping'  
                     order.paymentMethod = paymentMethod
                     order.paymentDate = timezone.now()
                     order.save()
