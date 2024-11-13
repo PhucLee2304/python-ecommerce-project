@@ -78,13 +78,17 @@
     </div>
     
     <div class="mt-3 d-flex justify-content-end">
-      {% if order.orderStatus == 'Completed' %}
+      
+      {% if order.orderStatus == 'Completed'%}
         <a href="{% url "product-detail" order.item.product.productID %}">
           <button class="btn btn-buy-again mr-2">Buy Again</button>
         </a>
+        {% if order.review is None %}
         <a href="{% url "product-detail" order.item.product.productID %}">
           <a href="{% url "feedback" order.orderID %}" class="btn btn-outline-secondary mr-2">Rate</a>
         </a>
+        {% endif %}
+        
       {% endif %}
       {% if order.orderStatus == 'Shipping' %}
         <a href="{% url "product-detail" order.item.product.productID %}">
