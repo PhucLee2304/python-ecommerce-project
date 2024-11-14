@@ -41,23 +41,23 @@
    <nav class="nav nav-pills nav-fill">
     {% if message == 'All' %}
       <a class="nav-link active" aria-current="page" href="{% url 'my-purchased' 'All' %}">All</a>
-      <a class="nav-link" href="{% url 'my-purchased' 'Shipping' %}">To ship</a>
-      <a class="nav-link" href="{% url 'my-purchased' 'Completed' %}">completed</a>
+      <a class="nav-link" href="{% url 'my-purchased' 'Shipping' %}">Shipping</a>
+      <a class="nav-link" href="{% url 'my-purchased' 'Completed' %}">Completed</a>
       <a class="nav-link" href="{% url 'my-purchased' 'Pending' %}">Pending</a>
     {% elif message == 'Completed' %}
       <a class="nav-link " aria-current="page" href="{% url 'my-purchased' 'All' %}">All</a>
-      <a class="nav-link" href="{% url 'my-purchased' 'Shipping' %}">To ship</a>
-      <a class="nav-link active" href="{% url 'my-purchased' 'Completed' %}">completed</a>
+      <a class="nav-link" href="{% url 'my-purchased' 'Shipping' %}">Shipping</a>
+      <a class="nav-link active" href="{% url 'my-purchased' 'Completed' %}">Completed</a>
       <a class="nav-link" href="{% url 'my-purchased' 'Pending' %}">Pending</a>
     {% elif message == 'Shipping' %}
       <a class="nav-link " aria-current="page" href="{% url 'my-purchased' 'All' %}">All</a>
-      <a class="nav-link active" href="{% url 'my-purchased' 'Shipping' %}">To ship</a>
-      <a class="nav-link " href="{% url 'my-purchased' 'Completed' %}">completed</a>
+      <a class="nav-link active" href="{% url 'my-purchased' 'Shipping' %}">Shipping</a>
+      <a class="nav-link " href="{% url 'my-purchased' 'Completed' %}">Completed</a>
       <a class="nav-link" href="{% url 'my-purchased' 'Pending' %}">Pending</a>
     {% else %}
     <a class="nav-link " aria-current="page" href="{% url 'my-purchased' 'All' %}">All</a>
-    <a class="nav-link " href="{% url 'my-purchased' 'Shipping' %}">To ship</a>
-    <a class="nav-link " href="{% url 'my-purchased' 'Completed' %}">completed</a>
+    <a class="nav-link " href="{% url 'my-purchased' 'Shipping' %}">Shipping</a>
+    <a class="nav-link " href="{% url 'my-purchased' 'Completed' %}">Completed</a>
     <a class="nav-link active" href="{% url 'my-purchased' 'Pending' %}">Pending</a>
     {% endif %}
     
@@ -71,10 +71,12 @@
       <div class="d-flex align-items-center">
         <img src="{{ order.item.product.productImage.url }}" class="img-fluid product-image mr-3" alt="Product Image">
         <div>
-          <h5>{{ order.item.product.productName }}</h5>
+          <a href="{% url "product-detail" order.item.product.productID %}"
+            <h5>{{ order.item.product.productName }}</h5>
+          </a>
           <p class="mb-1">Size: {{ order.item.size }} | Quantity: {{ order.itemQuantity }}</p>
-          <div>ngay dat hang: {{order.orderDate}}</div>
-          <span class="badge badge-success">Free Return</span>
+          <div>Order Date: {{order.orderDate}}</div>
+          {% comment %} <span class="badge badge-success">Free Return</span> {% endcomment %}
         </div>
       </div>
       <div>
@@ -98,15 +100,15 @@
         
       {% endif %}
       {% if order.orderStatus == 'Shipping' %}
-        <a href="{% url "product-detail" order.item.product.productID %}">
+        {% comment %} <a href="{% url "product-detail" order.item.product.productID %}">
           <button class="btn btn-buy-again mr-2">View Details</button>
-        </a>
+        </a> {% endcomment %}
       {% endif %}
-      {% if order.orderStatus == 'Processing' %}
+      {% if order.orderStatus == 'Pending' %}
         
-        <a href="{% url "product-detail" order.item.product.productID %}">
+        {% comment %} <a href="{% url "product-detail" order.item.product.productID %}">
           <button class="btn btn-buy-again mr-2">View Details</button>
-        </a>
+        </a> {% endcomment %}
 
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
           Cancel
@@ -125,24 +127,24 @@
                   <div>
                     <h5>{{ order.item.product.productName }}</h5>
                     <p class="mb-1">Size: {{ order.item.size }} | Quantity: {{ order.itemQuantity }}</p>
-                    <div>ngay dat hang: {{order.orderDate}}</div>
+                    <div>Order Date: {{order.orderDate}}</div>
 
                   </div>
                 </div>
                 <form action="">
                   <div>
-                    <label for="">ly do huy</label>
+                    <label for="">Cancellation Reason</label>
                   </div>
                   
-                  <textarea rows="4" cols="50" placeholder="Nhập nội dung ở đây"></textarea>
+                  <textarea rows="4" cols="50" placeholder="Enter detail here"></textarea>
 
 
                 </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Huy</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <a href="{% url "cancel-order" order.orderID %}">
-                  <button type="button" class="btn btn-primary">Xac Nhan</button>
+                  <button type="button" class="btn btn-primary">Confirm</button>
                 </a>
               </div>
             </div>

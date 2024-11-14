@@ -21,7 +21,8 @@ def getRating(reviews):
 def getTotalSale(orders):
     sum = 0
     for order in orders:
-        sum += order.itemQuantity
+        if order.orderStatus == 'Completed':
+            sum += order.itemQuantity
     return sum
 
 def productDetailView(request, pid):
