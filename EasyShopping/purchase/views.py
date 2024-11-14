@@ -223,7 +223,7 @@ def scan(request):
                     messages.info(request, 'Order {qrCode} does not exist')
                     return redirect('payment')
                 
-            return redirect('history')
+            return redirect('my-purchased', detail='All')
         else:
             messages.info(request, 'Wrong code. Scan again to get correct code')
             qrData = request.session.get('qrData', '')
