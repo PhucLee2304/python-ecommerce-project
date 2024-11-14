@@ -117,12 +117,12 @@ def cart(request):
     
     if request.method == 'POST':
         print("ok")
-        if 'deleteProduct' in request.POST:
-            itemID = request.POST.get('deleteProduct')
-            return deleteProductFromCart(request, cart, itemID)
-        elif 'deleteAll' in request.POST:
-            return deleteAllFromCart(request, cart)
-        elif 'buyAll' in request.POST:
+        # if 'deleteProduct' in request.POST:
+        #     itemID = request.POST.get('deleteProduct')
+        #     return deleteProductFromCart(request, cart, itemID)
+        # elif 'deleteAll' in request.POST:
+        #     return deleteAllFromCart(request, cart)
+        if 'buyAll' in request.POST:
             return addToPurchase(request, cart)
 
     context = { 
