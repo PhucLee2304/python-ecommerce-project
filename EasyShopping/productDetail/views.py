@@ -12,6 +12,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import F
 from django.db.models import Sum
 
+# tính trung bình đánh giá
 def getRating(reviews):
     rating = 0
     if len(reviews) == 0: return 0
@@ -19,6 +20,7 @@ def getRating(reviews):
         rating += review.rating
     return round(rating/len(reviews), 1)
 
+# tính tổng số đơn hàng đã bán được của 1 sản phẩm
 def getTotalSale(orders):
     sum = 0
     for order in orders:
