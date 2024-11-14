@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle quantity change events (increase and decrease)
     document.querySelectorAll('.btn-plus, .btn-minus').forEach(button => {
         button.addEventListener('click', (event) => {
-            console.log("ok");
+            // console.log("ok");
             event.preventDefault();
             
             const cartItemID = event.target.closest('button').dataset.cartitemId;
@@ -50,14 +50,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
             // Handle increase and decrease actions
             if (action === 'increase') {
-                // currentQuantity+=1;
+                currentQuantity+=1;
             } else if (action === 'decrease' && currentQuantity > 1) {
-                // currentQuantity--;
+                currentQuantity--;
             } else {
                 currentQuantity = 1;
             }
     
-            console.log("Current quantity:", currentQuantity);
+            // console.log("Current quantity:", currentQuantity);
     
             quantityInput.value = currentQuantity;
             console.log("cartItemID:", cartItemID);

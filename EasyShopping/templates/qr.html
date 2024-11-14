@@ -2,25 +2,124 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Mã QR Thanh Toán</title>
+    <title>QR Code Payment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Style for the body */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+
+        /* Style for headings */
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        h5 {
+            color: #007bff;
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* Style for paragraph */
+        p {
+            color: #666;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Style for QR code */
+        .qr-code {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .qr-code img {
+            border: 3px solid #007bff;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        /* Style for the form */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        /* Focus effect for input */
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        /* Style for buttons */
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+        }
+
+        /* Hover effect for buttons */
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Active effect for buttons */
+        button:active {
+            transform: scale(0.98);
+        }
+    </style>
 </head>
 <body>
-    {% include "components/header.html" %}
     {% for message in messages %}
         <h5>{{message}}</h5>
     {% endfor %}
-    <h2>Mã QR Thanh Toán</h2>
-    <p>Tổng số tiền: {{ totalAmount }}</p>
+    <h2>QR Code Payment</h2>
+    <p>Total Amount: {{ totalAmount }}</p>
 
     <div class="qr-code">
-        <img src="data:image/png;base64,{{ qr_base64 }}" alt="QR Code" style="width: 200px; height: auto;">
+        <img src="data:image/png;base64,{{ qr_base64 }}" alt="QR Code" style="width: 400px; height: auto;">
     </div>
 
     <form id="qr-form" action="{% url 'scan' %}" method="post">
         {% csrf_token %}
-        <input type="text" name="qrInput" placeholder="Nhập mã QR" required>
-        <button type="submit">Xác nhận</button>
+        <input type="text" name="qrInput" placeholder="Enter QR Code" required>
+        <button type="submit">Confirm</button>
     </form>
-    {% include "components/footer.html" %}
 </body>
 </html>

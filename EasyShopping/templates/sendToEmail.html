@@ -4,12 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password Reset Success</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Định dạng toàn bộ body */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+
+        /* Định dạng container */
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            text-align: center;
+        }
+
+        /* Định dạng tiêu đề */
+        h2 {
+            color: #28a745; /* Màu xanh lá cho trạng thái thành công */
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        /* Định dạng đoạn văn bản */
+        p {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        /* Định dạng liên kết */
+        a {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        /* Đổi màu khi hover vào liên kết */
+        a:hover {
+            background-color: #0056b3;
+        }
+
+        /* Hiệu ứng khi nhấn vào liên kết */
+        a:active {
+            transform: scale(0.98);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h2>Yêu cầu đặt lại mật khẩu đã được gửi!</h2>
-        <p>Hãy kiểm tra email của bạn để làm theo hướng dẫn đặt lại mật khẩu.</p>
-        <a href="{% url 'login' %}">Trở về trang đăng nhập</a>  <!-- Thêm link quay lại trang đăng nhập -->
+        <h2>Password Reset Request Sent!</h2>
+        <p>Please check your email to follow the instructions to reset your password.</p>
+        <a href="{% url 'login' %}">Back to Login</a>
     </div>
 </body>
 </html>
