@@ -43,15 +43,22 @@
       <a class="nav-link active" aria-current="page" href="{% url 'my-purchased' 'All' %}">All</a>
       <a class="nav-link" href="{% url 'my-purchased' 'Shipping' %}">To ship</a>
       <a class="nav-link" href="{% url 'my-purchased' 'Completed' %}">completed</a>
+      <a class="nav-link" href="{% url 'my-purchased' 'Pending' %}">Pending</a>
     {% elif message == 'Completed' %}
       <a class="nav-link " aria-current="page" href="{% url 'my-purchased' 'All' %}">All</a>
       <a class="nav-link" href="{% url 'my-purchased' 'Shipping' %}">To ship</a>
       <a class="nav-link active" href="{% url 'my-purchased' 'Completed' %}">completed</a>
+      <a class="nav-link" href="{% url 'my-purchased' 'Pending' %}">Pending</a>
     {% elif message == 'Shipping' %}
       <a class="nav-link " aria-current="page" href="{% url 'my-purchased' 'All' %}">All</a>
       <a class="nav-link active" href="{% url 'my-purchased' 'Shipping' %}">To ship</a>
       <a class="nav-link " href="{% url 'my-purchased' 'Completed' %}">completed</a>
-
+      <a class="nav-link" href="{% url 'my-purchased' 'Pending' %}">Pending</a>
+    {% else %}
+    <a class="nav-link " aria-current="page" href="{% url 'my-purchased' 'All' %}">All</a>
+    <a class="nav-link " href="{% url 'my-purchased' 'Shipping' %}">To ship</a>
+    <a class="nav-link " href="{% url 'my-purchased' 'Completed' %}">completed</a>
+    <a class="nav-link active" href="{% url 'my-purchased' 'Pending' %}">Pending</a>
     {% endif %}
     
   </nav> 
@@ -78,13 +85,17 @@
     </div>
     
     <div class="mt-3 d-flex justify-content-end">
-      {% if order.orderStatus == 'Completed' %}
+      
+      {% if order.orderStatus == 'Completed'%}
         <a href="{% url "product-detail" order.item.product.productID %}">
           <button class="btn btn-buy-again mr-2">Buy Again</button>
         </a>
+        {% if order.review is None %}
         <a href="{% url "product-detail" order.item.product.productID %}">
           <a href="{% url "feedback" order.orderID %}" class="btn btn-outline-secondary mr-2">Rate</a>
         </a>
+        {% endif %}
+        
       {% endif %}
       {% if order.orderStatus == 'Shipping' %}
         <a href="{% url "product-detail" order.item.product.productID %}">
