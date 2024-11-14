@@ -116,7 +116,7 @@ def cart(request):
         cartItem.amountUnit = amountUnit
     
     if request.method == 'POST':
-        print("ok")
+        # print("ok")
         # if 'deleteProduct' in request.POST:
         #     itemID = request.POST.get('deleteProduct')
         #     return deleteProductFromCart(request, cart, itemID)
