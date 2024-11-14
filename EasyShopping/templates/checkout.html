@@ -107,7 +107,7 @@
                                         <th scope="row">
                                         </th>
                                         <td class="py-5">
-                                            <p class="mb-0 text-dark py-4">Shipping</p>
+                                            <p class="mb-0 text-dark py-4">Shipping Fee: {{order.shippingFee|floatformat:0}} VND</p>
                                         </td>
                                         <td colspan="3" class="py-5">
                                             {% comment %} <div class="form-check text-start">
@@ -115,8 +115,8 @@
                                                 <label class="form-check-label" for="Shipping-1">Free Shipping</label>
                                             </div> {% endcomment %}
                                             <div class="form-check text-start">
-                                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Shipping-2" name="Shipping-1" value="Shipping">
-                                                <label class="form-check-label" for="Shipping-2">Flat rate: {{order.shippingFee|floatformat:0}} VND</label>
+                                                {% comment %} <input type="checkbox" class="form-check-input bg-primary border-0" id="Shipping-2" name="Shipping-1" value="Shipping"> {% endcomment %}
+                                                {% comment %} <label class="form-check-label" for="Shipping-2"></label> {% endcomment %}
                                             </div>
                                             {% comment %} <div class="form-check text-start">
                                                 <input type="checkbox" class="form-check-input bg-primary border-0" id="Shipping-3" name="Shipping-1" value="Shipping">
