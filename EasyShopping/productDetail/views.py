@@ -1,17 +1,15 @@
 
-from rest_framework import viewsets
 from core.models import *
-from .serializers import ProductSerializer
 from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import CartSerializer
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from django.db.models import F
-from django.db.models import Sum
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 
+# tính trung bình đánh giá
 def getRating(reviews):
     rating = 0
     if len(reviews) == 0: return 0
@@ -19,29 +17,12 @@ def getRating(reviews):
         rating += review.rating
     return round(rating/len(reviews), 1)
 
+# tính tổng số đơn hàng đã bán được của 1 sản phẩm
 def getTotalSale(orders):
     sum = 0
     for order in orders:
         sum += order.itemQuantity
     return sum
-
-def getRatePercent(reviews):
-    rates = {
-        1 : 0,
-        2: 0,
-        3 : 0,
-        4: 0,
-        5 : 0
-    }
-    n = len(reviews)
-    if n== 0: return rates
-    for r in reviews:
-        rates[r.rating] += 1
-    for key in rates.keys():
-        rates[key] /= n
-        rates[key] *= 100
-        rates[key] = round(rates[key], 1)
-    return rates
 
 def productDetailView(request, pid):
     product = Product.objects.get(productID = pid)
@@ -59,53 +40,49 @@ def productDetailView(request, pid):
     reviews = Review.objects.filter(product=product).order_by('-reviewDate')
 
     rating = getRating(reviews)
-    # total_quantity_sold = Order.objects.filter(item__product__productID=pid).aggregate(total_sold=Sum('itemQuantity'))['total_sold']
     
-    orders = Order.objects.filter(item__product__productID = pid)
     context = {
         "product" : product,
         "review" : reviews,
         "rating": rating,
-        "totalSale": getTotalSale(orders),
-        "rates": getRatePercent(reviews),
+        "totalSale": getTotalSale(Order.objects.filter(item__product__productID = pid))
     }
     return render(request, 'productDetail.html', context)
 
 
-class CartViewSet(viewsets.ModelViewSet):
-    queryset = Cart.objects.all()
-    serializer_class = CartSerializer
-    permission_classes = [IsAuthenticated]  # Only authenticated users can access cart
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_to_cart(request):
+    """
+    Thêm sản phẩm vào giỏ hàng của người dùng.
+    """
+    user = request.user
+    productID = request.data.get('productID')
+    quantity = request.data.get('quantity', 1)
+    sizeID = request.data.get('size')
 
-    def get_queryset(self):
-        # Only return the cart of the logged-in user
-        return Cart.objects.filter(user=self.request.user)
+    # Kiểm tra dữ liệu đầu vào
+    if not productID or not sizeID:
+        return Response({"error": "Product ID and Size are required"}, status=status.HTTP_400_BAD_REQUEST)
 
-    def create(self, request, *args, **kwargs):
-        print("ok")
-        """
-        Handle adding items to the cart. If the item already exists in the cart, update its quantity.
-        """
-        user = request.user
-        cart, created = Cart.objects.get_or_create(user=user)  # Ensure the user has a cart
-        productID = request.data.get('productID')
-        quantity = request.data.get('quantity', 1)
-        sizeID = request.data.get("size")
+    # Lấy hoặc tạo giỏ hàng cho người dùng
+    cart, _ = Cart.objects.get_or_create(user=user)
 
-        try:
-           item = Item.objects.get(product__productID=productID, size__sizeID=sizeID)
+    try:
+        # Tìm sản phẩm dựa trên productID và sizeID
+        item = Item.objects.get(product__productID=productID, size__sizeID=sizeID)
+    except Item.DoesNotExist:
+        return Response({"error": "Item does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
-        except Item.DoesNotExist:
-            print("not found item")
-            return Response({"error": "Item does not exist"}, status=status.HTTP_404_NOT_FOUND)
+    # Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, item=item)
 
-        # Check if the item is already in the cart
-        cart_item, created = CartItem.objects.get_or_create(cart=cart, item=item)
-        cart_item.quantity += int(quantity)  # Increase the quantity if it exists
-        cart_item.save()
+    # Tăng số lượng sản phẩm nếu đã tồn tại
+    cart_item.quantity += int(quantity)
+    cart_item.save()
 
-        # Update total amount
-        cart.totalAmount += item.product.getNewPrice() * int(quantity)
-        cart.save()
+    # Cập nhật tổng tiền trong giỏ hàng
+    cart.totalAmount += item.product.getNewPrice() * int(quantity)
+    cart.save()
 
-        return Response(CartSerializer(cart).data, status=status.HTTP_200_OK)
+    return Response(data="success", status=status.HTTP_200_OK)
