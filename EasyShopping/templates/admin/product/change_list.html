@@ -2,7 +2,13 @@
 
 {% block content %}
     <div style="margin-bottom: 20px;">
-        <h2>Total products: {{ total_products }}</h2>
+        <h2>Total Products: {{ total_products }}</h2>
     </div>
+
+    <div style="margin-bottom: 20px;">
+        <h3>Product Distribution by Category</h3>
+        <img src="data:image/png;base64,{{ category_chart_image }}" alt="Category Distribution Chart" />
+    </div>
+
     {{ block.super }}
 {% endblock %}

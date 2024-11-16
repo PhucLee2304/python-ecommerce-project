@@ -2,7 +2,35 @@
 
 {% block content %}
     <div style="margin-bottom: 20px;">
-        <h2>Total orders: {{ total_orders }}</h2>
+        <h2>Total Orders: {{ total_orders }}</h2>
+        <h3>Total Order Amount: {{ total_amount }}</h3>
     </div>
+
+    {% comment %} <div style="margin-bottom: 20px;">
+        <h3>Daily Order Amounts for This Month:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for date, total in daily_data.items %}
+                    <tr>
+                        <td>{{ date }}</td>
+                        <td>{{ total }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div> {% endcomment %}
+
+    <!-- Hiển thị biểu đồ đường -->
+    <div style="margin-top: 30px;">
+        {% comment %} <h3>Order Amount by Date</h3> {% endcomment %}
+        <img src="data:image/png;base64,{{ chart_image }}" alt="Order Amount Line Chart">
+    </div>
+
     {{ block.super }}
 {% endblock %}

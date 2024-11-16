@@ -2,7 +2,12 @@
 
 {% block content %}
     <div style="margin-bottom: 20px;">
-        <h2>Total users: {{ total_users }}</h2>  <!-- Hiển thị tổng số người dùng -->
+        <h2>Total users: {{ total_users }}</h2>
     </div>
+
+    <div>
+        <img src="data:image/png;base64,{{ chart_image }}" alt="Users per Month Chart">
+    </div>
+
     {{ block.super }}
 {% endblock %}
