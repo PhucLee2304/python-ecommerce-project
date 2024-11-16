@@ -113,14 +113,14 @@ from core.models import *
 @login_required(login_url='login')
 def payment(request):
     if request.method == 'POST':
-        print("Received POST request")
+        # print("Received POST request")
         paymentMethod = request.POST.get('paymentMethod')
         shippingFee = int(request.POST.get('shippingFee', 0))
         totalAmount = int(request.session.get('totalAmount', 0))
         orderIDs = [order['orderID'] for order in request.session.get('orders', [])]
 
-        print(f"Payment Method: {paymentMethod}")
-        print(f"Order IDs: {orderIDs}")
+        # print(f"Payment Method: {paymentMethod}")
+        # print(f"Order IDs: {orderIDs}")
         
         if not paymentMethod:
             messages.error(request, 'Select a payment method')
