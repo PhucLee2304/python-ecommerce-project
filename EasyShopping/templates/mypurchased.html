@@ -92,7 +92,7 @@
         <a href="{% url "product-detail" order.item.product.productID %}">
           <button class="btn btn-buy-again mr-2">Buy Again</button>
         </a>
-        {% if review.order is None %}
+        {% if order.review is None or order.review == "" %}
         <a href="{% url "product-detail" order.item.product.productID %}">
           <a href="{% url "feedback" order.orderID %}" class="btn btn-outline-secondary mr-2">Rate</a>
         </a>
