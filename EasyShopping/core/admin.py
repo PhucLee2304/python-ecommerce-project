@@ -6,7 +6,7 @@ import io
 import base64
 from django.utils import timezone
 from datetime import timedelta
-from django.db.models import Count, Sum, F
+from django.db.models import Count, Sum
 from django.db.models.functions import TruncDay, TruncDate
 
 class CartItemInline(admin.TabularInline):
@@ -105,29 +105,24 @@ class ProductAdmin(admin.ModelAdmin):
     def changelist_view(self, request, extra_context=None):
         total_products = Product.objects.count()
         
-        # Tính số lượng sản phẩm theo từng category
         category_data = Product.objects.values('category__categoryName').annotate(count=Count('category')).order_by('category__categoryName')
         
-        # Dữ liệu cho biểu đồ tròn
         chart_labels = [data['category__categoryName'] for data in category_data]
         chart_data = [data['count'] for data in category_data]
 
-        # Vẽ biểu đồ tròn với Matplotlib
         fig, ax = plt.subplots(figsize=(6, 6))
         ax.pie(chart_data, labels=chart_labels, autopct='%1.1f%%', startangle=90)
-        ax.axis('equal')  # Đảm bảo hình tròn
+        ax.axis('equal')  
 
-        # Lưu biểu đồ vào bộ nhớ (chưa lưu file)
         buf = io.BytesIO()
         plt.savefig(buf, format='png')
         buf.seek(0)
         img_data = base64.b64encode(buf.getvalue()).decode('utf-8')
         buf.close()
 
-        # Truyền dữ liệu vào template
         extra_context = extra_context or {}
         extra_context['total_products'] = total_products
-        extra_context['category_chart_image'] = img_data  # Thêm dữ liệu biểu đồ tròn vào context
+        extra_context['category_chart_image'] = img_data 
 
         return super().changelist_view(request, extra_context=extra_context)
     
@@ -199,46 +194,37 @@ class OrderAdmin(admin.ModelAdmin):
     change_list_template = "admin/order/change_list.html" 
 
     def changelist_view(self, request, extra_context=None):
-        # Tổng số đơn hàng có status 'Completed'
         total_orders = Order.objects.count()
 
-        # Tổng số tiền của tất cả đơn hàng có status 'Completed'
         total_amount = Order.objects.filter(orderStatus='Completed').aggregate(total_amount=Sum('orderAmount'))['total_amount'] or 0
 
-        # Tính số tiền theo từng ngày trong tháng này
         today = timezone.now().date()
         first_day_of_month = today.replace(day=1)
 
-        # Lấy tất cả các đơn hàng trong tháng này có status 'Completed', chỉ lấy ngày (bỏ qua giờ)
         orders_this_month = Order.objects.filter(
             orderDate__gte=first_day_of_month,
             orderDate__lte=today,
-            orderStatus='Completed'  # Lọc theo status 'Completed'
+            orderStatus='Completed' 
         )
 
-        # TruncDate để lấy chỉ phần ngày từ orderDate
         daily_amounts = (
             orders_this_month
-            .annotate(day_only=TruncDate('orderDate'))  # TruncDate sẽ lấy chỉ phần ngày
-            .values('day_only')  # Sử dụng day_only thay vì orderDate
+            .annotate(day_only=TruncDate('orderDate'))  
+            .values('day_only')  
             .annotate(daily_total=Sum('orderAmount'))
             .order_by('day_only')
         )
 
-        # Chuyển danh sách ngày và số tiền thành dictionary
         daily_data = {entry['day_only']: entry['daily_total'] for entry in daily_amounts}
 
-        # Tạo danh sách ngày trong tháng này
         all_days_in_month = [first_day_of_month + timedelta(days=i) for i in range((today - first_day_of_month).days + 1)]
 
-        # Cập nhật dữ liệu cho biểu đồ
         chart_dates = []
         chart_amounts = []
         for day in all_days_in_month:
-            chart_dates.append(day.day)  # Chỉ lấy ngày (không hiển thị tháng, năm)
-            chart_amounts.append(daily_data.get(day, 0))  # Nếu không có đơn hàng thì trả về 0
+            chart_dates.append(day.day)  
+            chart_amounts.append(daily_data.get(day, 0))  
 
-        # Vẽ biểu đồ đường
         fig, ax = plt.subplots(figsize=(8, 4))
         ax.plot(chart_dates, chart_amounts, marker='o', color='b', linestyle='-', label='Total Amount')
         ax.set_title('Daily Order Amounts for This Month')
@@ -247,14 +233,12 @@ class OrderAdmin(admin.ModelAdmin):
         ax.grid(True)
         ax.legend()
 
-        # Lưu biểu đồ vào bộ nhớ (chưa lưu file)
         buf = io.BytesIO()
         plt.savefig(buf, format='png')
         buf.seek(0)
         img_data = base64.b64encode(buf.getvalue()).decode('utf-8')
         buf.close()
 
-        # Truyền các giá trị vào context
         extra_context = extra_context or {}
         extra_context['total_orders'] = total_orders
         extra_context['total_amount'] = total_amount
