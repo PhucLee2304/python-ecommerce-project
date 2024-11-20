@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'home',
     'productDetail',
     'purchase',
-    'review',
     'myPurchased',
     'feedback',
 ]
